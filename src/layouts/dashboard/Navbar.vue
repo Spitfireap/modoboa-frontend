@@ -98,13 +98,15 @@
 </template>
 
 <script setup>
-import parameters from '@/api/parameters'
-import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { ref, computed, watch } from 'vue'
 import { useGettext } from 'vue3-gettext'
 
-const store = useStore()
+import parameters from '@/api/parameters'
+import { useAuthStore, useBusStore } from '@/stores'
+
+const authStore = useAuthStore()
+const busStore = useBusStore()
 const route = useRoute()
 const router = useRouter()
 const { $gettext } = useGettext()
@@ -112,8 +114,8 @@ const { $gettext } = useGettext()
 const rail = ref(false)
 const drawer = ref(true)
 
-const authUser = computed(() => store.state.auth.authUser)
-const isAuthenticated = computed(() => store.state.auth.isAuthenticated)
+const authUser = computed(() => authStore.authUser)
+const isAuthenticated = computed(() => authStore.isAuthenticated)
 
 const userInitials = computed(() => {
   let initials = null
@@ -158,10 +160,10 @@ parameters.getApplications().then(response => {
   })
 })
 
-let imapMigration = computed(store.state.bus.imapSettings)
+let imapMigration = computed(() => busStore.imapSettings)
 
 parameters.getApplication('imap_migration').then(response => {
-  store.commit('bus/changeImapSettings', response.data.params.enabled_imapmigration)
+  busStore.changeImapSettings(response.data.params.enabled_imapmigration)
 })
 
 const mainMenuItems = [
@@ -300,7 +302,7 @@ function displayMenuItem (item) {
   }
 }
 function logout () {
-  store.dispatch('auth/logout').then(() => {
+  authStore.$reset.then(() => {
     router.push({ name: 'Login' })
   })
 }

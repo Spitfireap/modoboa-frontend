@@ -1,6 +1,6 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router'
-//import { useStore } from 'vuex'
+//import { useAuthStore } from '@/stores'
 
 const routes = [
   {
@@ -219,14 +219,14 @@ const router = createRouter({
 })
 /*
 router.beforeEach((to, from, next) => {
-  const store = useStore()
+  const authStore = useAuthStore()
   if (to.meta.requiresAuth !== undefined) {
-    store.dispatch('auth/initialize').then(() => {
-      if (!store.getters['auth/isAuthenticated']) {
+    authStore.initialize().then(() => {
+      if (!authStore.isAuthenticated) {
         next({ name: 'Login' })
       } else {
         if (to.meta.allowedRoles !== undefined) {
-          if (to.meta.allowedRoles.indexOf(store.getters['auth/authUser'].role) === -1) {
+          if (to.meta.allowedRoles.indexOf(authStore.authUser.role) === -1) {
             next({ name: 'Dashboard' })
             return
           }

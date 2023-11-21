@@ -1,15 +1,17 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
-import store from '@/store'
 import router from '@/router'
+
+import { useAuthStore } from '@/stores'
 
 const _axios = axios.create()
 
 _axios.interceptors.request.use(
   function (config) {
+    const authStore = useAuthStore()
     // Do something before request is sent
-    if (store.state.auth.isAuthenticated) {
-      config.headers['Accept-Language'] = store.state.auth.authUser.language
+    if (authStore.isAuthenticated) {
+      config.headers['Accept-Language'] = authStore.authUser.language
     }
     return config
   },
@@ -37,8 +39,9 @@ _axios.interceptors.response.use(
       return Promise.reject(error)
     }
     const refreshToken = Cookies.get('refreshToken')
+    const authStore = useAuthStore()
     if (error.config.url.endsWith('/token/refresh/') || !refreshToken) {
-      store.dispatch('auth/logout')
+      authStore.logout()
       if (router.history.current.name !== 'Login') {
         router.push({ name: 'Login' })
       }

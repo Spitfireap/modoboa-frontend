@@ -2,10 +2,11 @@
 <script setup>
 
 import { ref } from 'vue'
-import rules from '@/plugins/rules.js'
-import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { useGettext } from 'vue3-gettext'
+
+import { useAuthStore } from '@/stores'
+import rules from '@/plugins/rules.js'
 
 const loading = ref(false)
 const rememberMe = ref(false)
@@ -15,7 +16,7 @@ const errors = ref({})
 const isPasswordvisible = ref(false)
 const loginForm = ref()
 
-const store = useStore()
+const authStore = useAuthStore()
 const router = useRouter()
 const { $gettext } = useGettext()
 
@@ -31,7 +32,7 @@ async function authenticate () {
     password: password.value,
     rememberMe: rememberMe.value
   }
-  store.dispatch('auth/login', payload).then(() =>{
+  authStore.login(payload).then(() =>{
     router.push({ name: 'Dashboard' })
   }).catch(err => {
     loading.value = false

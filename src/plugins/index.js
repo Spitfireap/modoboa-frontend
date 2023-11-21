@@ -8,12 +8,12 @@
 import vuetify from './vuetify'
 import router from '../router'
 import gettext from './gettext'
-import store from '@/store'
+import pinia from '@/stores'
 
 export function registerPlugins (app) {
   app
     .use(vuetify)
+    .use(pinia)
     .use(router)
-    .use(store)
     .use(gettext)
 }

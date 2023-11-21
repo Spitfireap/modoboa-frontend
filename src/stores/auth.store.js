@@ -1,5 +1,8 @@
 import Cookies from 'js-cookie'
 
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
+
 import repository from '@/api/repository'
 import account from '@/api/account'
 import auth from '@/api/auth'
@@ -10,42 +13,26 @@ function setupAxios (token) {
   repository.defaults.headers.post['Content-Type'] = 'application/json'
 }
 
-const state = () => ({
-  authUser: {},
-  isAuthenticated: false
-})
 
-const getters = {
-  isAuthenticated: state => state.isAuthenticated,
-  authUser: state => state.authUser
-}
+export const useAuthStore = defineStore('auth', () => {
+  const authUser = ref({})
+  const isAuthenticated = ref(false)
 
-const mutations = {
-  SET_AUTH_USER (state, { authUser, isAuthenticated }) {
-    state.authUser = authUser
-    state.isAuthenticated = isAuthenticated
-  },
-  LOGOUT_USER (state) {
-    state.authUser = null
-    state.isAuthenticated = false
-  }
-}
-
-const actions = {
-  fetchUser ({ commit }) {
+  function fetchUser() {
     return account.getMe().then(resp => {
-      commit('SET_AUTH_USER', { authUser: resp.data, isAuthenticated: true })
+      authUser.value = resp.data
+      isAuthenticated.value = true
     })
-  },
-  initialize ({ dispatch }) {
+  }
+  function initialize() {
     const token = Cookies.get('token')
     if (!token) {
       return
     }
     setupAxios(token)
-    return dispatch('fetchUser')
-  },
-  async login ({ dispatch }, payload) {
+    return fetchUser().value
+  }
+  async function login(payload) {
     const resp = await auth.requestToken(payload)
     const cookiesAttributes = { sameSite: 'strict' }
     if (payload.rememberMe) {
@@ -55,20 +42,13 @@ const actions = {
 
     cookie.set('token', resp.data.access)
     cookie.set('refreshToken', resp.data.refresh)
-    dispatch('initialize')
-  },
-  async logout ({ commit }) {
+    initialize()
+  }
+  async function $reset() {
     delete repository.defaults.headers.common.Authorization
     Cookies.remove('token')
     Cookies.remove('refreshToken')
-    commit('LOGOUT_USER')
+    authUser.value = {}
+    isAuthenticated.value = false
   }
-}
-
-export default {
-  namespaced: true,
-  state,
-  getters,
-  mutations,
-  actions
-}
+})
