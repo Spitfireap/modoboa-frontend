@@ -46,20 +46,16 @@ const actions = {
     return dispatch('fetchUser')
   },
   async login ({ dispatch }, payload) {
-    try {
-      const resp = await auth.requestToken(payload)
-      const cookiesAttributes = { sameSite: 'strict' }
-      if (payload.rememberMe) {
-        cookiesAttributes.expires = 90
-      }
-      const cookie = Cookies.withAttributes(cookiesAttributes)
-
-      cookie.set('token', resp.data.access)
-      cookie.set('refreshToken', resp.data.refresh)
-      dispatch('initialize')
-    } catch (err) {
-      throw err
+    const resp = await auth.requestToken(payload)
+    const cookiesAttributes = { sameSite: 'strict' }
+    if (payload.rememberMe) {
+      cookiesAttributes.expires = 90
     }
+    const cookie = Cookies.withAttributes(cookiesAttributes)
+
+    cookie.set('token', resp.data.access)
+    cookie.set('refreshToken', resp.data.refresh)
+    dispatch('initialize')
   },
   async logout ({ commit }) {
     delete repository.defaults.headers.common.Authorization
