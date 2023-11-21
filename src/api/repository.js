@@ -1,12 +1,9 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
-
-import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import store from '@/store'
+import router from '@/router'
 
 const _axios = axios.create()
-const store = useStore()
-const router = useRouter()
 
 _axios.interceptors.request.use(
   function (config) {

@@ -29,10 +29,9 @@
         <v-list-item
           v-if="!item.children"
           :value="item"
-          class="menu-item"
           :to="item.to"
           link
-          :key="item.title"
+          :key="item.text"
           :exact="item.exact"
           >
           <template v-slot:prepend>
@@ -43,16 +42,17 @@
         <v-list-group
           v-else
           :value="item.text"
-          color="white"
           :key="item.text"
-          :prepend-icon="item.icon"
           >
           <template v-slot:activator="{ props }">
             <v-list-item
               v-bind="props"
               :title="item.text"
+              color="white"
+              :key="item.text"
+              :prepend-icon="item.icon"
               >
-              </v-list-item>
+            </v-list-item>
           </template>
           <v-list-item
             v-for="subitem in item.children"
@@ -60,9 +60,10 @@
             :to="subitem.to"
             link
             :title="subitem.text"
+            :value="subitem"
             ></v-list-item>
-          </v-list-group>
-        </template>
+        </v-list-group>
+      </template>
     </v-list>
     <template v-slot:append>
       <v-menu rounded="lg" offset-y top v-if="isAuthenticated">
