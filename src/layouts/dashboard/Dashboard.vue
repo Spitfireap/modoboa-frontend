@@ -1,22 +1,16 @@
 <template>
   <v-app>
-    <navbar />
-    <dashboard-view />
+    <Navbar />
+    <DashboardView />
     <v-snackbar
       v-model="snackbar"
       :color="notificationColor"
       :timeout="notificationTimeout"
-      top
+      location="top"
     >
       {{ notification }}
-
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          color="white"
-          variant="text"
-          v-bind="attrs"
-          @click="snackbar = false"
-        >
+      <template v-slot:actions>
+        <v-btn color="white" text @click="snackbar = false">
           {{ $gettext('Close') }}
         </v-btn>
       </template>

@@ -60,11 +60,10 @@
     </v-list>
     <template v-slot:append>
       <v-menu rounded="lg" offset-y top v-if="isAuthenticated">
-        <template v-slot:activator="{ attrs, on }">
+        <template v-slot:activator="{ props }">
           <div
             class="d-flex user-box justify-center align-center white--text py-2"
-            v-bind="attrs"
-            v-on="on"
+            v-bind="props"
           >
             <v-avatar size="40" color="primary">
               <span class="white--text headline">{{ userInitials }}</span>

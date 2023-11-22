@@ -44,8 +44,8 @@ _axios.interceptors.response.use(
     const refreshToken = Cookies.get('refreshToken')
     const authStore = useAuthStore()
     if (error.config.url.endsWith('/token/refresh/') || !refreshToken) {
-      authStore.logout()
-      if (router.history.current.name !== 'Login') {
+      authStore.$reset()
+      if (router.currentRoute.name !== 'Login') {
         router.push({ name: 'Login' })
       }
       return Promise.reject(error)

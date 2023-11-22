@@ -41,7 +41,7 @@ export const useDomainsStore = defineStore('domains', () => {
 
   async function deleteDomain({ id, data }) {
     return domainApi.deleteDomain(id, data).then(() => {
-      domains = domains.value.filter((item) => item.pk !== id)
+      domains.value = domains.value.filter((item) => item.pk !== id)
     })
   }
 

@@ -18,8 +18,8 @@
         <v-icon>mdi-file-export-outline</v-icon>
       </v-btn>
       <v-menu offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn color="primary" v-bind="attrs" v-on="on">
+        <template v-slot:activator="{ props }">
+          <v-btn color="primary" v-bind="props">
             <v-icon left>mdi-plus</v-icon>
             {{ $gettext('New') }}
           </v-btn>
@@ -34,6 +34,8 @@
         </v-list>
       </v-menu>
     </v-toolbar>
+
+    <DomainList />
 
     <v-dialog
       v-model="showDomainWizard"
@@ -53,7 +55,7 @@ import { ref } from 'vue'
 import { useGettext } from 'vue3-gettext'
 //import DomainAliasForm from '@/components/domains/DomainAliasForm'
 //import DomainCreationForm from '@/components/domains/DomainCreationForm'
-//import DomainList from '@/components/domains/DomainList'
+import DomainList from '@/components/domains/DomainList'
 //import ImportForm from '@/components/tools/ImportForm'
 
 const showAliasForm = ref(false)
@@ -77,6 +79,10 @@ function importDomains (data) {
 
 <style scoped>
 .v-toolbar {
+  background-color: #f7f8fa !important;
+}
+
+.v-tabs-items {
   background-color: #f7f8fa !important;
 }
 </style>

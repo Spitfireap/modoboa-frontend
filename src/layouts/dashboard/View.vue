@@ -3,7 +3,9 @@
     <v-container fluid>
       <router-view v-slot="{ Component }">
         <transition name="fade">
-          <component :is="Component" />
+          <div>
+            <component :is="Component" />
+          </div>
         </transition>
       </router-view>
     </v-container>
@@ -13,3 +15,9 @@
 <script setup>
 //
 </script>
+
+<style scoped>
+.v-main {
+  background-color: #f7f8fa;
+}
+</style>

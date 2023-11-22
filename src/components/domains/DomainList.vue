@@ -2,8 +2,8 @@
   <v-card class="mt-6">
     <v-toolbar flat>
       <v-menu offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn v-bind="attrs" v-on="on" small>
+        <template v-slot:activator="{ props }">
+          <v-btn v-bind="props" small>
             Actions <v-icon right>mdi-chevron-down</v-icon>
           </v-btn>
         </template>
@@ -69,7 +69,7 @@
             </v-btn>
           </td>
           <td>
-            <dns-status-chip :status="item.dns_global_status" />
+            <DNSStatusChip :status="item.dns_global_status" />
           </td>
           <td>
             <v-progress-linear v-model="item.allocated_quota_in_percent" />
@@ -80,7 +80,7 @@
           <td>
             <div class="text-right">
               <v-menu offset-y>
-                <template v-slot:activator="{ on, attrs }">
+                <template v-slot:activator="{ props }">
                   <v-badge
                     v-if="item.opened_alarms_count"
                     bordered
@@ -88,11 +88,11 @@
                     icon="mdi-bell"
                     overlap
                   >
-                    <v-btn icon v-bind="attrs" v-on="on">
+                    <v-btn icon v-bind="props">
                       <v-icon>mdi-dots-horizontal</v-icon>
                     </v-btn>
                   </v-badge>
-                  <v-btn v-else icon v-bind="attrs" v-on="on">
+                  <v-btn v-else icon v-bind="props">
                     <v-icon>mdi-dots-horizontal</v-icon>
                   </v-btn>
                 </template>
@@ -119,15 +119,15 @@
         </tr>
       </template>
     </v-data-table>
-    <confirm-dialog ref="confirm">
+    <ConfirmDialog ref="confirm" @agree="onDeletedDomain">
       <v-checkbox
         v-model="keepDomainFolder"
-        :label="'Do not delete domain folder' | translate"
+        :label="$gettext('Do not delete domain folder')"
         hide-details
       />
-    </confirm-dialog>
+    </ConfirmDialog>
     <v-dialog v-model="showAliasForm" persistent max-width="800px">
-      <domain-alias-form
+      <DomainAliasForm
         @close="closeDomainAliasForm"
         :domain-alias="selectedDomainAlias"
         @alias-created="domainAliasCreated"
@@ -135,7 +135,7 @@
       />
     </v-dialog>
     <v-dialog v-model="showAdminList" persistent max-width="800px">
-      <administrator-list
+      <DomainAdminList
         :domain="selectedDomain"
         @close="showAdminList = false"
         dialog-mode
@@ -145,15 +145,15 @@
 </template>
 
 <script setup>
-import { useBusStore, useDomainStore } from '@/stores'
-import { useGettext } from '@/stores'
+import { useBusStore, useDomainsStore } from '@/stores'
+import { useGettext } from 'vue3-gettext'
 import { useRouter } from 'vue-router'
 import domainApi from '@/api/domains'
-import AdministratorList from './AdministratorList'
-import ConfirmDialog from '@/components/layout/ConfirmDialog'
-import DNSStatusChip from './DNSStatusChip'
-import DomainAliasForm from '@/components/domains/DomainAliasForm'
-import MenuItems from '@/components/tools/MenuItems'
+import DomainAdminList from './DomainAdminList.vue'
+import ConfirmDialog from '@/components/tools/ConfirmDialog.vue'
+import DNSStatusChip from './DNSStatusChip.vue'
+import DomainAliasForm from '@/components/domains/DomainAliasForm.vue'
+import MenuItems from '@/components/tools/MenuItems.vue'
 
 import { computed, ref } from 'vue'
 
@@ -161,7 +161,7 @@ const { $gettext } = useGettext()
 const router = useRouter()
 
 const busStore = useBusStore()
-const domainStore = useDomainStore()
+const domainStore = useDomainsStore()
 const domains = computed(() => domainStore.domains)
 const domainsLoaded = computed(() => domainStore.domainsLoaded)
 
@@ -179,11 +179,11 @@ const headers = [
   },
 ]
 
+const confirm = ref()
 const keepDomainFolder = ref(false)
 const selectedDomain = ref(null)
 const selectedDomainAlias = ref(null)
 const showAdminList = ref(false)
-const showConfirmDialog = ref(false)
 const showAliasForm = ref(false)
 const search = ref('')
 const selected = ref([])
@@ -199,7 +199,7 @@ function closeDomainAliasForm() {
 }
 
 async function deleteDomain(domain) {
-  const confirm = await this.$refs.confirm.open(
+  confirm.value.open(
     $gettext('Warning'),
     $gettext('Do you really want to delete the domain %{ domain }?', {
       domain: domain.name,
@@ -208,14 +208,15 @@ async function deleteDomain(domain) {
       color: 'error',
       cancelLabel: $gettext('No'),
       agreeLabel: $gettext('Yes'),
-    }
+    },
+    domain
   )
-  if (!confirm) {
-    return
-  }
+}
+
+function onDeletedDomain(domain) {
   const data = { keep_folder: keepDomainFolder.value }
   domainStore.deleteDomain({ id: domain.pk, data }).then(() => {
-    busStore.displayNotification({ msg: this.$gettext('Domain deleted') })
+    busStore.displayNotification({ msg: $gettext('Domain deleted') })
     keepDomainFolder.value = false
   })
 }
@@ -225,12 +226,12 @@ function domainAliasCreated() {
 }
 
 function domainAliasDeleted() {
-  const newList = aliases.value[this.selectedDomain.name].filter((alias) => {
+  const newList = aliases.value[selectedDomain.value.name].filter((alias) => {
     return alias.pk !== selectedDomainAlias.value.pk
   })
-  this.$set(this.aliases, this.selectedDomain.name, newList)
+  aliases.value[selectedDomain.value.name] = newList
   if (!newList.length) {
-    this.expanded = []
+    expanded.value = []
   }
   domainStore.getDomains()
   closeDomainAliasForm()
@@ -251,7 +252,7 @@ function loadAliases({ item, value }) {
     return
   }
   domainApi.getDomainAliases(item.name).then((resp) => {
-    this.$set(this.aliases, item.name, resp.data)
+    aliases.value[item.name] = resp.data
   })
 }
 
@@ -296,10 +297,10 @@ function getDomainMenuItems(domain) {
 </script>
 
 <style scoped>
-.v-text-field--outlined >>> fieldset {
+.v-text-field--outlined :deep(fieldset) {
   border-color: #bfc5d2;
 }
-.v-input--checkbox >>> .v-label {
+.v-input--checkbox :deep(.v-label) {
   font-size: 0.875rem !important;
 }
 </style>

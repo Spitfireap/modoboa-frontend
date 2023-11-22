@@ -6,7 +6,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint . --fix --ignore-path .gitignore --fix src",
+    "lint": "eslint . --ignore-path .gitignore --fix src",
     "format": "prettier . --write",
     "gettext:extract": "vue-gettext-extract",
     "gettext:compile": "vue-gettext-compile"
