@@ -18,6 +18,7 @@ export const useAuthStore = defineStore('auth', () => {
   const authUser = ref({})
   const isAuthenticated = ref(false)
 
+  //TODO: check wether or not we should not await for the resp.
   function fetchUser() {
     return account.getMe().then(resp => {
       authUser.value = resp.data
@@ -51,4 +52,6 @@ export const useAuthStore = defineStore('auth', () => {
     authUser.value = {}
     isAuthenticated.value = false
   }
+
+  return { authUser, isAuthenticated, fetchUser, initialize, login, $reset }
 })

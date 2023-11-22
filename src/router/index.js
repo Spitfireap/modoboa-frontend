@@ -30,6 +30,7 @@ const routes = [
       {
         path: '/domains',
         name: 'DomainList',
+        component: () => import('@/views/domains/Domains.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins']

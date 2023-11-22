@@ -9,7 +9,7 @@
     >
     <div class="d-flex align-center">
       <v-img
-        src="../../assets/Modoboa_RVB-BLANC-SANS.png"
+        src="@/assets/Modoboa_RVB-BLANC-SANS.png"
         max-width="190"
         class="logo"
         @click="router.push({ name: 'Dashboard' })"
@@ -99,7 +99,7 @@
 
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { useGettext } from 'vue3-gettext'
 
 import parameters from '@/api/parameters'

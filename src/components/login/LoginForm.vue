@@ -12,7 +12,6 @@ const loading = ref(false)
 const rememberMe = ref(false)
 const username = ref('')
 const password = ref('')
-const errors = ref({})
 const isPasswordvisible = ref(false)
 const loginForm = ref()
 

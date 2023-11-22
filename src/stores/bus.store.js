@@ -10,11 +10,17 @@ export const useBusStore = defineStore('bus', () => {
   const imapSettings = ref(true)
 
 
-  function showNotification(options) {
+  function displayNotification(options) {
     const authStore = useAuthStore()
     if (authStore.isAuthenticated) {
       notification.value = options.msg
       notificationColor.value = (options.type) ? options.type : 'success'
     }
   }
+
+  function changeImapSettings(status) {
+    imapSettings.value = status
+  }
+
+  return { notification, notificationColor, imapSettings, displayNotification, changeImapSettings }
 })

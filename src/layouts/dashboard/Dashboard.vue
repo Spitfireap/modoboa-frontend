@@ -27,7 +27,7 @@
 <script setup>
   import DashboardView from './View.vue'
   import Navbar from './Navbar.vue'
-  import { ref, watch, computed } from 'vue'
+  import { ref, computed } from 'vue'
   import { useGettext } from 'vue3-gettext'
 
   import { useBusStore } from '@/stores'
@@ -35,13 +35,17 @@
   const busStore = useBusStore()
   const { $gettext } = useGettext()
 
-  const snackbar = ref(false)
   const notificationColor = computed(() => busStore.notificationColor)
   const notificationTimeout = 2000
   const notification = computed(() => busStore.notification)
+  const snackbar = ref(false)
 
-  busStore.$subscribe((mutation, state) => {
-    snackbar.value = true
-})
-
+  busStore.$onAction(
+    ({ name, after }) => {
+      if(name === "displayNotification") {
+        after(() => {
+          snackbar.value = true
+        })
+      }
+    }, true)
 </script>
