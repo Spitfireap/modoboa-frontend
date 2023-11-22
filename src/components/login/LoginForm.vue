@@ -61,14 +61,14 @@ async function authenticate() {
             :rules="[rules.required]"
           />
           <v-text-field
+            v-model="password"
             :type="isPasswordvisible ? 'text' : 'password'"
             prepend-inner-icon="mdi-lock-outline"
             :label="$gettext('Password')"
-            @click:append-inner="isPasswordvisible = !isPasswordvisible"
-            v-model="password"
             outlined
             :append-inner-icon="isPasswordvisible ? 'mdi-eye-off' : 'mdi-eye'"
             :rules="[rules.required, rules.minLength(6)]"
+            @click:append-inner="isPasswordvisible = !isPasswordvisible"
           />
           <v-checkbox v-model="rememberMe" :label="$gettext('Remember me')" />
 

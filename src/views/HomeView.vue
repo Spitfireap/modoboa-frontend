@@ -42,8 +42,4 @@ function agree(passthrough) {
   console.log('agree!')
   console.log(passthrough)
 }
-
-function cancel() {
-  console.log('cancel')
-}
 </script>

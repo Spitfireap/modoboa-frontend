@@ -3,7 +3,7 @@
     <v-container fluid>
       <router-view v-slot="{ Component }">
         <transition name="fade">
-          <div>
+          <div v-show="true">
             <component :is="Component" />
           </div>
         </transition>

@@ -17,10 +17,10 @@
       </v-card-text>
       <v-card-actions class="pt-3">
         <v-spacer></v-spacer>
-        <v-btn v-if="!options.noconfirm" @click.native="cancel">
+        <v-btn v-if="!options.noconfirm" @click="cancel">
           {{ options.cancelLabel }}
         </v-btn>
-        <v-btn :color="options.color" @click.native="agree">
+        <v-btn :color="options.color" @click="agree">
           {{ options.agreeLabel }}
         </v-btn>
       </v-card-actions>

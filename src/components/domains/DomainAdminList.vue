@@ -2,12 +2,12 @@
   <v-card>
     <v-card-title>
       <span class="headline">
-        <template v-if="dialogMode" class="headline">
+        <div v-if="dialogMode" class="headline">
           {{ $gettext('Administrators of') }} {{ domain.name }}
-        </template>
-        <template v-else class="headline">
+        </div>
+        <div v-else class="headline">
           {{ $gettext('Administrators') }}
-        </template>
+        </div>
       </span>
     </v-card-title>
     <v-card-text>
@@ -16,7 +16,7 @@
         :items="administrators"
         hide-default-footer
       >
-        <template v-slot:item.username="{ item }">
+        <template #[`item.username`]="{ item }">
           <span v-if="item.id">{{ item.username }}</span>
           <v-autocomplete
             v-else
@@ -26,7 +26,7 @@
             item-text="username"
             return-object
           >
-            <template v-slot:append-outer>
+            <template #append-outer>
               <v-btn
                 v-if="selectedAccount"
                 icon
@@ -38,16 +38,16 @@
             </template>
           </v-autocomplete>
         </template>
-        <template v-slot:item.name="{ item }">
+        <template #[`item.name`]="{ item }">
           {{ item.first_name }} {{ item.last_name }}
         </template>
-        <template v-slot:item.actions="{ item }">
+        <template #[`item.actions`]="{ item }">
           <v-btn
             v-if="item.id"
             icon
             color="red"
-            @click="removeAdministrator(item)"
             :title="$gettext('Remove this administrator')"
+            @click="removeAdministrator(item)"
           >
             <v-icon>mdi-delete-outline</v-icon>
           </v-btn>
@@ -77,7 +77,10 @@ const busStore = useBusStore()
 const { $gettext } = useGettext()
 
 const props = defineProps({
-  domain: Object,
+  domain: {
+    type: Object,
+    default: () => {},
+  },
   dialogMode: {
     type: Boolean,
     default: false,
@@ -125,7 +128,7 @@ function fetchAccounts() {
 function addAdministrator() {
   domainApi
     .addDomainAdministrator(props.domain.pk, selectedAccount.value.pk)
-    .then((resp) => {
+    .then(() => {
       fetchAdministrators(props.domain)
       accounts.value = accounts.value.filter(
         (account) => account.pk !== selectedAccount.value.pk
@@ -137,13 +140,11 @@ function addAdministrator() {
 }
 
 function removeAdministrator(admin) {
-  domainApi
-    .removeDomainAdministrator(props.domain.pk, admin.id)
-    .then((resp) => {
-      fetchAdministrators(props.domain)
-      fetchAccounts()
-      bus.$emit('notification', { msg: $gettext('Administrator removed') })
-    })
+  domainApi.removeDomainAdministrator(props.domain.pk, admin.id).then(() => {
+    fetchAdministrators(props.domain)
+    fetchAccounts()
+    busStore.displayNotification({ msg: $gettext('Administrator removed') })
+  })
 }
 
 watch(

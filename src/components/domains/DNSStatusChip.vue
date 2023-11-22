@@ -8,7 +8,9 @@
 import { computed } from 'vue'
 import { useGettext } from 'vue3-gettext'
 
-const props = defineProps(['status'])
+const props = defineProps({
+  status: { type: String, default: 'pending' },
+})
 const { $gettext } = useGettext()
 
 const label = computed(() => {

@@ -23,44 +23,44 @@
 
     <v-list nav>
       <template v-for="item in menuItems">
-        <v-list-item
-          v-if="!item.children"
-          :value="item"
-          :to="item.to"
-          link
-          :key="item.text"
-          :exact="item.exact"
-        >
-          <template v-slot:prepend>
-            <v-icon :icon="item.icon"></v-icon>
-          </template>
-          <v-list-item-title v-text="item.text"></v-list-item-title>
-        </v-list-item>
-        <v-list-group v-else :value="item.text" :key="item.text">
-          <template v-slot:activator="{ props }">
-            <v-list-item
-              v-bind="props"
-              :title="item.text"
-              color="white"
-              :key="item.text"
-              :prepend-icon="item.icon"
-            >
-            </v-list-item>
-          </template>
+        <template v-if="displayMenuItem(item)">
           <v-list-item
-            v-for="subitem in item.children"
-            :key="subitem.text"
-            :to="subitem.to"
+            v-if="!item.children"
+            :key="item.text"
+            :value="item"
+            :to="item.to"
             link
-            :title="subitem.text"
-            :value="subitem"
-          ></v-list-item>
-        </v-list-group>
+            :exact="item.exact"
+            :title="item.text"
+            :prepend-icon="item.icon"
+          >
+          </v-list-item>
+          <v-list-group v-else :key="item.text" :value="item.text">
+            <template #activator="{ props }">
+              <v-list-item
+                v-bind="props"
+                :key="item.text"
+                :title="item.text"
+                color="white"
+                :prepend-icon="item.icon"
+              >
+              </v-list-item>
+            </template>
+            <v-list-item
+              v-for="subitem in item.children"
+              :key="subitem.text"
+              :to="subitem.to"
+              link
+              :title="subitem.text"
+              :value="subitem"
+            ></v-list-item>
+          </v-list-group>
+        </template>
       </template>
     </v-list>
-    <template v-slot:append>
-      <v-menu rounded="lg" offset-y top v-if="isAuthenticated">
-        <template v-slot:activator="{ props }">
+    <template #append>
+      <v-menu v-if="isAuthenticated" rounded="lg" offset-y top>
+        <template #activator="{ props }">
           <div
             class="d-flex user-box justify-center align-center white--text py-2"
             v-bind="props"
@@ -79,10 +79,10 @@
             v-for="item in userMenuItems"
             :key="item.text"
             :to="item.to"
-            @click="item.click"
             link
+            @click="item.click"
           >
-            <template v-slot:prepend>
+            <template #prepend>
               <v-icon :icon="item.icon"></v-icon>
             </template>
             <v-list-item-title>{{ item.text }}</v-list-item-title>
@@ -303,6 +303,7 @@ function displayMenuItem(item) {
     return condition
   }
 }
+
 function logout() {
   authStore.$reset.then(() => {
     router.push({ name: 'Login' })

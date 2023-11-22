@@ -2,7 +2,7 @@
   <v-card class="mt-6">
     <v-toolbar flat>
       <v-menu offset-y>
-        <template v-slot:activator="{ props }">
+        <template #activator="{ props }">
           <v-btn v-bind="props" small>
             Actions <v-icon right>mdi-chevron-down</v-icon>
           </v-btn>
@@ -22,19 +22,19 @@
     </v-toolbar>
     <v-data-table
       v-model="selected"
-      :headers="headers"
+      v-model:expanded="expanded"
+      :headers="domainHeaders"
       :items="domains"
       :search="search"
       item-key="name"
       class="elevation-1"
       show-select
       single-expand
-      :expanded.sync="expanded"
+      :loading="!domainsLoaded"
       @item-expanded="loadAliases"
       @click:row="showAliases"
-      :loading="!domainsLoaded"
     >
-      <template v-slot:item="{ item, isExpanded, expand }">
+      <template #item="{ item, isExpanded, expand }">
         <tr>
           <td>
             <v-checkbox />
@@ -80,7 +80,7 @@
           <td>
             <div class="text-right">
               <v-menu offset-y>
-                <template v-slot:activator="{ props }">
+                <template #activator="{ props }">
                   <v-badge
                     v-if="item.opened_alarms_count"
                     bordered
@@ -102,7 +102,7 @@
           </td>
         </tr>
       </template>
-      <template v-slot:expanded-item="{ headers, item }">
+      <template #expanded-item="{ headers, item }">
         <tr class="grey lighten-4">
           <td :colspan="headers.length">
             <span
@@ -128,8 +128,8 @@
     </ConfirmDialog>
     <v-dialog v-model="showAliasForm" persistent max-width="800px">
       <DomainAliasForm
-        @close="closeDomainAliasForm"
         :domain-alias="selectedDomainAlias"
+        @close="closeDomainAliasForm"
         @alias-created="domainAliasCreated"
         @alias-deleted="domainAliasDeleted"
       />
@@ -137,8 +137,8 @@
     <v-dialog v-model="showAdminList" persistent max-width="800px">
       <DomainAdminList
         :domain="selectedDomain"
-        @close="showAdminList = false"
         dialog-mode
+        @close="showAdminList = false"
       />
     </v-dialog>
   </v-card>
@@ -165,7 +165,7 @@ const domainStore = useDomainsStore()
 const domains = computed(() => domainStore.domains)
 const domainsLoaded = computed(() => domainStore.domainsLoaded)
 
-const headers = [
+const domainHeaders = [
   { text: $gettext('Name'), value: 'name' },
   { text: $gettext('Aliases'), value: 'domainalias_count' },
   { text: $gettext('DNS status'), value: 'dns_global_status', sortable: false },

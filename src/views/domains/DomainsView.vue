@@ -18,7 +18,7 @@
         <v-icon>mdi-file-export-outline</v-icon>
       </v-btn>
       <v-menu offset-y>
-        <template v-slot:activator="{ props }">
+        <template #activator="{ props }">
           <v-btn color="primary" v-bind="props">
             <v-icon left>mdi-plus</v-icon>
             {{ $gettext('New') }}

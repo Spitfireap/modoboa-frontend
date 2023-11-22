@@ -3,7 +3,7 @@
     <v-list-item
       v-for="(item, index) in items"
       :key="index"
-      @click="item.onClick(object)"
+      @click="item.onClick(obj)"
     >
       <v-list-item-icon>
         <v-icon :color="item.color">{{ item.icon }}</v-icon>
@@ -16,5 +16,14 @@
 </template>
 
 <script setup>
-defineProps(['items', 'object'])
+defineProps({
+  items: {
+    type: Object,
+    default: () => {},
+  },
+  obj: {
+    type: Object,
+    default: () => {},
+  },
+})
 </script>

@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <Navbar />
+    <NavBar />
     <DashboardView />
     <v-snackbar
       v-model="snackbar"
@@ -9,7 +9,7 @@
       location="top"
     >
       {{ notification }}
-      <template v-slot:actions>
+      <template #actions>
         <v-btn color="white" text @click="snackbar = false">
           {{ $gettext('Close') }}
         </v-btn>
@@ -19,8 +19,8 @@
 </template>
 
 <script setup>
-import DashboardView from './View.vue'
-import Navbar from './Navbar.vue'
+import DashboardView from './DashboardView.vue'
+import NavBar from './NavBar.vue'
 import { ref, computed } from 'vue'
 import { useGettext } from 'vue3-gettext'
 

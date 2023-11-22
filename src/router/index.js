@@ -5,12 +5,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   {
     path: '/login',
-    component: () => import('@/layouts/default/Default.vue'),
+    component: () => import('@/layouts/default/DefaultLayout.vue'),
     children: [
       {
         path: '',
         name: 'Login',
-        component: () => import('@/views/Login.vue'),
+        component: () => import('@/views/LoginView.vue'),
       },
       {
         path: '/twofa',
@@ -20,17 +20,17 @@ const routes = [
   },
   {
     path: '/admin',
-    component: () => import('@/layouts/dashboard/Dashboard.vue'),
+    component: () => import('@/layouts/dashboard/DashboardLayout.vue'),
     children: [
       {
         path: '',
         name: 'Dashboard',
-        component: () => import('@/views/Home.vue'),
+        component: () => import('@/views/HomeView.vue'),
       },
       {
         path: '/domains',
         name: 'DomainList',
-        component: () => import('@/views/domains/Domains.vue'),
+        component: () => import('@/views/domains/DomainsView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],

@@ -60,7 +60,7 @@ const { $gettext } = useGettext()
 
 const emit = defineEmits(['close', 'alias-deleted', 'alias-created'])
 
-const domainAlias = defineProps({
+const props = defineProps({
   domainAlias: {
     type: Object,
     default: null,
@@ -93,7 +93,7 @@ function close() {
 }
 
 function deleteAlias() {
-  domainApi.deleteDomainAlias(props.domainAlias.pk).then((resp) => {
+  domainApi.deleteDomainAlias(props.domainAlias.pk).then(() => {
     emit('alias-deleted')
     busStore.displayNotification({
       msg: $gettext('Domain alias deleted'),
@@ -102,7 +102,7 @@ function deleteAlias() {
 }
 
 async function submit() {
-  const { valid } = await loginForm.value.validate()
+  const { valid } = await vform.value.validate()
   if (!valid) {
     return
   }
@@ -118,7 +118,7 @@ async function submit() {
     } else {
       const data = JSON.parse(JSON.stringify(form.value))
       data.target = data.target.pk
-      await domainApi.updateDomainAlias(form.value.pk, data).then((resp) => {
+      await domainApi.updateDomainAlias(form.value.pk, data).then(() => {
         busStore.displayNotification({
           msg: this.$gettext('Domain alias updated'),
         })
@@ -136,7 +136,7 @@ onMounted(() => {
   }
 })
 
-watch(domainAlias, (old, newDomainAlias) => {
+watch(props.domainAlias, (old, newDomainAlias) => {
   if (newDomainAlias) {
     form.value = JSON.parse(JSON.stringify(newDomainAlias))
   }
