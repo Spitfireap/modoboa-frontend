@@ -7,12 +7,10 @@ import repository from '@/api/repository'
 import account from '@/api/account'
 import auth from '@/api/auth'
 
-
-function setupAxios (token) {
+function setupAxios(token) {
   repository.defaults.headers.common.Authorization = `Bearer ${token}`
   repository.defaults.headers.post['Content-Type'] = 'application/json'
 }
-
 
 export const useAuthStore = defineStore('auth', () => {
   const authUser = ref({})
@@ -20,7 +18,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   //TODO: check wether or not we should not await for the resp.
   function fetchUser() {
-    return account.getMe().then(resp => {
+    return account.getMe().then((resp) => {
       authUser.value = resp.data
       isAuthenticated.value = true
     })

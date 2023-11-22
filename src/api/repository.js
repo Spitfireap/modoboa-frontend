@@ -35,7 +35,10 @@ _axios.interceptors.response.use(
     if (error.response.status === 429) {
       return Promise.reject(error)
     }
-    if (error.response.status !== 401 || router.currentRoute.path === '/login/') {
+    if (
+      error.response.status !== 401 ||
+      router.currentRoute.path === '/login/'
+    ) {
       return Promise.reject(error)
     }
     const refreshToken = Cookies.get('refreshToken')
@@ -47,21 +50,27 @@ _axios.interceptors.response.use(
       }
       return Promise.reject(error)
     }
-    return _axios.post('/token/refresh/', { refresh: refreshToken }).then(resp => {
-      Cookies.set('token', resp.data.access, { sameSite: 'strict' })
-      _axios.defaults.headers.common.Authorization = `Bearer ${resp.data.access}`
-      const config = error.config
-      config.headers.Authorization = `Bearer ${resp.data.access}`
-      return new Promise((resolve, reject) => {
-        _axios.request(config).then(resp => {
-          resolve(resp)
-        }).catch(error => {
-          reject(error)
+    return _axios
+      .post('/token/refresh/', { refresh: refreshToken })
+      .then((resp) => {
+        Cookies.set('token', resp.data.access, { sameSite: 'strict' })
+        _axios.defaults.headers.common.Authorization = `Bearer ${resp.data.access}`
+        const config = error.config
+        config.headers.Authorization = `Bearer ${resp.data.access}`
+        return new Promise((resolve, reject) => {
+          _axios
+            .request(config)
+            .then((resp) => {
+              resolve(resp)
+            })
+            .catch((error) => {
+              reject(error)
+            })
         })
       })
-    }).catch(error => {
-      Promise.reject(error)
-    })
+      .catch((error) => {
+        Promise.reject(error)
+      })
   }
 )
 

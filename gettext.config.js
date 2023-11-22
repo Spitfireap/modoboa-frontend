@@ -1,5 +1,5 @@
 module.exports = {
   output: {
-    locales: ["en"],
+    locales: ['en'],
   },
-};
+}

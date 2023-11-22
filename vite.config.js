@@ -11,7 +11,7 @@ import { fileURLToPath, URL } from 'node:url'
 export default defineConfig({
   plugins: [
     vue({
-      template: { transformAssetUrls }
+      template: { transformAssetUrls },
     }),
     // https://github.com/vuetifyjs/vuetify-loader/tree/master/packages/vite-plugin#readme
     vuetify({
@@ -22,35 +22,30 @@ export default defineConfig({
     }),
     ViteFonts({
       google: {
-        families: [{
-          name: 'Roboto',
-          styles: 'wght@100;300;400;500;700;900',
-        }],
+        families: [
+          {
+            name: 'Roboto',
+            styles: 'wght@100;300;400;500;700;900',
+          },
+        ],
       },
     }),
   ],
-  base: process.env.NODE_ENV === "production" ? "/new-admin/" : "/",
+  base: process.env.NODE_ENV === 'production' ? '/new-admin/' : '/',
   define: { 'process.env': {} },
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
-    extensions: [
-      '.js',
-      '.json',
-      '.jsx',
-      '.mjs',
-      '.ts',
-      '.tsx',
-      '.vue',
-    ],
+    extensions: ['.js', '.json', '.jsx', '.mjs', '.ts', '.tsx', '.vue'],
   },
   server: {
     port: 3000,
     proxy: {
-      '/api': process.env.DOCKER == "yes"
-          ? "http://api:8000"
-          : "http://127.0.0.1:8000",
-    }
+      '/api':
+        process.env.DOCKER == 'yes'
+          ? 'http://api:8000'
+          : 'http://127.0.0.1:8000',
+    },
   },
 })

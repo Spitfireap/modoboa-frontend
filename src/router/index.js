@@ -15,7 +15,7 @@ const routes = [
       {
         path: '/twofa',
         name: 'TwoFA',
-      }
+      },
     ],
   },
   {
@@ -25,7 +25,7 @@ const routes = [
       {
         path: '',
         name: 'Dashboard',
-        component: () => import('@/views/Home.vue')
+        component: () => import('@/views/Home.vue'),
       },
       {
         path: '/domains',
@@ -33,135 +33,135 @@ const routes = [
         component: () => import('@/views/domains/Domains.vue'),
         meta: {
           requiresAuth: true,
-          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins']
-        }
+          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
+        },
       },
       {
         path: '/domains/:id',
         name: 'DomainDetail',
         meta: {
           requiresAuth: true,
-          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins']
-        }
+          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
+        },
       },
       {
         path: '/domains/:id/edit',
         name: 'DomainEdit',
         meta: {
           requiresAuth: true,
-          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins']
-        }
+          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
+        },
       },
       {
         path: '/imap_migration/migrations',
         name: 'MigrationsList',
         meta: {
           requiresAuth: true,
-          allowedRoles: ['Resellers', 'SuperAdmins']
-        }
+          allowedRoles: ['Resellers', 'SuperAdmins'],
+        },
       },
       {
         path: '/imap_migration/providers',
         name: 'ProvidersList',
         meta: {
           requiresAuth: true,
-          allowedRoles: ['Resellers', 'SuperAdmins']
-        }
+          allowedRoles: ['Resellers', 'SuperAdmins'],
+        },
       },
       {
         path: '/imap_migration/providers/:id/edit',
         name: 'ProviderEdit',
         meta: {
           requiresAuth: true,
-          allowedRoles: ['Resellers', 'SuperAdmins']
-        }
+          allowedRoles: ['Resellers', 'SuperAdmins'],
+        },
       },
       {
         path: '/identities',
         name: 'Identities',
         meta: {
           requiresAuth: true,
-          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins']
-        }
+          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
+        },
       },
       {
         path: '/identities/accounts/:id',
         name: 'AccountDetail',
         meta: {
           requiresAuth: true,
-          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins']
-        }
+          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
+        },
       },
       {
         path: '/identities/accounts/:id/edit',
         name: 'AccountEdit',
         meta: {
           requiresAuth: true,
-          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins']
-        }
+          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
+        },
       },
       {
         path: '/identities/aliases/:id',
         name: 'AliasDetail',
         meta: {
           requiresAuth: true,
-          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins']
-        }
+          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
+        },
       },
       {
         path: '/identities/aliases/:id/edit',
         name: 'AliasEdit',
         meta: {
           requiresAuth: true,
-          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins']
-        }
+          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
+        },
       },
       {
         path: '/parameters/:app',
         name: 'ParametersEdit',
         meta: {
           requiresAuth: true,
-          allowedRoles: ['SuperAdmins']
-        }
+          allowedRoles: ['SuperAdmins'],
+        },
       },
       {
         path: '/alarms',
         name: 'Alarms',
         meta: {
-          requiresAuth: true
-        }
+          requiresAuth: true,
+        },
       },
       {
         path: '/monitoring/statistics',
         name: 'Statistics',
         meta: {
           requiresAuth: true,
-          allowedRoles: ['SuperAdmins']
-        }
+          allowedRoles: ['SuperAdmins'],
+        },
       },
       {
         path: '/monitoring/audit_trail',
         name: 'AuditTrail',
         meta: {
           requiresAuth: true,
-          allowedRoles: ['SuperAdmins']
-        }
+          allowedRoles: ['SuperAdmins'],
+        },
       },
       {
         path: '/monitoring/messages',
         name: 'MessageLog',
         meta: {
           requiresAuth: true,
-          allowedRoles: ['DomainAdmins', 'SuperAdmins']
-        }
+          allowedRoles: ['DomainAdmins', 'SuperAdmins'],
+        },
       },
       {
         path: '/information',
         name: 'Information',
         meta: {
           requiresAuth: true,
-          allowedRoles: ['SuperAdmins']
-        }
+          allowedRoles: ['SuperAdmins'],
+        },
       },
       {
         path: '/password_recovery',
@@ -174,8 +174,8 @@ const routes = [
       {
         path: '/password_recovery/sms_confirm',
         name: 'PasswordRecoverySms',
-      }
-    ]
+      },
+    ],
   },
   {
     path: '/user',
@@ -186,32 +186,32 @@ const routes = [
         name: 'APISetup',
         meta: {
           requiresAuth: true,
-          allowedRoles: ['SuperAdmins']
-        }
+          allowedRoles: ['SuperAdmins'],
+        },
       },
       {
         path: 'profile',
         name: 'UserProfile',
         meta: {
           requiresAuth: true,
-        }
+        },
       },
       {
         path: 'security',
         name: 'UserSecurity',
         meta: {
           requiresAuth: true,
-        }
+        },
       },
       {
         path: 'forward',
         name: 'UserForward',
         meta: {
           requiresAuth: true,
-        }
+        },
       },
-    ]
-  }
+    ],
+  },
 ]
 
 const router = createRouter({

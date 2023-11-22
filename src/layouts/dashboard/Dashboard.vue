@@ -7,7 +7,7 @@
       :color="notificationColor"
       :timeout="notificationTimeout"
       top
-      >
+    >
       {{ notification }}
 
       <template v-slot:action="{ attrs }">
@@ -16,7 +16,7 @@
           variant="text"
           v-bind="attrs"
           @click="snackbar = false"
-          >
+        >
           {{ $gettext('Close') }}
         </v-btn>
       </template>
@@ -25,27 +25,26 @@
 </template>
 
 <script setup>
-  import DashboardView from './View.vue'
-  import Navbar from './Navbar.vue'
-  import { ref, computed } from 'vue'
-  import { useGettext } from 'vue3-gettext'
+import DashboardView from './View.vue'
+import Navbar from './Navbar.vue'
+import { ref, computed } from 'vue'
+import { useGettext } from 'vue3-gettext'
 
-  import { useBusStore } from '@/stores'
+import { useBusStore } from '@/stores'
 
-  const busStore = useBusStore()
-  const { $gettext } = useGettext()
+const busStore = useBusStore()
+const { $gettext } = useGettext()
 
-  const notificationColor = computed(() => busStore.notificationColor)
-  const notificationTimeout = 2000
-  const notification = computed(() => busStore.notification)
-  const snackbar = ref(false)
+const notificationColor = computed(() => busStore.notificationColor)
+const notificationTimeout = 2000
+const notification = computed(() => busStore.notification)
+const snackbar = ref(false)
 
-  busStore.$onAction(
-    ({ name, after }) => {
-      if(name === "displayNotification") {
-        after(() => {
-          snackbar.value = true
-        })
-      }
-    }, true)
+busStore.$onAction(({ name, after }) => {
+  if (name === 'displayNotification') {
+    after(() => {
+      snackbar.value = true
+    })
+  }
+}, true)
 </script>

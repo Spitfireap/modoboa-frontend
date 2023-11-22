@@ -1,7 +1,7 @@
 import repository from './repository'
 
 export default {
-  getComponentsInformation () {
+  getComponentsInformation() {
     return repository.get('/admin/components')
-  }
+  },
 }

@@ -16,7 +16,7 @@ import { createApp } from 'vue'
 //api
 import repository from '@/api/repository.js'
 
-fetch(import.meta.env.BASE_URL + 'config.json').then(resp => {
+fetch(import.meta.env.BASE_URL + 'config.json').then((resp) => {
   resp.json().then((config) => {
     if (!config.API_BASE_URL) {
       throw Error('API_BASE_URL is not defined in config.json')

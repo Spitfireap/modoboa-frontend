@@ -1,9 +1,7 @@
-
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
 import domainApi from '@/api/domains'
-
 
 export const useDomainsStore = defineStore('domains', () => {
   const domainsLoaded = ref(false)
@@ -19,20 +17,20 @@ export const useDomainsStore = defineStore('domains', () => {
   })
 
   async function getDomains() {
-    return domainApi.getDomains().then(response => {
+    return domainApi.getDomains().then((response) => {
       domainsLoaded.value = true
       domains.value = response.data
     })
   }
 
   async function createDomain(data) {
-    return domainApi.createDomain(data).then(response => {
+    return domainApi.createDomain(data).then((response) => {
       domains.value.push(response.data)
     })
   }
 
   async function updateDomain(data) {
-    return domainApi.updateDomain(data.pk, data).then(response => {
+    return domainApi.updateDomain(data.pk, data).then((response) => {
       domains.value.forEach(function (item, pos) {
         if (item.pk === response.data.pk) {
           domains.value[pos] = response.data
@@ -43,10 +41,17 @@ export const useDomainsStore = defineStore('domains', () => {
 
   async function deleteDomain({ id, data }) {
     return domainApi.deleteDomain(id, data).then(() => {
-      domains = domains.value.filter(item => item.pk !== id)
+      domains = domains.value.filter((item) => item.pk !== id)
     })
   }
 
-
-  return { domainsLoaded, domains, getDomainByPk, getDomains, createDomain, updateDomain, deleteDomain }
+  return {
+    domainsLoaded,
+    domains,
+    getDomainByPk,
+    getDomains,
+    createDomain,
+    updateDomain,
+    deleteDomain,
+  }
 })

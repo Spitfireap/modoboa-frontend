@@ -10,10 +10,6 @@ import router from '../router'
 import gettext from './gettext'
 import pinia from '@/stores'
 
-export function registerPlugins (app) {
-  app
-    .use(vuetify)
-    .use(pinia)
-    .use(router)
-    .use(gettext)
+export function registerPlugins(app) {
+  app.use(vuetify).use(pinia).use(router).use(gettext)
 }

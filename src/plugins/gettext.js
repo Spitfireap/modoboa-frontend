@@ -1,11 +1,11 @@
-import { createGettext } from "vue3-gettext";
-import translations from "@/language/translations.json";
+import { createGettext } from 'vue3-gettext'
+import translations from '@/language/translations.json'
 
 export default createGettext({
   availableLanguages: {
-    en: "English",
+    en: 'English',
   },
-  defaultLanguage: "en",
+  defaultLanguage: 'en',
   translations: translations,
   silent: true, // stop warnings
-});
+})
