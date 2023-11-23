@@ -136,7 +136,7 @@ onMounted(() => {
   }
 })
 
-watch(props.domainAlias, (old, newDomainAlias) => {
+watch(props.domainAlias, (newDomainAlias) => {
   if (newDomainAlias) {
     form.value = JSON.parse(JSON.stringify(newDomainAlias))
   }

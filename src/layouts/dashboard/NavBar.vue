@@ -14,10 +14,11 @@
         class="logo"
         @click="router.push({ name: 'Dashboard' })"
       />
-      <v-btn icon @click.stop="rail = !rail">
-        <v-icon
-          :icon="rail ? 'mdi-chevron-right' : 'mdi-chevron-left'"
-        ></v-icon>
+      <v-btn
+        :icon="rail ? 'mdi-chevron-right' : 'mdi-chevron-left'"
+        variant="text"
+        @click.stop="rail = !rail"
+      >
       </v-btn>
     </div>
 

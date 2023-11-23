@@ -11,5 +11,5 @@ import gettext from './gettext'
 import pinia from '@/stores'
 
 export function registerPlugins(app) {
-  app.use(vuetify).use(pinia).use(gettext).use(router)
+  app.use(gettext).use(vuetify).use(pinia).use(router)
 }

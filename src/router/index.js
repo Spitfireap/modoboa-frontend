@@ -28,7 +28,7 @@ const routes = [
         component: () => import('@/views/HomeView.vue'),
       },
       {
-        path: '/domains',
+        path: 'domains',
         name: 'DomainList',
         component: () => import('@/views/domains/DomainsView.vue'),
         meta: {
@@ -37,7 +37,7 @@ const routes = [
         },
       },
       {
-        path: '/domains/:id',
+        path: 'domains/:id',
         name: 'DomainDetail',
         meta: {
           requiresAuth: true,
@@ -45,7 +45,7 @@ const routes = [
         },
       },
       {
-        path: '/domains/:id/edit',
+        path: 'domains/:id/edit',
         name: 'DomainEdit',
         meta: {
           requiresAuth: true,
@@ -179,7 +179,7 @@ const routes = [
   },
   {
     path: '/user',
-    component: () => import('@/layouts/default/Default.vue'),
+    component: () => import('@/layouts/default/DefaultLayout.vue'),
     children: [
       {
         path: 'api',

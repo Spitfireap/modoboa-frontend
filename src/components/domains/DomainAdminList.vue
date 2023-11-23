@@ -11,11 +11,7 @@
       </span>
     </v-card-title>
     <v-card-text>
-      <v-data-table
-        :headers="headers"
-        :items="administrators"
-        hide-default-footer
-      >
+      <v-data-table-virtual :headers="adminHeaders" :items="administrators">
         <template #[`item.username`]="{ item }">
           <span v-if="item.id">{{ item.username }}</span>
           <v-autocomplete
@@ -23,14 +19,16 @@
             v-model="selectedAccount"
             :label="$gettext('Select an account')"
             :items="accounts"
-            item-text="username"
+            item-title="username"
+            class="mt-5"
             return-object
           >
-            <template #append-outer>
+            <template #append>
               <v-btn
                 v-if="selectedAccount"
-                icon
+                variant="text"
                 color="primary"
+                size="x-large"
                 @click="addAdministrator"
               >
                 <v-icon>mdi-content-save</v-icon>
@@ -44,24 +42,35 @@
         <template #[`item.actions`]="{ item }">
           <v-btn
             v-if="item.id"
-            icon
+            variant="text"
             color="red"
             :title="$gettext('Remove this administrator')"
+            size="x-large"
             @click="removeAdministrator(item)"
           >
             <v-icon>mdi-delete-outline</v-icon>
           </v-btn>
         </template>
-      </v-data-table>
-      <v-btn v-if="!hideAddBtn" small color="primary" outlined @click="addRow">
-        <v-icon small>mdi-plus</v-icon> {{ $gettext('Add administrator') }}
-      </v-btn>
+      </v-data-table-virtual>
     </v-card-text>
     <v-card-actions v-if="dialogMode">
-      <v-spacer></v-spacer>
-      <v-btn color="grey darken-1" text @click="close">
-        {{ $gettext('Close') }}>
-      </v-btn>
+      <v-row>
+        <v-col align="left">
+          <v-btn
+            v-if="!hideAddBtn"
+            color="primary"
+            variant="outlined"
+            @click="addRow"
+          >
+            <v-icon small>mdi-plus</v-icon> {{ $gettext('Add administrator') }}
+          </v-btn>
+        </v-col>
+        <v-col align="right">
+          <v-btn color="grey darken-1" variant="text" @click="close">
+            {{ $gettext('Close') }}
+          </v-btn>
+        </v-col>
+      </v-row>
     </v-card-actions>
   </v-card>
 </template>
@@ -71,7 +80,7 @@ import accountApi from '@/api/accounts'
 import domainApi from '@/api/domains'
 import { useBusStore } from '@/stores'
 import { useGettext } from 'vue3-gettext'
-import { ref, watch } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const busStore = useBusStore()
 const { $gettext } = useGettext()
@@ -92,10 +101,10 @@ const emit = defineEmits(['close'])
 const accounts = ref([])
 const administrators = ref([])
 
-const headers = ref([
-  { text: $gettext('Username'), value: 'username' },
-  { text: $gettext('Name'), value: 'name' },
-  { text: '', value: 'actions', align: 'right', sortable: false },
+const adminHeaders = ref([
+  { title: $gettext('Username'), value: 'username' },
+  { title: $gettext('Name'), value: 'name' },
+  { title: '', value: 'actions', align: 'end', sortable: false },
 ])
 
 const hideAddBtn = ref(false)
@@ -107,8 +116,8 @@ function addRow() {
 }
 
 function close() {
-  emit('close')
   hideAddBtn.value = false
+  emit('close')
 }
 function fetchAdministrators(domain) {
   domainApi.getDomainAdministrators(domain.pk).then((resp) => {
@@ -147,12 +156,8 @@ function removeAdministrator(admin) {
   })
 }
 
-watch(
-  props.domain,
-  (old, newDomain) => {
-    fetchAdministrators(newDomain)
-    fetchAccounts()
-  },
-  { immediate: true }
-)
+onMounted(() => {
+  fetchAdministrators(props.domain)
+  fetchAccounts()
+})
 </script>

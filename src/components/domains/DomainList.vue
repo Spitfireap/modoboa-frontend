@@ -1,43 +1,59 @@
 <template>
   <v-card class="mt-6">
-    <v-toolbar flat>
-      <v-menu offset-y>
-        <template #activator="{ props }">
-          <v-btn v-bind="props" small>
-            Actions <v-icon right>mdi-chevron-down</v-icon>
-          </v-btn>
-        </template>
-        <v-list dense> </v-list>
-      </v-menu>
-      <v-spacer></v-spacer>
-      <v-text-field
-        v-model="search"
-        prepend-inner-icon="mdi-magnify"
-        placeholder="Search"
-        filled
-        outlined
-        dense
-        hide-details
-      ></v-text-field>
-    </v-toolbar>
     <v-data-table
       v-model="selected"
-      v-model:expanded="expanded"
+      :expanded="expanded"
       :headers="domainHeaders"
       :items="domains"
+      item-value="name"
       :search="search"
-      item-key="name"
       class="elevation-1"
       show-select
-      single-expand
+      expand-on-click
       :loading="!domainsLoaded"
-      @item-expanded="loadAliases"
-      @click:row="showAliases"
     >
-      <template #item="{ item, isExpanded, expand }">
+      <template #top>
+        <v-toolbar color="white" flat>
+          <v-menu offset-y>
+            <template #activator="{ props }">
+              <v-btn
+                variant="elevated"
+                append-icon="mdi-chevron-down"
+                v-bind="props"
+              >
+                {{ $gettext('Actions') }}
+              </v-btn>
+            </template>
+            <v-list dense> </v-list>
+          </v-menu>
+          <v-spacer></v-spacer>
+          <v-text-field
+            v-model="search"
+            prepend-inner-icon="mdi-magnify"
+            placeholder="Search"
+            variant="outlined"
+            single-line
+            flat
+            hide-details
+          ></v-text-field>
+        </v-toolbar>
+      </template>
+      <template
+        #item="{
+          item,
+          internalItem,
+          isExpanded,
+          toggleExpand,
+          isSelected,
+          toggleSelect,
+        }"
+      >
         <tr>
           <td>
-            <v-checkbox />
+            <v-checkbox-btn
+              :value="!isSelected(internalItem)"
+              @click="toggleSelect(internalItem)"
+            />
           </td>
           <td>
             <router-link
@@ -61,11 +77,12 @@
             {{ item.domainalias_count }} aliases
             <v-btn
               v-if="item.domainalias_count"
-              icon
-              @click="expand(!isExpanded)"
+              variant="text"
+              :icon="
+                isExpanded(internalItem) ? 'mdi-chevron-up' : 'mdi-chevron-down'
+              "
+              @click="loadAliases(item, internalItem, isExpanded, toggleExpand)"
             >
-              <v-icon v-if="!isExpanded">mdi-chevron-down</v-icon>
-              <v-icon v-else>mdi-chevron-up</v-icon>
             </v-btn>
           </td>
           <td>
@@ -96,15 +113,15 @@
                     <v-icon>mdi-dots-horizontal</v-icon>
                   </v-btn>
                 </template>
-                <menu-items :items="getDomainMenuItems(item)" :object="item" />
+                <MenuItems :items="getDomainMenuItems(item)" :obj="item" />
               </v-menu>
             </div>
           </td>
         </tr>
       </template>
-      <template #expanded-item="{ headers, item }">
+      <template #expanded-row="{ item, columns }">
         <tr class="grey lighten-4">
-          <td :colspan="headers.length">
+          <td :colspan="columns.length">
             <span
               v-for="alias in aliases[item.name]"
               :key="alias.name"
@@ -113,7 +130,9 @@
               <a href="#" class="mr-2" @click="editDomainAlias(item, alias)">{{
                 alias.name
               }}</a>
-              <v-chip x-small color="success">DNS OK</v-chip>
+              <v-chip variant="elevated" size="x-small" color="success"
+                >DNS OK</v-chip
+              >
             </span>
           </td>
         </tr>
@@ -166,16 +185,16 @@ const domains = computed(() => domainStore.domains)
 const domainsLoaded = computed(() => domainStore.domainsLoaded)
 
 const domainHeaders = [
-  { text: $gettext('Name'), value: 'name' },
-  { text: $gettext('Aliases'), value: 'domainalias_count' },
-  { text: $gettext('DNS status'), value: 'dns_global_status', sortable: false },
-  { text: $gettext('Sending limit'), value: 'message_limit' },
-  { text: $gettext('Quota'), value: 'allocated_quota_in_percent' },
+  { title: $gettext('Name'), key: 'name' },
+  { title: $gettext('Aliases'), key: 'domainalias_count' },
+  { title: $gettext('DNS status'), key: 'dns_global_status', sortable: false },
+  { title: $gettext('Sending limit'), key: 'message_limit' },
+  { title: $gettext('Quota'), key: 'allocated_quota_in_percent' },
   {
-    text: $gettext('Actions'),
+    title: $gettext('Actions'),
     value: 'actions',
     sortable: false,
-    align: 'right',
+    align: 'end',
   },
 ]
 
@@ -247,22 +266,21 @@ function editDomainAlias(domain, alias) {
   showAliasForm.value = true
 }
 
-function loadAliases({ item, value }) {
-  if (!value) {
+function loadAliases(item, internalItem, isItemExpanded, toggleExpand) {
+  const isExpand = isItemExpanded(internalItem)
+  if (isExpand) {
+    toggleExpand(internalItem)
     return
   }
   domainApi.getDomainAliases(item.name).then((resp) => {
     aliases.value[item.name] = resp.data
+    toggleExpand(internalItem)
   })
 }
 
 function openAdminList(domain) {
   selectedDomain.value = domain
   showAdminList.value = true
-}
-
-function showAliases(item) {
-  expanded.value = [{ item }]
 }
 
 function getDomainMenuItems(domain) {

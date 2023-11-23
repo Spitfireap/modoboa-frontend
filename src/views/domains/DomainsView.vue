@@ -6,21 +6,26 @@
       <v-btn
         class="mr-2"
         :title="$gettext('Import domains and aliases from CSV file')"
+        variant="elevated"
+        icon="mdi-file-import-outline"
         @click="showImportForm = true"
-      >
-        <v-icon>mdi-file-import-outline</v-icon>
-      </v-btn>
+      ></v-btn>
       <v-btn
         class="mr-2"
         :title="$gettext('Export domains and aliases to CSV')"
+        variant="elevated"
+        icon="mdi-file-export-outline"
         @click="exportDomains"
       >
-        <v-icon>mdi-file-export-outline</v-icon>
       </v-btn>
       <v-menu offset-y>
         <template #activator="{ props }">
-          <v-btn color="primary" v-bind="props">
-            <v-icon left>mdi-plus</v-icon>
+          <v-btn
+            color="primary"
+            variant="flat"
+            v-bind="props"
+            prepend-icon="mdi-plus"
+          >
             {{ $gettext('New') }}
           </v-btn>
         </template>
@@ -51,12 +56,13 @@
 
 <script setup>
 import { ref } from 'vue'
-//import domains from '@/api/domains'
+import domainApi from '@/api/domains'
 import { useGettext } from 'vue3-gettext'
 //import DomainAliasForm from '@/components/domains/DomainAliasForm'
 //import DomainCreationForm from '@/components/domains/DomainCreationForm'
 import DomainList from '@/components/domains/DomainList'
 //import ImportForm from '@/components/tools/ImportForm'
+import { importExportMixin } from '@/mixins/importExport'
 
 const showAliasForm = ref(false)
 const showDomainWizard = ref(false)
@@ -64,13 +70,14 @@ const showImportForm = ref(false)
 
 const { $gettext } = useGettext()
 
-/*
-function exportDomains () {
-  domains.exportAll().then(resp => {
-    this.exportContent(resp.data, 'domains')
+function exportDomains() {
+  domainApi.exportAll().then((resp) => {
+    const { exportContent } = importExportMixin()
+    exportContent(resp.data, 'domains', $gettext)
+    console.log(resp.data)
   })
 }
-
+/*
 function importDomains (data) {
   this.importContent(domains, data)
 }
