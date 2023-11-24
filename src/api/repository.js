@@ -1,7 +1,6 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import router from '@/router'
-
 import { useAuthStore } from '@/stores'
 
 const _axios = axios.create()
@@ -35,10 +34,7 @@ _axios.interceptors.response.use(
     if (error.response.status === 429) {
       return Promise.reject(error)
     }
-    if (
-      error.response.status !== 401 ||
-      router.currentRoute.path === '/login/'
-    ) {
+    if (error.response.status !== 401 || router.currentRoute.name === 'Login') {
       return Promise.reject(error)
     }
     const refreshToken = Cookies.get('refreshToken')

@@ -1,6 +1,6 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router'
-//import { useAuthStore } from '@/stores'
+import { useAuthStore } from '@/stores'
 
 const routes = [
   {
@@ -219,20 +219,21 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 })
-/*
+
 router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore()
   if (to.meta.requiresAuth !== undefined) {
+    const authStore = useAuthStore()
     authStore.initialize().then(() => {
       if (!authStore.isAuthenticated) {
         next({ name: 'Login' })
       } else {
+        /*
         if (to.meta.allowedRoles !== undefined) {
           if (to.meta.allowedRoles.indexOf(authStore.authUser.role) === -1) {
             next({ name: 'Dashboard' })
             return
           }
-        }
+        }*/
         next()
       }
     })
@@ -240,6 +241,5 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
-*/
 
 export default router

@@ -25,7 +25,7 @@ export const importExportMixin = () => {
         const busStore = useBusStore()
         if (resp.data.status) {
           busStore.displayNotification({ msg: resp.data.message })
-          importForm.close()
+          importForm.value.close()
         } else {
           busStore.displayNotification({
             msg: resp.data.message,

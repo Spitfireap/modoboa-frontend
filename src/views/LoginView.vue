@@ -1,6 +1,6 @@
 <template>
   <template v-if="smAndDown">
-    <login-form />
+    <LoginForm />
   </template>
   <template v-else>
     <v-row class="fill-height ma-0">
@@ -12,7 +12,7 @@
         />
       </v-col>
       <v-col class="text-center">
-        <login-form />
+        <LoginForm />
       </v-col>
     </v-row>
   </template>

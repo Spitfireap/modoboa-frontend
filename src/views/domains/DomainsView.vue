@@ -50,7 +50,29 @@
     >
     </v-dialog>
     <v-dialog v-model="showAliasForm" persistent max-width="800px"> </v-dialog>
-    <v-dialog v-model="showImportForm" persistent max-width="800px"> </v-dialog>
+    <v-dialog v-model="showImportForm" persistent max-width="800px">
+      <ImportForm
+        ref="importForm"
+        :title="$gettext('Import domains')"
+        @submit="importDomains"
+        @close="showImportForm = false"
+      >
+        <template v-slot:help>
+          <ul>
+            <li>
+              <em>domain; name; quota; default mailbox quota; enabled</em>
+            </li>
+            <li><em>domainalias; name; targeted domain; enabled</em></li>
+            <li>
+              <em
+                >relaydomain; name; target host; target port; service; enabled;
+                verify recipients</em
+              >
+            </li>
+          </ul>
+        </template>
+      </ImportForm>
+    </v-dialog>
   </div>
 </template>
 
@@ -61,7 +83,7 @@ import { useGettext } from 'vue3-gettext'
 //import DomainAliasForm from '@/components/domains/DomainAliasForm'
 //import DomainCreationForm from '@/components/domains/DomainCreationForm'
 import DomainList from '@/components/domains/DomainList'
-//import ImportForm from '@/components/tools/ImportForm'
+import ImportForm from '@/components/tools/ImportForm'
 import { importExportMixin } from '@/mixins/importExport'
 
 const showAliasForm = ref(false)
@@ -70,18 +92,19 @@ const showImportForm = ref(false)
 
 const { $gettext } = useGettext()
 
+const importForm = ref()
+
+const { importContent, exportContent } = importExportMixin()
+
 function exportDomains() {
   domainApi.exportAll().then((resp) => {
-    const { exportContent } = importExportMixin()
     exportContent(resp.data, 'domains', $gettext)
-    console.log(resp.data)
   })
 }
-/*
-function importDomains (data) {
-  this.importContent(domains, data)
+
+function importDomains(data) {
+  importContent(domainApi, data, importForm, $gettext)
 }
-*/
 </script>
 
 <style scoped>
