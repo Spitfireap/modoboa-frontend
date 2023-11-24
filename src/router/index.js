@@ -15,6 +15,7 @@ const routes = [
       {
         path: '/twofa',
         name: 'TwoFA',
+        component: () => import('@/views/TwoFA.vue'),
       },
     ],
   },

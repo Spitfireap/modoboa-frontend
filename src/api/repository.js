@@ -29,7 +29,7 @@ _axios.interceptors.response.use(
   },
   function (error) {
     if (error.response.status === 418) {
-      //router.push({ name: 'TwoFA' })
+      router.push({ name: 'TwoFA' })
       return Promise.reject(error)
     }
     if (error.response.status === 429) {

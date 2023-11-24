@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="js">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useGettext } from 'vue3-gettext'
