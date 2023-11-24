@@ -1,36 +1,37 @@
 <template>
   <CreationForm
     ref="form"
-    :title="'New domain' | translate"
+    :title="$gettext('New domain')"
     :steps="steps"
-    :form-getter="getForm"
-    :form-observer-getter="getObserver"
-    :validate-object="validateDomain"
-    :summary-sections="summarySections"
+    :formGetter="getForm"
+    :getVFormRef="getVFormRef"
+    :validateDomain="validateDomain"
+    :summarySections="summarySections"
     @close="close"
     @create="submit"
   >
-    <template v-slot:form.general="{ step }">
-      <DomainGeneralForm :ref="formsRef[`form_${step}`]" v-model="domain" />
+    <template #form.general>
+      <DomainGeneralForm ref="general" class="ml-4" :domain="domain" />
     </template>
   </CreationForm>
 </template>
 
-<script setup>
+<script setup lang="js">
 import CreationForm from '@/components/tools/CreationForm'
 //import DomainDNSForm from './DomainDNSForm'
-import DomainGeneralForm from './DomainGeneralForm'
+import DomainGeneralForm from './form_steps/DomainGeneralForm'
 //import DomainLimitationsForm from './DomainLimitationsForm'
 //import DomainOptionsForm from './DomainOptionsForm'
 //import DomainTransportForm from './DomainTransportForm'
 import { useGettext } from 'vue3-gettext'
 import { ref, computed, onMounted } from 'vue'
-import { useBusStore } from '@/stores'
+import { useBusStore, useDomainsStore } from '@/stores'
+import { useRouter } from 'vue-router'
 
 const { $gettext } = useGettext()
 const busStore = useBusStore()
-
-const props = defineProps(['value'])
+const domainsStore = useDomainsStore()
+const router = useRouter()
 
 const emit = defineEmits(['close'])
 
@@ -39,10 +40,19 @@ const domain = ref({
 })
 
 const createAdmin = ref(false)
-const formErrors = ref({})
-const formsRef = ref({})
+
+// Reference to steps components
+const general = ref()
+
+// Object to reference
+const formStepsComponenents = { general: general }
+
 const domainSteps = [{ name: 'general', title: $gettext('General') }]
 const relaySteps = [{ name: 'general', title: $gettext('General') }]
+
+const steps = computed(() => {
+  return domain.value.type === 'domain' ? domainSteps : relaySteps
+})
 
 const summarySections = computed(() => {
   const result = [
@@ -61,22 +71,6 @@ const summarySections = computed(() => {
   ]
   return result
 })
-
-const steps = computed(() => {
-  return domain.value.type === 'domain' ? domainSteps : relaySteps
-})
-
-onMounted(() => {
-  initDomain()
-})
-
-function copyPassword() {
-  navigator.clipboard.writeText(domain.value.domain_admin.password).then(() => {
-    busStore.displayNotification({
-      msg: this.$gettext('Password copied to clipboard'),
-    })
-  })
-}
 
 function initDomain() {
   domain.value = {
@@ -102,30 +96,42 @@ function close() {
   initDomain()
   emit('close')
 }
+
+onMounted(() => {
+  initDomain()
+})
+
+function copyPassword() {
+  navigator.clipboard.writeText(domain.value.domain_admin.password).then(() => {
+    busStore.displayNotification({
+      msg: $gettext('Password copied to clipboard'),
+    })
+  })
+}
+
 function getForm(step) {
-  return this.$refs[`form_${step}`]
+  return formsRef.value[step.name]
 }
-function getObserver(step) {
-  return this.$refs[`form_${step}`].$refs.observer
+function getVFormRef(step) {
+  console.log(formStepsComponenents[step.name].value)
+  return formStepsComponenents[step.name].value.vFormRef
 }
+
 function validateDomain() {}
+
 function updateCreateAdmin(value) {
-  this.createAdmin = value
+  createAdmin.value = value
 }
+
 function submit() {
-  const data = JSON.parse(JSON.stringify(this.domain))
-  if (!this.createAdmin) {
+  const data = JSON.parse(JSON.stringify(domain.value))
+  if (!createAdmin.value) {
     delete data.domain_admin
   }
-  if (data.type === 'relaydomain') {
-    this.$refs.form_4.checkSettingTypes(data)
-  } else {
-    delete data.transport
-  }
-  this.$store.dispatch('domains/createDomain', data).then((resp) => {
-    this.$router.push({ name: 'DomainDetail', params: { id: resp.data.pk } })
-    bus.$emit('notification', { msg: this.$gettext('Domain created') })
-    this.close()
+  domainsStore.createDomain(data).then((resp) => {
+    router.push({ name: 'DomainDetail', params: { id: resp.data.pk } })
+    busStore.displayNotification({ msg: $gettext('Domain created') })
+    close()
   })
 }
 </script>

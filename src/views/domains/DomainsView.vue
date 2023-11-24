@@ -29,7 +29,7 @@
             {{ $gettext('New') }}
           </v-btn>
         </template>
-        <v-list dense>
+        <v-list>
           <v-list-item @click="showDomainWizard = true">
             <v-list-item-title>{{ $gettext('Domain') }}</v-list-item-title>
           </v-list-item>
@@ -42,12 +42,8 @@
 
     <DomainList />
 
-    <v-dialog
-      v-model="showDomainWizard"
-      fullscreen
-      scrollable
-      transition="dialog-bottom-transition"
-    >
+    <v-dialog v-model="showDomainWizard" fullscreen scrollable z-index="10">
+      <DomainCreationForm @close="showDomainWizard = false" />
     </v-dialog>
     <v-dialog v-model="showAliasForm" persistent max-width="800px"> </v-dialog>
     <v-dialog v-model="showImportForm" persistent max-width="800px">
@@ -81,7 +77,7 @@ import { ref } from 'vue'
 import domainApi from '@/api/domains'
 import { useGettext } from 'vue3-gettext'
 //import DomainAliasForm from '@/components/domains/DomainAliasForm'
-//import DomainCreationForm from '@/components/domains/DomainCreationForm'
+import DomainCreationForm from '@/components/domains/DomainCreationForm'
 import DomainList from '@/components/domains/DomainList'
 import ImportForm from '@/components/tools/ImportForm'
 import { importExportMixin } from '@/mixins/importExport'

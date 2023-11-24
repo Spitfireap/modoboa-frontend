@@ -2,7 +2,7 @@
   <v-dialog
     v-model="dialog"
     :max-width="options.width"
-    :style="{ zIndex: options.zIndex }"
+    :z-index="options.zIndex"
     @keydown.esc="cancel"
   >
     <v-card>
@@ -28,7 +28,7 @@
   </v-dialog>
 </template>
 
-<script setup>
+<script setup lang="js">
 import { ref } from 'vue'
 import { useGettext } from 'vue3-gettext'
 
@@ -45,7 +45,7 @@ const emit = defineEmits(['agree', 'cancel'])
 const options = ref({
   color: 'primary',
   width: 400,
-  zIndex: 200,
+  zIndex: 2400,
   noconfirm: false,
   cancelLabel: $gettext('Cancel'),
   agreeLabel: $gettext('OK'),

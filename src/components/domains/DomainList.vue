@@ -163,7 +163,7 @@
   </v-card>
 </template>
 
-<script setup>
+<script setup lang="js">
 import { useBusStore, useDomainsStore } from '@/stores'
 import { useGettext } from 'vue3-gettext'
 import { useRouter } from 'vue-router'

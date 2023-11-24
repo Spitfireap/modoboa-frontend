@@ -1,35 +1,39 @@
 <template>
-<v-container class="fill-height" fuild>
-  <v-row align="center" justify="center" dense>
-    <v-col cols="12" sm="10" md="8" lg="8" class="text-center">
-      <h4 class="text-primary mb-10 text-h4">
-        {{ $gettext('Two-factor authentication') }}
-      </h4>
-      <v-form ref="loginForm" @submit.prevent="verifyCode">
-        <div class="text-body-2">
-          {{ $gettext('Enter the code from the two-factor app on your mobile device. If you have lost your device, you may enter one of your recovery codes.') }}
-        </div>
-        <v-otp-input
-          ref="otpInput"
-          v-model="code"
-          length="6"
-          @finish="verifyCode"
-          :rules="[rules.required]"
+  <v-container class="fill-height" fuild>
+    <v-row align="center" justify="center" dense>
+      <v-col cols="12" sm="10" md="8" lg="8" class="text-center">
+        <h4 class="text-primary mb-10 text-h4">
+          {{ $gettext('Two-factor authentication') }}
+        </h4>
+        <v-form ref="loginForm" @submit.prevent="verifyCode">
+          <div class="text-body-2">
+            {{
+              $gettext(
+                'Enter the code from the two-factor app on your mobile device. If you have lost your device, you may enter one of your recovery codes.'
+              )
+            }}
+          </div>
+          <v-otp-input
+            ref="otpInput"
+            v-model="code"
+            length="6"
+            @finish="verifyCode"
+            :rules="[rules.required]"
           />
-        <v-btn
-          block
-          color="primary"
-          size="large"
-          type="submit"
-          :loading="loading"
-          class="mb-5"
+          <v-btn
+            block
+            color="primary"
+            size="large"
+            type="submit"
+            :loading="loading"
+            class="mb-5"
           >
-          {{ $gettext('Verify code') }}
-        </v-btn>
-      </v-form>
-    </v-col>
-  </v-row>
-</v-container>
+            {{ $gettext('Verify code') }}
+          </v-btn>
+        </v-form>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script setup lang="js">
@@ -53,15 +57,18 @@ async function verifyCode() {
     return
   }
   loading.value = true
-  account.verifyTFACode(code.value).then(resp => {
-    Cookies.set('token', resp.data.access, { sameSite: 'strict' })
-    Cookies.set('refreshToken', resp.data.refresh, { sameSite: 'strict' })
-    authStore.initialize().then(() => {
-      // bus.$emit('loggedIn')
-      this.$router.push({ name: 'DomainList' })
+  account
+    .verifyTFACode(code.value)
+    .then((resp) => {
+      Cookies.set('token', resp.data.access, { sameSite: 'strict' })
+      Cookies.set('refreshToken', resp.data.refresh, { sameSite: 'strict' })
+      authStore.initialize().then(() => {
+        // bus.$emit('loggedIn')
+        this.$router.push({ name: 'DomainList' })
+      })
     })
-  }).catch(() => {
-    loading.value = false
-  })
+    .catch(() => {
+      loading.value = false
+    })
 }
 </script>
