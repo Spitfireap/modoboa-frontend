@@ -80,6 +80,7 @@ const routes = [
       {
         path: '/identities',
         name: 'Identities',
+        component: () => import('@/views/identities/IdentitiesView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
