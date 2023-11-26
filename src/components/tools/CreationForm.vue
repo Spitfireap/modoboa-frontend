@@ -1,9 +1,13 @@
 <template>
   <div class="d-flex justify-center inner fill-height">
-    <v-stepper model-value="currentStep" :mobile="!smAndDown">
+    <v-stepper v-model="currentStep" :mobile="!smAndDown">
       <ConfirmDialog ref="confirm" @agree="emit('close')" />
       <v-stepper-header class="align-center px-10">
-        <v-img src="@/assets/Modoboa_RVB-BLEU-SANS.png" max-width="190" />
+        <v-img
+          src="@/assets/Modoboa_RVB-BLEU-SANS.png"
+          max-width="190"
+          class="hidden-sm-and-down"
+        />
         <v-stepper-item
           v-for="(step, index) in steps"
           :value="index + 1"
@@ -14,7 +18,12 @@
         <v-stepper-item :value="steps.length + 1">
           {{ $gettext('Summary') }}
         </v-stepper-item>
-        <v-btn icon="mdi-close" color="primary" size="x-large" @click="close">
+        <v-btn
+          icon="mdi-close"
+          color="primary"
+          :size="smAndDown ? 'small' : 'x-large'"
+          @click="close"
+        >
         </v-btn>
       </v-stepper-header>
       <v-stepper-window class="mt-4 d-flex justify-center">
@@ -31,7 +40,11 @@
                   /
                   {{ step.title }}
                 </div>
-                <slot :name="`form.${step.name}`" v-bind:step="index + 1" />
+                <slot
+                  :name="`form.${step.name}`"
+                  v-bind:step="step"
+                  v-bind:current-step="index + 1"
+                />
               </v-col>
             </v-row>
           </v-container>
@@ -55,7 +68,14 @@
         </v-stepper-window-item>
         <v-stepper-window-item :value="steps.length + 1" class="flex-grow-0">
           <div class="text-center text-h3">{{ $gettext('Summary') }}</div>
-
+          <CreationSummary
+            :sections="summarySections"
+            @modify-step="(val) => (currentStep = val)"
+          >
+            <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope">
+              <slot :name="slot" v-bind="scope" />
+            </template>
+          </CreationSummary>
           <div class="d-flex justify-center mt-8">
             <v-btn color="primary" @click="create" large :loading="working">
               {{ $gettext('Confirm and create') }}
@@ -69,7 +89,7 @@
 
 <script setup lang="js">
 import ConfirmDialog from './ConfirmDialog'
-//import CreationSummary from '@/components/tools/CreationSummary'
+import CreationSummary from './CreationSummary.vue'
 import { ref } from 'vue'
 import { useGettext } from 'vue3-gettext'
 import { useDisplay } from 'vuetify'
@@ -112,6 +132,7 @@ async function goToNextStep(current, next) {
   const vform = props.getVFormRef(props.steps[current - 1])
   if (vform !== undefined) {
     const { valid } = await vform.validate()
+    console.log(valid)
     if (!valid) {
       return
     }

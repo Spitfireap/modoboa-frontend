@@ -27,6 +27,9 @@ const routes = [
         path: '',
         name: 'Dashboard',
         component: () => import('@/views/HomeView.vue'),
+        meta: {
+          requiresAuth: true,
+        },
       },
       {
         path: 'domains',
@@ -213,6 +216,11 @@ const routes = [
         },
       },
     ],
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    redirect: { name: 'Dashboard' },
   },
 ]
 

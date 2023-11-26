@@ -1,49 +1,55 @@
 <template>
-  <div>
-    <div
-      class="text-subtitle-1 text-grey-darken-1 mb-5"
-      :class="{ 'label--disabled': disabled }"
-    >
-      <label class="m-label">{{ label }}</label>
-    </div>
-    <v-row v-for="lineChoices in formatedChoices" class="ml-5">
-      <v-col
-        v-for="choice in lineChoices"
-        class="choice rounded pa-md-10 pa-5 mr-5 flex-grow-0 mb-5"
-        :class="{
-          'choice--disabled': disabled,
-          'choice--selected': !disabled && currentChoice === choice.value,
-        }"
-        @click="selectChoice(choice.value)"
-        align="center"
-      >
-        <v-row align="center" justify="center">
-          <v-col cols="12" class="pa-0">
-            <v-icon
-              v-if="choice.icon"
-              class="hidden-md-and-down mb-5 align-center"
-              :color="iconColor(choice.value)"
-              size="x-large"
-            >
-              {{ choice.icon }}
-            </v-icon>
-          </v-col>
-        </v-row>
-        <v-row align="center" justify="center">
-          <v-col cols="12" class="pa-0">
-            <div class="text-grey-darken-1">{{ choice.label }}</div>
-          </v-col>
-        </v-row>
-      </v-col>
-    </v-row>
+  <div
+    class="text-subtitle-1 text-grey-darken-1 mb-5"
+    :class="{ 'label--disabled': disabled }"
+  >
+    <label class="m-label">{{ label }}</label>
   </div>
+  <v-input v-model="currentChoice" :rules="[!!disabled || rules.required]">
+    <template #default>
+      <v-row v-for="lineChoices in formatedChoices" class="ml-5">
+        <v-col
+          v-for="choice in lineChoices"
+          class="choice rounded pa-md-10 pa-5 mr-5 flex-grow-0 mb-5"
+          :class="{
+            'choice--disabled': disabled,
+            'choice--selected': !disabled && currentChoice === choice.value,
+          }"
+          @click="selectChoice(choice.value)"
+          align="center"
+        >
+          <v-row align="center" justify="center">
+            <v-col cols="12" class="pa-0">
+              <v-icon
+                v-if="choice.icon"
+                class="hidden-md-and-down mb-5 align-center"
+                :color="iconColor(choice.value)"
+                size="x-large"
+              >
+                {{ choice.icon }}
+              </v-icon>
+            </v-col>
+          </v-row>
+          <v-row align="center" justify="center">
+            <v-col cols="12" class="pa-0">
+              <div class="text-grey-darken-1">{{ choice.label }}</div>
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
+    </template>
+    <template #message="{ message }"
+      ><div class="ml-4">{{ message }}</div></template
+    >
+  </v-input>
 </template>
 
 <script setup lang="js">
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import rules from '@/plugins/rules.js'
 
 const props = defineProps({
-  value: [Number, String],
+  modelValue: [Number, String],
   label: String,
   choices: Array,
   disabled: {
@@ -53,11 +59,18 @@ const props = defineProps({
   choicesPerLine: Number,
 })
 
-const currentChoice = ref(null)
+const emit = defineEmits(['update:modelValue'])
+
+const currentChoice = computed({
+  get() {
+    return props.modelValue
+  },
+  set(value) {
+    emit('update:modelValue', value)
+  },
+})
 
 const formatedChoices = ref([])
-
-const emit = defineEmits(['input'])
 
 function formatChoices() {
   if (props.choicesPerLine) {
@@ -73,30 +86,21 @@ function formatChoices() {
   } else {
     formatedChoices.value.push(props.choices)
   }
-  currentChoice.value = formatedChoices.value[0].value
 }
 
 function iconColor(value) {
-  return !props.disabled && value === currentChoice.value ? 'primary' : ''
+  return !props.disabled && value === currentChoice ? 'primary' : ''
 }
 function selectChoice(value) {
   if (props.disabled) {
     return
   }
   currentChoice.value = value
-  emit('input', value)
 }
 
 onMounted(() => {
   formatChoices()
 })
-
-watch(
-  () => props.value,
-  (newVal) => {
-    currentChoice.value = newVal
-  }
-)
 </script>
 
 <style lang="scss" scoped>

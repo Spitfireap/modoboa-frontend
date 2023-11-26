@@ -13,6 +13,7 @@
       :label="$gettext('Type')"
       :choices="domainTypes"
     />
+
     <v-switch
       :label="$gettext('Enabled')"
       v-model="form.enabled"
@@ -29,17 +30,27 @@
 
 <script setup lang="js">
 import ChoiceField from '@/components/tools/ChoiceField'
-import rules from '@/plugins/rules.js'
 import { useGettext } from 'vue3-gettext'
-import { ref, onMounted } from 'vue'
+import { ref, computed } from 'vue'
+import rules from '@/plugins/rules.js'
 
 const { $gettext } = useGettext()
 
 const props = defineProps({
-  domain: Object,
+  modelValue: Object,
 })
 
-const form = ref({})
+const emit = defineEmits(['update:model-value'])
+
+const form = computed({
+  get() {
+    return props.modelValue
+  },
+  set(value) {
+    emit('update:model-value', value)
+  },
+})
+
 const vFormRef = ref()
 
 const domainTypes = [
@@ -54,10 +65,6 @@ const domainTypes = [
     value: 'relaydomain',
   },
 ]
-
-onMounted(() => {
-  form.value = { ...props.domain }
-})
 
 defineExpose({ vFormRef })
 </script>

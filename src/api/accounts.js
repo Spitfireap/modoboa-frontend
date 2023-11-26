@@ -10,7 +10,7 @@ export default {
     return repository.get(`${resource}/${accountId}/`)
   },
   getRandomPassword() {
-    return repository.get(`${resource}/random_password`)
+    return repository.get(`${resource}/random_password/`)
   },
   validate(data) {
     return repository.post(`${resource}/validate/`, data)

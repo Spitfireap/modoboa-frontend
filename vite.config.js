@@ -32,7 +32,7 @@ export default defineConfig({
     }),
   ],
   base: process.env.NODE_ENV === 'production' ? '/new-admin/' : '/',
-  define: { 'process.env': {} },
+  define: { 'process.env': {}, __VUE_OPTIONS_API__: false },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
