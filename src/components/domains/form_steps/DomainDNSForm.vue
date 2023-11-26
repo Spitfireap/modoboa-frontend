@@ -2,24 +2,24 @@
   <v-form ref="vFormRef">
     <div>
       <v-switch
-        :label="$gettext('Enable DNS checks')"
         v-model="domain.enable_dns_checks"
+        :label="$gettext('Enable DNS checks')"
         color="primary"
       />
       <v-switch
-        :label="$gettext('Enable DKIM signing')"
         v-model="domain.enable_dkim"
+        :label="$gettext('Enable DKIM signing')"
         color="primary"
       />
       <v-text-field
-        :label="$gettext('DKIM key selector')"
         v-model="domain.dkim_key_selector"
+        :label="$gettext('DKIM key selector')"
         :disabled="!domain.enable_dkim"
         variant="outlined"
       />
       <choice-field
-        :label="$gettext('DKIM key length')"
         v-model="domain.dkim_key_length"
+        :label="$gettext('DKIM key length')"
         :choices="dkimKeyLengths"
         :disabled="!domain.enable_dkim"
       />
@@ -34,7 +34,7 @@ import { ref, computed } from 'vue'
 
 const { $gettext } = useGettext()
 
-const props = defineProps(['modelValue'])
+const props = defineProps({ modelValue: { type: Object, default: () => {} } })
 const emit = defineEmits(['update:modelValue'])
 
 const vFormRef = ref()

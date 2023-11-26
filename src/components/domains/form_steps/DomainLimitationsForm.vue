@@ -1,6 +1,7 @@
 <template>
   <v-form ref="vFormRef">
     <v-text-field
+      v-model="domain.quota"
       :label="$gettext('Quota')"
       :hint="
         $gettext(
@@ -8,13 +9,13 @@
         )
       "
       persistent-hint
-      v-model="domain.quota"
       class="mb-4"
       variant="outlined"
       :rules="[rules.required]"
     />
 
     <v-text-field
+      v-model="domain.default_mailbox_quota"
       :label="$gettext('Default mailbox quota')"
       :hint="
         $gettext(
@@ -22,13 +23,13 @@
         )
       "
       persistent-hint
-      v-model="domain.default_mailbox_quota"
       class="mb-4"
       variant="outlined"
       :rules="[rules.required]"
       @update:model-value="check"
     />
     <v-text-field
+      v-model="domain.message_limit"
       :label="$gettext('Message sending limit')"
       :hint="
         $gettext(
@@ -36,7 +37,6 @@
         )
       "
       persistent-hint
-      v-model="domain.message_limit"
       variant="outlined"
       :rules="[rules.numericOrNull]"
     />
@@ -50,7 +50,7 @@ import rules from '@/plugins/rules.js'
 
 const { $gettext } = useGettext()
 
-const props = defineProps(['modelValue'])
+const props = defineProps({ modelValue: { type: Object, default: () => {} } })
 const emit = defineEmits(['update:modelValue'])
 
 const vFormRef = ref()

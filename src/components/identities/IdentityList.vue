@@ -2,7 +2,7 @@
   <v-card class="mt-6">
     <v-toolbar flat>
       <v-menu offset-y>
-        <template v-slot:activator="{ props }">
+        <template #activator="{ props }">
           <v-btn v-bind="props" size="small">
             {{ $gettext('Actions') }} <v-icon right>mdi-chevron-down</v-icon>
           </v-btn>
@@ -32,7 +32,7 @@
       class="elevation-1"
       show-select
     >
-      <template v-slot:item.identity="{ item }">
+      <template #item.identity="{ item }">
         <template v-if="item.type === 'account'">
           <router-link :to="{ name: 'AccountDetail', params: { id: item.pk } }">
             {{ item.identity }}
@@ -44,7 +44,7 @@
           </router-link>
         </template>
       </template>
-      <template v-slot:item.tags="{ item }">
+      <template #item.tags="{ item }">
         <v-chip
           v-for="(tag, index) in item.tags"
           :key="tag.name"
@@ -55,12 +55,12 @@
           {{ tag.label }}
         </v-chip>
       </template>
-      <template v-slot:item.actions="{ item }">
+      <template #item.actions="{ item }">
         <template v-if="item.possible_actions.length !== 0">
           <v-icon size="2.5em" color="blue">mdi-circle-small</v-icon>
         </template>
         <v-menu offset-y>
-          <template v-slot:activator="{ props }">
+          <template #activator="{ props }">
             <v-btn v-bind="props" size="small" icon="mdi-dots-horizontal">
             </v-btn>
           </template>

@@ -3,14 +3,14 @@
     <v-switch
       v-model="createAdmin"
       :label="$gettext('Create a domain administrator')"
-      @update:modelValue="updateCreateAdmin"
       color="primary"
+      @update:model-value="updateCreateAdmin"
     />
     <v-text-field
+      v-model="domain.domain_admin.username"
       :label="$gettext('Name')"
       :hint="$gettext('Name of the administrator')"
       persistent-hint
-      v-model="domain.domain_admin.username"
       variant="outlined"
       :disabled="!createAdmin"
       :suffix="`@${domain.name}`"
@@ -21,9 +21,9 @@
       :label="$gettext('Random password')"
       :disabled="!createAdmin"
       :hint="$gettext('Generate a random password for the administrator.')"
-      @update:modelValue="updatePassword"
       persistent-hint
       color="primary"
+      @update:model-value="updatePassword"
     />
     <v-switch
       v-model="domain.domain_admin.with_mailbox"
@@ -52,7 +52,7 @@ import rules from '@/plugins/rules.js'
 
 const { $gettext } = useGettext()
 
-const props = defineProps(['modelValue'])
+const props = defineProps({ modelValue: { type: Object, default: () => {} } })
 const emit = defineEmits(['update:modelValue', 'createAdmin'])
 
 const vFormRef = ref()
@@ -69,7 +69,6 @@ const domain = computed({
 })
 
 function updatePassword(value) {
-  console.log(value)
   if (value) {
     accountsApi.getRandomPassword().then((resp) => {
       domain.value.domain_admin.password = resp.data.password

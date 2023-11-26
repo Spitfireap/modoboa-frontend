@@ -3,41 +3,72 @@
     ref="form"
     :title="$gettext('New domain')"
     :steps="steps"
-    :formGetter="getForm"
-    :getVFormRef="getVFormRef"
-    :validateDomain="validateDomain"
-    :summarySections="summarySections"
+    :form-getter="getForm"
+    :get-v-form-ref="getVFormRef"
+    :validate-domain="validateDomain"
+    :summary-sections="summarySections"
     @close="close"
     @create="submit"
   >
-    <template #form.general>
-      <DomainGeneralForm ref="general" class="ml-4" v-model="domain" />
+    <template #[`form.general`]>
+      <DomainGeneralForm ref="general" v-model="domain" class="ml-4" />
     </template>
-    <template #form.dns>
-      <DomainDNSForm ref="dns" class="ml-4" v-model="domain" />
+
+    <template #[`form.dns`]>
+      <DomainDNSForm ref="dns" v-model="domain" class="ml-4" />
     </template>
-    <template #form.limitations>
-      <DomainLimitationsForm ref="limitations" class="ml-4" v-model="domain" />
+    <template #[`form.limitations`]>
+      <DomainLimitationsForm ref="limitations" v-model="domain" class="ml-4" />
     </template>
-    <template #form.options>
+    <template #[`form.options`]>
       <DomainOptionsForm
         ref="options"
-        class="ml-4"
         v-model="domain"
-        @createAdmin="updateCreateAdmin"
+        class="ml-4"
+        @create-admin="updateCreateAdmin"
       />
     </template>
-    <template #form.transport>
+    <template #[`form.transport`]>
       <DomainTransportForm
         ref="transport"
-        class="ml-4"
         v-model="domain.transport"
+        class="ml-4"
       />
+    </template>
+    <template #[`item.with_random_password`]="{ item }">
+      <template v-if="item.value">
+        <v-col cols="12" class="highligth text-white">
+          <v-row>
+            <v-col
+              ><span>{{ item.key }}</span></v-col
+            >
+            <v-col class="text-right">{{ $yesno(item.value) }}</v-col>
+          </v-row>
+          <v-row>
+            <v-col class="text-right py-1">
+              {{ domain.domain_admin.password }}
+              <v-btn
+                icon="mdi-clipboard-multiple-outline"
+                color="white"
+                :title="$gettext('Copy to clipboard')"
+                @click="copyPassword"
+              ></v-btn>
+            </v-col>
+          </v-row>
+        </v-col>
+      </template>
+      <template v-else>
+        <v-col
+          ><span class="text-grey">{{ item.key }}</span></v-col
+        >
+        <v-col class="text-right">{{ $yesno(item.value) }}</v-col>
+      </template>
     </template>
   </CreationForm>
 </template>
 
 <script setup lang="js">
+//TODO: Investigate transport!!
 import ParametersApi from '@/api/parameters.js'
 import CreationForm from '@/components/tools/CreationForm.vue'
 import DomainGeneralForm from './form_steps/DomainGeneralForm.vue'
@@ -72,7 +103,7 @@ const defaultDomain = {
     with_mailbox: false,
     with_aliases: false,
   },
-  transport: {},
+  transport: { settings: {} },
 }
 
 const domain = ref(defaultDomain)
@@ -177,8 +208,35 @@ const summarySections = computed(() => {
       value: domain.value.dkim_key_length,
     })
   }
-  if (createAdmin.value) {
-    result.push({
+  if (domain.value.type === 'relaydomain') {
+    const relayEntry = {
+      title: $gettext('Transport'),
+      items: [
+        { key: $gettext('Service'), value: domain.value.transport.service },
+      ],
+    }
+    if (
+      transport.value !== undefined &&
+      transport.value.service != null &&
+      transport.value.service.value
+    ) {
+      console.log(transport.value)
+      const service = transport.value.service.value
+      for (const setting of service.settings) {
+        const item = {
+          key: setting.label,
+          value:
+            domain.value.transport.settings[`${service.name}_${setting.name}`],
+        }
+        if (setting.type === 'boolean') {
+          item.type = 'yesno'
+        }
+        relayEntry.items.push(item)
+      }
+    }
+    result.push(relayEntry)
+  } else if (domain.value.type === 'domain') {
+    const options = {
       title: $gettext('Options'),
       items: [
         {
@@ -186,6 +244,10 @@ const summarySections = computed(() => {
           value: createAdmin.value,
           type: 'yesno',
         },
+      ],
+    }
+    if (createAdmin.value) {
+      options.items.push(
         {
           key: $gettext('Administrator name'),
           value: domain.value.domain_admin.username,
@@ -205,32 +267,10 @@ const summarySections = computed(() => {
           key: $gettext('Create aliases'),
           value: domain.value.domain_admin.with_aliases,
           type: 'yesno',
-        },
-      ],
-    })
-  }
-  if (domain.value.type === 'relaydomain') {
-    const relayEntry = {
-      title: $gettext('Transport'),
-      items: [
-        { key: $gettext('Service'), value: domain.value.transport.service },
-      ],
-    }
-    if (transport.value.service.value) {
-      const service = transport.service.value
-      for (const setting of service.settings) {
-        const item = {
-          key: setting.label,
-          value:
-            domain.value.transport.settings[`${service.name}_${setting.name}`],
         }
-        if (setting.type === 'boolean') {
-          item.type = 'yesno'
-        }
-        relayEntry.items.push(item)
-      }
+      )
     }
-    result.push(relayEntry)
+    result.push(options)
   }
   return result
 })
@@ -249,7 +289,7 @@ function copyPassword() {
 }
 
 function getForm(step) {
-  return formsRef.value[step.name]
+  return formStepsComponenents.value[step.name]
 }
 function getVFormRef(step) {
   console.log(step.name)

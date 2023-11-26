@@ -43,7 +43,7 @@
           :hint="$gettext('Don\'t treat duplicated objects as errors')"
           persistent-hint
         />
-        <slot name="extraFields" v-bind:form="form" />
+        <slot name="extraFields" :form="form" />
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -63,7 +63,7 @@ import { ref } from 'vue'
 import { useGettext } from 'vue3-gettext'
 import rules from '@/plugins/rules.js'
 
-const props = defineProps({
+defineProps({
   helpText: { type: String, default: '' },
   title: { type: String, default: '' },
 })
@@ -80,8 +80,6 @@ function close() {
   emit('close')
 }
 
-defineExpose({ close })
-
 async function submit() {
   const { valid } = await vform.value.validate()
   if (!valid) {
@@ -97,4 +95,6 @@ async function submit() {
   }
   emit('submit', data)
 }
+
+defineExpose({ close })
 </script>

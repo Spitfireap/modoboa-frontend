@@ -10,6 +10,7 @@
         />
         <v-stepper-item
           v-for="(step, index) in steps"
+          :key="step.name"
           :value="index + 1"
           :complete="currentStep > index + 1"
         >
@@ -29,6 +30,7 @@
       <v-stepper-window class="mt-4 d-flex justify-center">
         <v-stepper-window-item
           v-for="(step, index) in steps"
+          :key="step.name"
           :value="index + 1"
           class="flex-grow-1 ma-10"
         >
@@ -42,8 +44,8 @@
                 </div>
                 <slot
                   :name="`form.${step.name}`"
-                  v-bind:step="step"
-                  v-bind:current-step="index + 1"
+                  :step="step"
+                  :current-step="index + 1"
                 />
               </v-col>
             </v-row>
@@ -51,16 +53,16 @@
           <div class="d-flex justify-end mt-4">
             <v-btn
               v-if="index + 1 > 1"
-              @click="currentStep = index"
               class="mr-10"
               variant="text"
+              @click="currentStep = index"
             >
               {{ $gettext('Back') }}
             </v-btn>
             <v-btn
               color="primary"
-              @click="goToNextStep(index + 1, index + 2)"
               large
+              @click="goToNextStep(index + 1, index + 2)"
             >
               {{ $gettext('Next') }}
             </v-btn>
@@ -72,12 +74,12 @@
             :sections="summarySections"
             @modify-step="(val) => (currentStep = val)"
           >
-            <template v-for="(_, slot) of $scopedSlots" v-slot:[slot]="scope">
+            <template v-for="(_, slot) of $slots" #[slot]="scope">
               <slot :name="slot" v-bind="scope" />
             </template>
           </CreationSummary>
           <div class="d-flex justify-center mt-8">
-            <v-btn color="primary" @click="create" large :loading="working">
+            <v-btn color="primary" large :loading="working" @click="create">
               {{ $gettext('Confirm and create') }}
             </v-btn>
           </div>
@@ -97,12 +99,12 @@ import { useDisplay } from 'vuetify'
 const { smAndDown } = useDisplay()
 
 const props = defineProps({
-  title: String,
-  steps: Array,
-  summarySections: Array,
-  getVFormRef: Function,
-  formGetter: Function,
-  validateObject: Function,
+  title: { type: String, default: '' },
+  steps: { type: Array, default: () => [] },
+  summarySections: { type: Array, default: () => [] },
+  getVFormRef: { type: Function, default: null },
+  formGetter: { type: Function, default: null },
+  validateObject: { type: Function, default: null },
 })
 
 const currentStep = ref(1)

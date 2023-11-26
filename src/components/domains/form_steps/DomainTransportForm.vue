@@ -1,35 +1,33 @@
 <template>
-  <div>
+  <v-form ref="vFormRef">
     <label class="m-label">{{ $gettext('Service') }}</label>
     <v-autocomplete
       v-model="service"
       :items="backends"
-      item-text="name"
+      item-title="name"
       return-object
       variant="outlined"
       :rules="[rules.required]"
     />
     <template v-if="service">
-      <template v-for="setting in service.settings" :key="setting.name">
+      <template v-for="(setting, i) in service.settings" :key="i">
         <template v-if="setting.type === 'str' || setting.type === 'int'">
           <label class="m-label">{{ setting.label }}</label>
           <v-text-field
-            v-model="
-              domain.transport.settings[`${service.name}_${setting.name}`]
-            "
+            v-model="transport.settings[`${service.name}_${setting.name}`]"
             variant="outlined"
             :type="setting.type === 'int' ? 'number' : 'text'"
-            :rules="[!!settings.required || rules.required]"
+            :rules="[!!setting.required || rules.required]"
           />
         </template>
         <v-checkbox
           v-else-if="setting.type === 'boolean'"
-          v-model="domain.transport.settings[`${service.name}_${setting.name}`]"
+          v-model="transport.settings[`${service.name}_${setting.name}`]"
           :label="setting.label"
         />
       </template>
     </template>
-  </div>
+  </v-form>
 </template>
 
 <script setup lang="js">
@@ -40,10 +38,12 @@ import rules from '@/plugins/rules.js'
 
 const { $gettext } = useGettext()
 
-const props = defineProps(['modelValue'])
+const props = defineProps({ modelValue: { type: Object, default: () => {} } })
 const emit = defineEmits(['update:modelValue'])
 
-const domain = computed({
+const vFormRef = ref()
+
+const transport = computed({
   get() {
     return props.modelValue
   },
@@ -53,7 +53,7 @@ const domain = computed({
 })
 
 const backends = ref([])
-const service = ref(null)
+const service = ref()
 
 function checkSettingTypes(data) {
   for (const setting of service.value.settings) {
@@ -69,12 +69,11 @@ function checkSettingTypes(data) {
 onMounted(() => {
   transports.getAll().then((resp) => {
     backends.value = resp.data
-
     service.value = backends.value.find(
-      (backend) => backend.name === domain.value.transport.service
+      (backend) => backend.name === transport.value.service
     )
   })
 })
 
-defineExpose({ checkSettingTypes, service })
+defineExpose({ checkSettingTypes, service, vFormRef })
 </script>

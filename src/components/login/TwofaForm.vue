@@ -17,8 +17,8 @@
             ref="otpInput"
             v-model="code"
             length="6"
-            @finish="verifyCode"
             :rules="[rules.required]"
+            @finish="verifyCode"
           />
           <v-btn
             block

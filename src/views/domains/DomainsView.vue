@@ -53,7 +53,7 @@
         @submit="importDomains"
         @close="showImportForm = false"
       >
-        <template v-slot:help>
+        <template #help>
           <ul>
             <li>
               <em>domain; name; quota; default mailbox quota; enabled</em>

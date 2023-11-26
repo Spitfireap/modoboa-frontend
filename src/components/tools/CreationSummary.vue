@@ -14,19 +14,19 @@
       <template v-if="item.value !== undefined">
         <slot
           :name="`item.${item.name}`"
-          v-bind:item="item"
-          v-bind:displayList="displayList"
+          :item="item"
+          :display-list="displayList"
         >
           <v-col
             ><span class="text-grey">{{ item.key }}</span></v-col
           >
-          <v-col class="text-right" v-if="item.type === 'yesno'">
+          <v-col v-if="item.type === 'yesno'" class="text-right">
             {{ $yesno(item.value) }}
           </v-col>
-          <v-col class="text-right" v-else-if="item.type === 'list'">
+          <v-col v-else-if="item.type === 'list'" class="text-right">
             {{ displayList(item.value) }}
           </v-col>
-          <v-col class="text-right" v-else>{{ item.value }}</v-col>
+          <v-col v-else class="text-right">{{ item.value }}</v-col>
         </slot>
       </template>
     </v-row>
@@ -38,7 +38,7 @@ import { useGettext } from 'vue3-gettext'
 
 const { $gettext } = useGettext()
 
-const props = defineProps(['sections'])
+defineProps({ sections: { type: Array, default: () => [] } })
 const emit = defineEmits(['modify-step'])
 
 function displayList(value) {

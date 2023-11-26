@@ -5,19 +5,19 @@
     <v-btn
       class="mr-2"
       :title="$gettext('Import accounts and aliases from CSV file')"
-      @click="showImportForm = true"
       icon="mdi-file-import-outline"
+      @click="showImportForm = true"
     >
     </v-btn>
     <v-btn
       class="mr-2"
       :title="$gettext('Export accounts and aliases to CSV')"
-      @click="exportIdentities"
       icon="mdi-file-export-outline"
+      @click="exportIdentities"
     >
     </v-btn>
     <v-menu offset-y>
-      <template v-slot:activator="{ props }">
+      <template #activator="{ props }">
         <v-btn color="primary" v-bind="props">
           <v-icon icon="mdi-plus"></v-icon>
           {{ $gettext('New') }}

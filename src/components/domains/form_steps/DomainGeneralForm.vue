@@ -1,8 +1,8 @@
 <template>
   <v-form ref="vFormRef">
     <v-text-field
-      :label="$gettext('Domain name (ex: domain.tld)')"
       v-model="form.name"
+      :label="$gettext('Domain name (ex: domain.tld)')"
       :rules="[rules.required]"
       variant="outlined"
       class="mb-5"
@@ -15,8 +15,8 @@
     />
 
     <v-switch
-      :label="$gettext('Enabled')"
       v-model="form.enabled"
+      :label="$gettext('Enabled')"
       :hint="
         $gettext(
           'Control if this domain will be allowed to send and receive messages'
@@ -36,9 +36,7 @@ import rules from '@/plugins/rules.js'
 
 const { $gettext } = useGettext()
 
-const props = defineProps({
-  modelValue: Object,
-})
+const props = defineProps({ modelValue: { type: Object, default: () => {} } })
 
 const emit = defineEmits(['update:model-value'])
 

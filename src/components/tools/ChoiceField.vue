@@ -7,16 +7,17 @@
   </div>
   <v-input v-model="currentChoice" :rules="[!!disabled || rules.required]">
     <template #default>
-      <v-row v-for="lineChoices in formatedChoices" class="ml-5">
+      <v-row v-for="(lineChoices, i) in formatedChoices" :key="i" class="ml-5">
         <v-col
-          v-for="choice in lineChoices"
+          v-for="(choice, j) in lineChoices"
+          :key="j"
           class="choice rounded pa-md-10 pa-5 mr-5 flex-grow-0 mb-5"
           :class="{
             'choice--disabled': disabled,
             'choice--selected': !disabled && currentChoice === choice.value,
           }"
-          @click="selectChoice(choice.value)"
           align="center"
+          @click="selectChoice(choice.value)"
         >
           <v-row align="center" justify="center">
             <v-col cols="12" class="pa-0">
@@ -49,14 +50,14 @@ import { ref, onMounted, computed } from 'vue'
 import rules from '@/plugins/rules.js'
 
 const props = defineProps({
-  modelValue: [Number, String],
-  label: String,
-  choices: Array,
+  modelValue: { type: [Number, String], default: null },
+  label: { type: String, default: '' },
+  choices: { type: Array, default: () => [] },
   disabled: {
     type: Boolean,
     default: false,
   },
-  choicesPerLine: Number,
+  choicesPerLine: { type: Number, default: undefined },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -89,7 +90,7 @@ function formatChoices() {
 }
 
 function iconColor(value) {
-  return !props.disabled && value === currentChoice ? 'primary' : ''
+  return !props.disabled && value === currentChoice.value ? 'primary' : ''
 }
 function selectChoice(value) {
   if (props.disabled) {
