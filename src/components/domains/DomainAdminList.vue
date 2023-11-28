@@ -53,9 +53,9 @@
         </template>
       </v-data-table-virtual>
     </v-card-text>
-    <v-card-actions v-if="dialogMode">
+    <v-card-actions>
       <v-row>
-        <v-col align="left">
+        <v-col :align="dialogMode ? 'left' : 'right'">
           <v-btn
             v-if="!hideAddBtn"
             color="primary"
@@ -65,7 +65,7 @@
             <v-icon small>mdi-plus</v-icon> {{ $gettext('Add administrator') }}
           </v-btn>
         </v-col>
-        <v-col align="right">
+        <v-col align="right" v-if="dialogMode">
           <v-btn color="grey darken-1" variant="text" @click="close">
             {{ $gettext('Close') }}
           </v-btn>

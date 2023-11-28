@@ -1,11 +1,12 @@
 <template>
   <v-card v-if="domain">
     <v-card-title>
-      <span class="text-h5"> DNS </span>
+      <span> DNS </span>
       <v-btn
         icon="mdi-information-outline"
         :title="$gettext('DNS configuration help')"
         variant="text"
+        size="x-small"
         @click="showConfigHelp = true"
       ></v-btn>
     </v-card-title>

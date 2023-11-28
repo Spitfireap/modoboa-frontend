@@ -1,5 +1,5 @@
 <template>
-  <v-chip :color="chipType" small>
+  <v-chip :color="chipType" size="small">
     {{ label }}
   </v-chip>
 </template>

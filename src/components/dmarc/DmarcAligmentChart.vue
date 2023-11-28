@@ -79,9 +79,9 @@
     <v-alert
       v-if="dmarcDisabled"
       type="info"
-      outlined
+      variant="outlined"
       prominent
-      border="left"
+      border="start"
       class="mt-6"
     >
       <div>

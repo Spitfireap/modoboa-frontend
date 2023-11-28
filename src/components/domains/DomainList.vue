@@ -110,10 +110,19 @@
                     icon="mdi-bell"
                     overlap
                   >
-                    <v-btn icon="mdi-dots-horizontal" variant="text" v-bind="props">
+                    <v-btn
+                      icon="mdi-dots-horizontal"
+                      variant="text"
+                      v-bind="props"
+                    >
                     </v-btn>
                   </v-badge>
-                  <v-btn v-else icon="mdi-dots-horizontal" variant="text" v-bind="props">
+                  <v-btn
+                    v-else
+                    icon="mdi-dots-horizontal"
+                    variant="text"
+                    v-bind="props"
+                  >
                   </v-btn>
                 </template>
                 <MenuItems :items="getDomainMenuItems(item)" :obj="item" />
