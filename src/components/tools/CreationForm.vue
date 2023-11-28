@@ -24,6 +24,7 @@
           color="primary"
           :size="smAndDown ? 'small' : 'x-large'"
           @click="close"
+          variant="text"
         >
         </v-btn>
       </v-stepper-header>

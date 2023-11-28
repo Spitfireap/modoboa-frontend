@@ -38,6 +38,7 @@
 
 <script setup lang="js">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores'
 import { useGettext } from 'vue3-gettext'
 import account from '@/api/account'
@@ -45,6 +46,7 @@ import Cookies from 'js-cookie'
 import rules from '@/plugins/rules.js'
 
 const authStore = useAuthStore()
+const router = useRouter()
 const { $gettext } = useGettext()
 
 const loading = ref(false)
@@ -64,7 +66,7 @@ async function verifyCode() {
       Cookies.set('refreshToken', resp.data.refresh, { sameSite: 'strict' })
       authStore.initialize().then(() => {
         // bus.$emit('loggedIn')
-        this.$router.push({ name: 'DomainList' })
+        router.push({ name: 'DomainList' })
       })
     })
     .catch(() => {
