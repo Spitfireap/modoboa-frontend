@@ -45,7 +45,9 @@
     <v-dialog v-model="showDomainWizard" fullscreen scrollable z-index="10">
       <DomainCreationForm @close="showDomainWizard = false" />
     </v-dialog>
-    <v-dialog v-model="showAliasForm" persistent max-width="800px"> </v-dialog>
+    <v-dialog v-model="showAliasForm" persistent max-width="800px">
+      <DomainAliasForm @close="showAliasForm = false" />
+    </v-dialog>
     <v-dialog v-model="showImportForm" persistent max-width="800px">
       <ImportForm
         ref="importForm"
@@ -76,7 +78,7 @@
 import { ref } from 'vue'
 import domainApi from '@/api/domains'
 import { useGettext } from 'vue3-gettext'
-//import DomainAliasForm from '@/components/domains/DomainAliasForm'
+import DomainAliasForm from '@/components/domains/DomainAliasForm'
 import DomainCreationForm from '@/components/domains/DomainCreationForm'
 import DomainList from '@/components/domains/DomainList'
 import ImportForm from '@/components/tools/ImportForm'

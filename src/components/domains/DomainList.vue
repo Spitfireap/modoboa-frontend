@@ -26,6 +26,11 @@
             </template>
             <v-list dense> </v-list>
           </v-menu>
+          <v-btn
+            variant="text"
+            icon="mdi-reload"
+            @click="reloadDomains"
+          ></v-btn>
           <v-spacer></v-spacer>
           <v-text-field
             v-model="search"
@@ -147,8 +152,6 @@
       <DomainAliasForm
         :domain-alias="selectedDomainAlias"
         @close="closeDomainAliasForm"
-        @alias-created="domainAliasCreated"
-        @alias-deleted="domainAliasDeleted"
       />
     </v-dialog>
     <v-dialog v-model="showAdminList" persistent max-width="800px">
@@ -165,7 +168,6 @@
 import { useBusStore, useDomainsStore } from '@/stores'
 import { useGettext } from 'vue3-gettext'
 import { useRouter } from 'vue-router'
-import domainApi from '@/api/domains'
 import DomainAdminList from './DomainAdminList.vue'
 import ConfirmDialog from '@/components/tools/ConfirmDialog.vue'
 import DNSStatusChip from './DNSStatusChip.vue'
@@ -181,6 +183,7 @@ const busStore = useBusStore()
 const domainStore = useDomainsStore()
 const domains = computed(() => domainStore.domains)
 const domainsLoaded = computed(() => domainStore.domainsLoaded)
+const aliases = computed(() => domainStore.domainAliases)
 
 const domainHeaders = [
   { title: $gettext('Name'), key: 'name' },
@@ -205,9 +208,12 @@ const showAliasForm = ref(false)
 const search = ref('')
 const selected = ref([])
 const expanded = ref([])
-const aliases = ref({})
 
-domainStore.getDomains()
+function reloadDomains() {
+  domainStore.getDomains()
+}
+
+reloadDomains()
 
 function closeDomainAliasForm() {
   showAliasForm.value = false
@@ -238,22 +244,6 @@ function onDeletedDomain(domain) {
   })
 }
 
-function domainAliasCreated() {
-  domainStore.getDomains()
-}
-
-function domainAliasDeleted() {
-  const newList = aliases.value[selectedDomain.value.name].filter((alias) => {
-    return alias.pk !== selectedDomainAlias.value.pk
-  })
-  aliases.value[selectedDomain.value.name] = newList
-  if (!newList.length) {
-    expanded.value = []
-  }
-  domainStore.getDomains()
-  closeDomainAliasForm()
-}
-
 function editDomain(domain) {
   router.push({ name: 'DomainEdit', params: { id: domain.pk } })
 }
@@ -270,8 +260,7 @@ function loadAliases(item, internalItem, isItemExpanded, toggleExpand) {
     toggleExpand(internalItem)
     return
   }
-  domainApi.getDomainAliases(item.name).then((resp) => {
-    aliases.value[item.name] = resp.data
+  domainStore.getAliases(item.name).then(() => {
     toggleExpand(internalItem)
   })
 }

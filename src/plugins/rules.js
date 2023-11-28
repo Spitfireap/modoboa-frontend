@@ -21,6 +21,7 @@ export default {
   minLength: (len) => (value) =>
     value.length > len || $gettext('Minimum length is 6'),
   numericOrNull: (value) =>
+    value == null ||
     value === '' ||
     validateNumeric(value) ||
     $gettext('Must be a numeric value or empty'),

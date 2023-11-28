@@ -60,8 +60,8 @@ onMounted(() => {
 })
 
 function check() {
-  console.log(`input is : ${domain.value.default_mailbox_quota}`)
-  console.log(typeof domain.value.default_mailbox_quota)
+  console.log(`input is : ${domain.value.message_limit}`)
+  console.log(typeof domain.value.message_limit)
 }
 
 const domain = computed({

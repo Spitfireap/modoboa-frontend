@@ -47,6 +47,7 @@ const routes = [
           requiresAuth: true,
           allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
         },
+        component: () => import('@/views/domains/DomainView.vue'),
       },
       {
         path: 'domains/:id/edit',
