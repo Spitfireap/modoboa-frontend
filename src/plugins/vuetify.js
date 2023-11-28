@@ -24,4 +24,11 @@ export default createVuetify({
       },
     },
   },
+  styles: { configFile: 'src/styles/settings.scss' },
+  defaults: {
+    VCard: {
+      class: 'pa-2',
+      VCardTitle: { class: 'd-flex', style: 'align-items: center;' },
+    },
+  },
 })

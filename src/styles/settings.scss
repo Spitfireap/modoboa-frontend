@@ -8,3 +8,7 @@
 // @use 'vuetify/settings' with (
 //   $color-pack: false
 // );
+
+@use 'vuetify/settings' with (
+  $card-title-flex: 1 0 auto
+);
