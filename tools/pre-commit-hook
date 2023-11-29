@@ -1,0 +1,39 @@
+#!/bin/bash
+
+FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E "(\.js)|(\.vue)$")
+[ -z "$FILES" ] && echo -e "\e[32mNo file file for the pre-commit, all set\e[0m" && exit 0
+
+function prettier () {
+    # Prettify all selected files
+    echo "$FILES" | xargs ./node_modules/.bin/prettier --ignore-unknown --write
+
+    # Add back the modified/prettified files to staging
+    echo "$FILES" | xargs git add
+}
+
+function lint () {
+    # Linting all selected files
+    for FILE in $FILES
+    do
+        LINT_OUTPUT=$(./node_modules/.bin/eslint --color --ext .js,.vue --ignore-path .gitignore $FILE)
+        if [[ $? -ne 0 ]] ; then
+            ERROR=1
+            LINT_ERRORS="${LINT_ERRORS}${LINT_OUTPUT}"
+        fi
+    done
+}
+
+echo -e "\e[93mPretting...\e[0m"
+prettier
+echo -e "\e[93mPretting finished, linting\e[0m"
+ERROR=0
+lint
+if [[ $ERROR -ne 0 ]] ; then
+	echo -e "$LINT_ERRORS"
+    echo -e "\e[31mLinting issue, commiting anyway\e[0m"
+	exit 0
+fi
+
+echo -e "\e[32m Yahou ! Commit looks good\e[0m"
+exit 0
+
