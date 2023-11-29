@@ -3,10 +3,11 @@
     <v-card-title>
       <span> DNS </span>
       <v-btn
+        class="ml-2"
         icon="mdi-information-outline"
         :title="$gettext('DNS configuration help')"
         variant="text"
-        size="x-small"
+        density="compact"
         @click="showConfigHelp = true"
       ></v-btn>
     </v-card-title>
@@ -16,7 +17,7 @@
         <v-row>
           <v-col>
             <v-chip color="info" size="small">
-              {{ $gettext('Pending') }}>
+              {{ $gettext('Pending') }}
             </v-chip>
           </v-col>
         </v-row>
@@ -27,7 +28,7 @@
           :items="detail.mx_records"
           hide-default-footer
         >
-          <template v-slot:item.updated="{ item }">
+          <template #[`item.updated`]="{ item }">
             {{ $date(item.updated) }}
           </template>
         </v-data-table>
@@ -98,20 +99,47 @@
         </v-row>
       </template>
       <template v-if="domain.enable_dkim">
-        <v-row>
-          <v-col cols="3">{{ $gettext('DKIM key') }}</v-col>
-          <v-col cols="9">
+        <v-row no-gutters align="center" class="d-flex flex-nowrap">
+          <v-col
+            cols="4"
+            sm="auto"
+            class="d-flex flex-grow-1 flex-shrink-0 text-subtitle-2"
+          >
+            {{ $gettext('DKIM key') }}
+          </v-col>
+          <v-col cols="8" class="d-none d-sm-flex flex-shrink-1">
+            <v-btn
+              icon="mdi-content-copy"
+              variant="text"
+              size="small"
+              density="compact"
+              @click="copyPubKey"
+            ></v-btn>
+            <pre style="overflow-x: auto">{{ domain.dkim_public_key }}</pre>
+          </v-col>
+          <v-col class="d-flex flex-shrink-0 flex-grow-1">
             <div v-if="domain.dkim_private_key_path && domain.dkim_public_key">
               <v-btn color="primary" small @click="showDKIMKey = true">
                 {{ $gettext('Show key') }}
               </v-btn>
               <v-btn
                 icon="mdi-refresh"
-                :title="'Generate a new DKIM key' | translate"
+                :title="$gettext('Generate a new DKIM key')"
+                variant="text"
+                :loading="keyLoading"
                 @click="generateNewKey"
               ></v-btn>
             </div>
-            <div v-else>{{ $gettext('Not generated') }}</div>
+            <div v-else>
+              {{ $gettext('Not generated') }}
+              <v-btn
+                icon="mdi-reload"
+                color="primary"
+                variant="text"
+                :loading="keyLoading"
+                @click="retryKeyGeneration"
+              ></v-btn>
+            </div>
           </v-col>
         </v-row>
       </template>
@@ -122,7 +150,11 @@
     <v-dialog v-model="showDKIMKey" max-width="800px" persistent>
       <DomainDKIMKey :domain="domain" @close="showDKIMKey = false" />
     </v-dialog>
-    <ConfirmDialog ref="dialog" @agree="confirmGenNewKey" />
+    <ConfirmDialog
+      ref="dialog"
+      @agree="confirmGenNewKey"
+      @close="cancelDKIMGen"
+    />
   </v-card>
 </template>
 
@@ -133,7 +165,7 @@ import domainsApi from '@/api/domains'
 import DomainDKIMKey from './DomainDKIMKey.vue'
 import DomainDNSConfig from './DomainDNSConfig.vue'
 import ConfirmDialog from '@/components/tools/ConfirmDialog.vue'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 const { $gettext } = useGettext()
 const busStore = useBusStore()
@@ -150,17 +182,13 @@ const mxRecordHeaders = ref([
   { text: $gettext('Address'), value: 'address' },
   { text: $gettext('Updated'), value: 'updated' },
 ])
+const keyLoading = ref(false)
 
 const showConfigHelp = ref(false)
 const showDKIMKey = ref(false)
 
 const domain = computed({
   get() {
-    if (props.modelValue) {
-      domainsApi.getDomainDNSDetail(props.modelValue.pk).then((resp) => {
-        detail.value = resp.data
-      })
-    }
     return props.modelValue
   },
   set(value) {
@@ -168,22 +196,54 @@ const domain = computed({
   },
 })
 
+function copyPubKey() {
+  navigator.clipboard.writeText(domain.value.dkim_public_key)
+}
+
 function confirmGenNewKey() {
   const payload = {
     dkim_private_key_path: '',
   }
-  domainsApi.patchDomain(domain.value.pk, payload).then(() => {
-    busStore.displayNotification({
-      msg: $gettext(
-        'A new key will be generated soon. Refresh the page in a moment to see it.'
-      ),
-      type: 'success',
+  domainsApi
+    .patchDomain(domain.value.pk, payload)
+    .then(() => {
+      busStore.displayNotification({
+        msg: $gettext(
+          'A new key will be generated soon. Refresh the page in a moment to see it.'
+        ),
+        type: 'success',
+      })
+      domain.value.dkim_private_key_path = ''
+      keyLoading.value = false
     })
-    domain.value.dkim_private_key_path = ''
+    .catch(() => {
+      keyLoading.value = false
+    })
+}
+
+function cancelDKIMGen() {
+  keyLoading.value = false
+}
+
+async function retryKeyGeneration() {
+  keyLoading.value = true
+  domainsApi.getDomainDNSDetail(domain.value.pk).then((resp) => {
+    detail.value = resp.data
+    dialog.value.open(
+      $gettext('warning'),
+      $gettext(
+        'DKIM key does not seem to be genrated yet or has failed. Do you want to requeue the job?'
+      ),
+      {
+        color: 'warning',
+        cancelLabel: $gettext('No'),
+        agreeLabel: $gettext('Yes'),
+      }
+    )
   })
 }
 
-async function generateNewKey() {
+function generateNewKey() {
   dialog.value.open(
     $gettext('Warning'),
     $gettext(
@@ -196,4 +256,12 @@ async function generateNewKey() {
     }
   )
 }
+
+watch(domain, (newDomain) => {
+  if (props.modelValue) {
+    domainsApi.getDomainDNSDetail(newDomain.pk).then((resp) => {
+      detail.value = resp.data
+    })
+  }
+})
 </script>

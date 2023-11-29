@@ -36,8 +36,8 @@ mail.{{ domain.name }}. IN A <strong>[{{$gettext('IP address of your Modoboa ser
       </v-alert>
 
       <v-alert
-        class="mb-4"
         v-if="domain.enable_dkim && domain.dkim_public_key"
+        class="mb-4"
         border="start"
         border-color="primary lighten-3"
         elevation="2"

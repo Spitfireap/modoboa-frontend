@@ -8,6 +8,7 @@
     "preview": "vite preview",
     "lint": "eslint . --ext .js,.vue --ignore-path .gitignore --fix src",
     "format": "prettier . --write",
+    "format-specific": "prettier --write",
     "gettext:extract": "vue-gettext-extract",
     "gettext:compile": "vue-gettext-compile"
   },

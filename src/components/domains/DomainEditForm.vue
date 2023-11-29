@@ -39,15 +39,15 @@
                   <v-col cols="6">
                     <div class="mr-2">{{ $gettext('DNS checks') }}</div>
                     <v-icon
-                      color="success"
                       v-if="editedDomain.enable_dns_checks"
+                      color="success"
                       >mdi-check-circle-outline</v-icon
                     >
                     <v-icon v-else>mdi-close-circle-outline</v-icon>
                   </v-col>
                   <v-col cols="6">
                     <div class="mr-2">{{ $gettext('DKIM signing') }}</div>
-                    <v-icon color="success" v-if="editedDomain.enable_dkim"
+                    <v-icon v-if="editedDomain.enable_dkim" color="success"
                       >mdi-check-circle-outline</v-icon
                     >
                     <v-icon v-else>mdi-close-circle-outline</v-icon>
@@ -76,13 +76,13 @@
                       {{ $gettext('Quota: ') }} {{ domain.quota }}
                     </div>
                   </v-col>
-                  <v-col cols="6" v-if="domain.message_limit">
+                  <v-col v-if="domain.message_limit" cols="6">
                     <div class="mr-2">
                       {{ $gettext('Sending limit: ') }}
                       {{ domain.message_limit }}
                     </div>
                   </v-col>
-                  <v-col cols="6" v-else>
+                  <v-col v-else cols="6">
                     <div class="mr-2">{{ $gettext('No sending limit') }}</div>
                   </v-col>
                 </v-row>
@@ -139,14 +139,14 @@
       </v-expansion-panel>
     </v-expansion-panels>
     <div class="mt-4 d-flex justify-end">
-      <v-btn @click="$router.go(-1)" :loading="working">
+      <v-btn :loading="working" @click="$router.go(-1)">
         {{ $gettext('Cancel') }}
       </v-btn>
       <v-btn
         class="ml-4"
         color="primary darken-1"
-        @click="save"
         :loading="working"
+        @click="save"
       >
         {{ $gettext('Save') }}
       </v-btn>
@@ -223,6 +223,6 @@ async function save() {
 }
 
 parametersApi.getApplication('limits').then((resp) => {
-  limitsConfig.data = resp.data
+  limitsConfig.value.data = resp.data
 })
 </script>

@@ -1,8 +1,9 @@
 <template>
-  <button @click="copyDKIM()" class="dkimbutton">
+  <button class="dkimbutton" @click="copyDKIM()">
     <pre id="dkimdns" class="dkim"
       >{{ domain.dkim_key_selector }}._domainkey.{{ domain.name }}. IN TXT ({{
-        splitKey(`v=DKIM1;k=rsa;p=${domain.dkim_public_key}`)
+        splitKey
+      }})
       }})</pre
     >
   </button>
@@ -16,7 +17,7 @@ const props = defineProps({
 })
 
 const splitKey = computed(() => {
-  let key = `v=DKIM1;k=rsa;p=${props.domain.value.dkim_public_key}`
+  let key = `v=DKIM1;k=rsa;p=${props.domain.dkim_public_key}`
   const result = []
   while (key.length > 0) {
     if (key.length > 74) {

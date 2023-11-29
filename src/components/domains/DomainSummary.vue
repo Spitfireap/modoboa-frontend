@@ -14,17 +14,17 @@
       </v-row>
       <v-row>
         <v-col cols="6">{{ $gettext('Quota') }}</v-col>
-        <v-col cols="6" v-if="domain.quota === '0'">{{
+        <v-col v-if="domain.quota === '0'" cols="6">{{
           $gettext('Unlimited')
         }}</v-col>
-        <v-col cols="6" v-else>{{ domain.quota }} {{ $gettext('MB') }}</v-col>
+        <v-col v-else cols="6">{{ domain.quota }} {{ $gettext('MB') }}</v-col>
       </v-row>
       <v-row>
         <v-col cols="6">{{ $gettext('Default mailbox quota') }}</v-col>
-        <v-col cols="6" v-if="domain.default_mailbox_quota === '0'">{{
+        <v-col v-if="domain.default_mailbox_quota === '0'" cols="6">{{
           $gettext('Unlimited')
         }}</v-col>
-        <v-col cols="6" v-else>{{ domain.default_mailbox_quota }} MB</v-col>
+        <v-col v-else cols="6">{{ domain.default_mailbox_quota }} MB</v-col>
       </v-row>
       <v-row v-if="domain.message_limit !== undefined">
         <v-col cols="6">{{ $gettext('Daily sending limit') }}</v-col>

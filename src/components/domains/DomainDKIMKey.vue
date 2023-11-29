@@ -1,21 +1,3 @@
-<style>
-.dkimbutton {
-  border-radius: 10px;
-}
-.dkimbutton:hover {
-  background-color: rgba(131, 131, 250, 0.283);
-  transition: all 0.8s;
-}
-.dkimbutton:active {
-  background-color: rgba(60, 255, 60, 0.136);
-  transition: all 0.2s;
-}
-.dkim {
-  white-space: normal;
-  word-break: break-all;
-}
-</style>
-
 <template>
   <v-card>
     <v-card-title>
@@ -26,13 +8,13 @@
     <v-card-text>
       <p>{{ $gettext('Raw format. Click to copy') }}</p>
       <v-alert
-        border="left"
+        border="start"
         colored-border
-        color="primary lighten-3"
+        border-color="primary lighten-3"
         elevation="2"
         dense
       >
-        <button @click="copyPubDKIM()" class="dkimbutton">
+        <button class="dkimbutton" @click="copyPubDKIM()">
           <pre id="dkimpub" class="dkim">{{ domain.dkim_public_key }}</pre>
         </button>
       </v-alert>
@@ -40,9 +22,9 @@
     <v-card-text>
       <p>{{ $gettext('Bind/named format. Click to copy') }}</p>
       <v-alert
-        border="left"
+        border="start"
         colored-border
-        color="primary lighten-3"
+        border-color="primary lighten-3"
         elevation="2"
         dense
       >
@@ -67,9 +49,27 @@ const { $gettext } = useGettext()
 defineProps({
   domain: { type: Object, default: null },
 })
-defineEmits(['close'])
+const emit = defineEmits(['close'])
 
 function copyPubDKIM() {
   navigator.clipboard.writeText(document.getElementById('dkimpub').textContent)
 }
 </script>
+
+<style>
+.dkimbutton {
+  border-radius: 10px;
+}
+.dkimbutton:hover {
+  background-color: rgba(131, 131, 250, 0.283);
+  transition: all 0.8s;
+}
+.dkimbutton:active {
+  background-color: rgba(60, 255, 60, 0.136);
+  transition: all 0.2s;
+}
+.dkim {
+  white-space: normal;
+  word-break: break-all;
+}
+</style>

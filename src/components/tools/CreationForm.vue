@@ -23,8 +23,8 @@
           icon="mdi-close"
           color="primary"
           :size="smAndDown ? 'small' : 'x-large'"
-          @click="close"
           variant="text"
+          @click="close"
         >
         </v-btn>
       </v-stepper-header>

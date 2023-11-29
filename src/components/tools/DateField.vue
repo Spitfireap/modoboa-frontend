@@ -12,6 +12,7 @@
         :label="label"
         prepend-icon="mdi-calendar"
         readonly
+        variant="underlined"
         v-bind="props"
       ></v-text-field>
     </template>
@@ -21,9 +22,9 @@
 </template>
 
 <script setup lang="js">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 
-const props = defineProps({
+defineProps({
   modelValue: { type: Object, default: null },
   label: { type: String, default: '' },
 })

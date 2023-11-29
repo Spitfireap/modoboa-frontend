@@ -16,7 +16,7 @@
       </v-toolbar-title>
     </v-toolbar>
 
-    <v-tabs class="mb-4" v-model="tab" color="primary">
+    <v-tabs v-model="tab" class="mb-4" color="primary">
       <v-tab>
         {{ $gettext('General') }}
       </v-tab>

@@ -65,7 +65,7 @@
             <v-icon small>mdi-plus</v-icon> {{ $gettext('Add administrator') }}
           </v-btn>
         </v-col>
-        <v-col align="right" v-if="dialogMode">
+        <v-col v-if="dialogMode" align="right">
           <v-btn color="grey darken-1" variant="text" @click="close">
             {{ $gettext('Close') }}
           </v-btn>
