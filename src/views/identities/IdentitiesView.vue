@@ -18,7 +18,7 @@
     </v-btn>
     <v-menu offset-y>
       <template #activator="{ props }">
-        <v-btn color="primary" v-bind="props">
+        <v-btn color="primary" variant="flat" v-bind="props">
           <v-icon icon="mdi-plus"></v-icon>
           {{ $gettext('New') }}
         </v-btn>

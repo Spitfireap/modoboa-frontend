@@ -1,9 +1,9 @@
 <template>
   <v-card class="mt-6">
-    <v-toolbar flat>
-      <v-menu offset-y>
+    <v-toolbar flat color="white">
+      <v-menu location="bottom">
         <template #activator="{ props }">
-          <v-btn v-bind="props" size="small">
+          <v-btn v-bind="props" size="small" variant="flat">
             {{ $gettext('Actions') }} <v-icon right>mdi-chevron-down</v-icon>
           </v-btn>
         </template>
@@ -29,7 +29,7 @@
       :search="search"
       :loading="loading"
       item-value="identity"
-      class="elevation-1"
+      class="elevation-0"
       show-select
     >
       <template #item.identity="{ item }">
@@ -50,7 +50,7 @@
           :key="tag.name"
           :color="tag.type !== 'idt' ? 'primary' : 'default'"
           :class="index > 0 ? 'ml-2' : ''"
-          small
+          size="small"
         >
           {{ tag.label }}
         </v-chip>
@@ -59,9 +59,9 @@
         <template v-if="item.possible_actions.length !== 0">
           <v-icon size="2.5em" color="blue">mdi-circle-small</v-icon>
         </template>
-        <v-menu offset-y>
+        <v-menu location="bottom">
           <template #activator="{ props }">
-            <v-btn v-bind="props" size="small" icon="mdi-dots-horizontal">
+            <v-btn v-bind="props" size="small" icon="mdi-dots-horizontal" variant="text">
             </v-btn>
           </template>
           <menu-items :items="getMenuItems(item)" :object="item" />
@@ -87,7 +87,7 @@ const headers = ref([
     title: $gettext('Actions'),
     key: 'actions',
     sortable: false,
-    align: 'right',
+    align: 'end',
   },
 ])
 const identities = ref([])
