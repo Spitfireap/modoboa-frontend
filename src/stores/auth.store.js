@@ -2,6 +2,7 @@ import Cookies from 'js-cookie'
 
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import gettext from '@/plugins/gettext'
 
 import repository from '@/api/repository'
 import account from '@/api/account'
@@ -14,6 +15,8 @@ export const useAuthStore = defineStore('auth', () => {
   //TODO: check wether or not we should not await for the resp.
   async function fetchUser() {
     return account.getMe().then((resp) => {
+      const language = gettext
+      language.current = resp.data.language
       authUser.value = resp.data
       isAuthenticated.value = true
     })

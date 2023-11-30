@@ -8,48 +8,49 @@ import domainApi from '@/api/domains'
 export const useDomainsStore = defineStore('domains', () => {
   const { $gettext } = gettext
   const domainsLoaded = ref(false)
-  const domains = ref([])
+  const domains = ref({})
   const domainAliases = ref({})
-
-  async function getDomainByPk(pk) {
-    for (const domain of domains.value) {
-      if (domain.pk === parseInt(pk, 10)) {
-        return domain
-      }
-    }
-    return null
-  }
 
   async function getDomains() {
     domainsLoaded.value = false
     return domainApi.getDomains().then((response) => {
+      domains.value = {}
+      const _domains = {}
+      response.data.forEach(function (domain) {
+        _domains[domain.pk] = domain
+      })
+      domains.value = _domains
       domainsLoaded.value = true
-      domains.value = response.data
+      return response
+    })
+  }
+
+  async function getDomain(pk) {
+    domainsLoaded.value = false
+    return domainApi.getDomain(pk).then((response) => {
+      domains.value[pk] = response.data
+      domainsLoaded.value = true
       return response
     })
   }
 
   async function createDomain(data) {
     return domainApi.createDomain(data).then((response) => {
-      domains.value.push(response.data)
+      domains.value[response.data.pk] = response.data
       return response
     })
   }
 
   async function updateDomain(data) {
     return domainApi.updateDomain(data.pk, data).then((response) => {
-      domains.value.forEach(function (item, pos) {
-        if (item.pk === response.data.pk) {
-          domains.value[pos] = response.data
-        }
-      })
+      domains.value[data.pk] = response.data
       return response
     })
   }
 
   async function deleteDomain({ id, data }) {
     return domainApi.deleteDomain(id, data).then((response) => {
-      domains.value = domains.value.filter((item) => item.pk !== id)
+      delete domains.value[id]
       return response
     })
   }
@@ -69,15 +70,12 @@ export const useDomainsStore = defineStore('domains', () => {
 
   async function createAlias(data) {
     const busStore = useBusStore()
-    const apiRequest = domainApi.createDomainAlias(data)
-    const domainLookup = getDomainByPk(data.target)
-    return Promise.all([apiRequest, domainLookup]).then((results) => {
+    return domainApi.createDomainAlias(data).then((response) => {
       busStore.displayNotification({
         msg: $gettext('Domain alias created'),
       })
-      const response = results[0]
-      const domain = results[1]
-      if (domain !== null) {
+      if (domains.value[data.target] != null) {
+        const domain = domains.value[data.target]
         if (domainAliases.value[domain.name] !== undefined) {
           domainAliases.value[domain.name].push(response.data)
         } else {
@@ -91,8 +89,8 @@ export const useDomainsStore = defineStore('domains', () => {
 
   async function deleteAlias(alias) {
     const busStore = useBusStore()
+    const domain = domains.value[alias.target]
     const apiRequest = domainApi.deleteDomainAlias(alias.pk)
-    const domain = await getDomainByPk(alias.target)
     const filter = _filterAlias(domain.name, alias.pk)
     Promise.all([filter, apiRequest]).then((results) => {
       const newList = results[0]
@@ -108,7 +106,7 @@ export const useDomainsStore = defineStore('domains', () => {
 
   async function updateAlias(data) {
     const busStore = useBusStore()
-    const domain = await getDomainByPk(data.target)
+    const domain = domains.value[data.target]
     const filter = _filterAlias(domain.name, data.pk)
     const apiRequest = domainApi.updateDomainAlias(data.pk, data)
     Promise.all([filter, apiRequest]).then((results) => {
@@ -129,7 +127,7 @@ export const useDomainsStore = defineStore('domains', () => {
     domainsLoaded,
     domains,
     domainAliases,
-    getDomainByPk,
+    getDomain,
     getDomains,
     createDomain,
     updateDomain,

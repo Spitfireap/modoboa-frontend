@@ -4,10 +4,9 @@
       v-model="selected"
       :expanded="expanded"
       :headers="domainHeaders"
-      :items="domains"
+      :items="Object.values(domains)"
       item-value="name"
       :search="search"
-      class="elevation-1"
       show-select
       expand-on-click
       :loading="!domainsLoaded"

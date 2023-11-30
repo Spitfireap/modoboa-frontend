@@ -15,7 +15,7 @@
         <label class="m-label">{{ $gettext('Choose a domain') }}</label>
         <v-select
           v-model="form.target"
-          :items="domainsStore.domains"
+          :items="Object.values(domainsStore.domains)"
           item-title="name"
           item-value="pk"
           :rules="[rules.required]"

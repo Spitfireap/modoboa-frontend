@@ -107,7 +107,11 @@
           >
             {{ $gettext('DKIM key') }}
           </v-col>
-          <v-col cols="8" class="d-none d-sm-flex flex-shrink-1">
+          <v-col
+            v-if="domain.dkim_private_key_path && domain.dkim_public_key"
+            cols="8"
+            class="d-none d-sm-flex flex-shrink-1"
+          >
             <v-btn
               icon="mdi-content-copy"
               variant="text"
@@ -153,7 +157,7 @@
     <ConfirmDialog
       ref="dialog"
       @agree="confirmGenNewKey"
-      @close="cancelDKIMGen"
+      @cancel="cancelDKIMGen"
     />
   </v-card>
 </template>

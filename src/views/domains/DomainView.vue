@@ -11,7 +11,7 @@
         <v-btn
           color="primary"
           icon="mdi-reload"
-          @click="refreshDomain(domain.pk)"
+          @click="refreshDomain()"
         ></v-btn>
       </v-toolbar-title>
     </v-toolbar>
@@ -82,34 +82,31 @@ import DomainAdminList from '@/components/domains/DomainAdminList.vue'
 import DmarcAligmentChart from '@/components/dmarc/DmarcAligmentChart.vue'
 import DNSDetail from '@/components/domains/DNSDetail.vue'
 import DomainSummary from '@/components/domains/DomainSummary.vue'
-import parametersApi from '@/api/parameters'
-import domainsApi from '@/api/domains'
+import { useDomainsStore } from '@/stores'
 import ResourcesForm from '@/components/tools/ResourcesForm.vue'
 import TimeSerieChart from '@/components/tools/TimeSerieChart.vue'
 import { useGettext } from 'vue3-gettext'
-import { ref, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 const { $gettext } = useGettext()
 const route = useRoute()
+const domainsStore = useDomainsStore()
 
-const domain = ref({ pk: route.params.id })
+const domain = computed(() => {
+  if (domainsStore.domains[route.params.id] !== undefined) {
+    return domainsStore.domains[route.params.id]
+  }
+  refreshDomain()
+  return { pk: route.params.id }
+})
 
 const limitsConfig = ref({})
 const tab = ref(null)
 
-function refreshDomain(domainId) {
-  domainsApi.getDomain(domainId).then((resp) => {
-    domain.value = resp.data
-  })
+function refreshDomain() {
+  domainsStore.getDomain(route.params.id)
 }
-
-onMounted(() => {
-  parametersApi.getApplication('limits').then((resp) => {
-    limitsConfig.value = resp.data
-  })
-  refreshDomain(route.params.id)
-})
 </script>
 
 <style scoped>

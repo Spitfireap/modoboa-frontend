@@ -1,15 +1,16 @@
 <template>
-  <div>
-    <v-expansion-panels v-model="panel">
-      <v-expansion-panel>
-        <v-expansion-panel-header v-slot="{ open }">
+  <LoadingData v-if="!domainsStore.domainsLoaded" />
+  <div v-else>
+    <v-expansion-panels v-model="panel" :multiple="formErrors">
+      <v-expansion-panel eager value="generalForm">
+        <v-expansion-panel-title v-slot="{ expanded }">
           <v-row no-gutters>
             <v-col cols="4">
               {{ $gettext('General') }}
             </v-col>
-            <v-col cols="8" class="text-secondary">
+            <v-col cols="8" class="text-medium-emphasis">
               <v-fade-transition leave-absolute>
-                <span v-if="open"></span>
+                <span v-if="expanded"></span>
                 <v-row v-else no-gutters style="width: 100%">
                   <v-col cols="6">
                     {{ $gettext('Name: ') }} {{ editedDomain.name }}
@@ -21,20 +22,20 @@
               </v-fade-transition>
             </v-col>
           </v-row>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
           <DomainGeneralForm ref="generalForm" v-model="editedDomain" />
-        </v-expansion-panel-content>
+        </v-expansion-panel-text>
       </v-expansion-panel>
-      <v-expansion-panel>
-        <v-expansion-panel-header v-slot="{ open }">
+      <v-expansion-panel eager value="dnsForm">
+        <v-expansion-panel-title v-slot="{ expanded }">
           <v-row no-gutters>
             <v-col cols="4">
               {{ $gettext('DNS') }}
             </v-col>
-            <v-col cols="8" class="text-secondary">
+            <v-col cols="8" class="text-medium-emphasis">
               <v-fade-transition leave-absolute>
-                <span v-if="open"></span>
+                <span v-if="expanded"></span>
                 <v-row v-else no-gutters style="width: 100%">
                   <v-col cols="6">
                     <div class="mr-2">{{ $gettext('DNS checks') }}</div>
@@ -56,30 +57,30 @@
               </v-fade-transition>
             </v-col>
           </v-row>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
           <DomainDNSForm ref="dnsForm" v-model="editedDomain" />
-        </v-expansion-panel-content>
+        </v-expansion-panel-text>
       </v-expansion-panel>
-      <v-expansion-panel>
-        <v-expansion-panel-header v-slot="{ open }">
+      <v-expansion-panel eager value="limitationForm">
+        <v-expansion-panel-title v-slot="{ expanded }">
           <v-row no-gutters>
             <v-col cols="4">
               {{ $gettext('Limitations') }}
             </v-col>
-            <v-col cols="8" class="text-secondary">
+            <v-col cols="8" class="text-medium-emphasis">
               <v-fade-transition leave-absolute>
-                <span v-if="open"></span>
+                <span v-if="expanded"></span>
                 <v-row v-else no-gutters style="width: 100%">
                   <v-col cols="6">
                     <div class="mr-2">
-                      {{ $gettext('Quota: ') }} {{ domain.quota }}
+                      {{ $gettext('Quota: ') }} {{ editedDomain.quota }}
                     </div>
                   </v-col>
-                  <v-col v-if="domain.message_limit" cols="6">
+                  <v-col v-if="editedDomain.message_limit" cols="6">
                     <div class="mr-2">
                       {{ $gettext('Sending limit: ') }}
-                      {{ domain.message_limit }}
+                      {{ editedDomain.message_limit }}
                     </div>
                   </v-col>
                   <v-col v-else cols="6">
@@ -89,20 +90,24 @@
               </v-fade-transition>
             </v-col>
           </v-row>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <DomainLimitationsForm v-model="editedDomain" />
-        </v-expansion-panel-content>
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
+          <DomainLimitationsForm ref="limitationForm" v-model="editedDomain" />
+        </v-expansion-panel-text>
       </v-expansion-panel>
-      <v-expansion-panel v-if="editedDomain.type === 'relaydomain'">
-        <v-expansion-panel-header v-slot="{ open }">
+      <v-expansion-panel
+        v-if="editedDomain.type === 'relaydomain'"
+        value="transportForm"
+        eager
+      >
+        <v-expansion-panel-title v-slot="{ expanded }">
           <v-row no-gutters>
             <v-col cols="4">
               {{ $gettext('Transport') }}
             </v-col>
-            <v-col cols="8" class="text-secondary">
+            <v-col cols="8" class="text-medium-emphasis">
               <v-fade-transition leave-absolute>
-                <span v-if="open"></span>
+                <span v-if="expanded"></span>
                 <v-row v-else no-gutters style="width: 100%">
                   <v-col cols="6">
                     <div class="mr-2">
@@ -114,10 +119,10 @@
               </v-fade-transition>
             </v-col>
           </v-row>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
           <DomainTransportForm ref="transportForm" v-model="editedDomain" />
-        </v-expansion-panel-content>
+        </v-expansion-panel-text>
       </v-expansion-panel>
       <v-expansion-panel
         v-if="
@@ -125,21 +130,23 @@
           limitsConfig.params.enable_domain_limits &&
           (authUser.role === 'SuperAdmins' || authUser.role === 'Resellers')
         "
+        value="resourcesForm"
+        eager
       >
-        <v-expansion-panel-header>
+        <v-expansion-panel-title>
           <v-row no-gutters>
             <v-col cols="4">
               {{ $gettext('Resources') }}
             </v-col>
           </v-row>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
           <ResourcesForm ref="resourcesForm" v-model="editedDomain.resources" />
-        </v-expansion-panel-content>
+        </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
     <div class="mt-4 d-flex justify-end">
-      <v-btn :loading="working" @click="$router.go(-1)">
+      <v-btn :loading="working" @click="router.go(-1)">
         {{ $gettext('Cancel') }}
       </v-btn>
       <v-btn
@@ -159,29 +166,37 @@ import DomainDNSForm from './form_steps/DomainDNSForm.vue'
 import DomainGeneralForm from './form_steps/DomainGeneralForm.vue'
 import DomainLimitationsForm from './form_steps/DomainLimitationsForm.vue'
 import DomainTransportForm from './form_steps/DomainTransportForm.vue'
+import LoadingData from '@/components/tools/LoadingData.vue'
 import parametersApi from '@/api/parameters'
 import ResourcesForm from '@/components/tools/ResourcesForm.vue'
 import { computed, ref } from 'vue'
 import { useGettext } from 'vue3-gettext'
 import { useAuthStore, useDomainsStore, useBusStore } from '@/stores'
+import { useRoute, useRouter } from 'vue-router'
+import { onMounted } from 'vue'
 
+const route = useRoute()
+const router = useRouter()
 const { $gettext } = useGettext()
 const authStore = useAuthStore()
 const domainsStore = useDomainsStore()
 const busStore = useBusStore()
 
-const props = defineProps({ domain: { type: Object, default: null } })
 const authUser = computed(() => authStore.authUser)
 
 const editedDomain = computed(() => {
-  const _editdomain = props.domain
-  if (
-    _editdomain.value.type === 'relaydomain' &&
-    _editdomain.value.transport === null
-  ) {
-    _editdomain.value.transport = {}
+  const _editedDomain = domainsStore.domains[route.params.id]
+  if (_editedDomain === undefined) {
+    domainsStore.getDomain(route.params.id)
+    return { pk: route.params.id }
   }
-  return _editdomain
+  if (
+    _editedDomain.type === 'relaydomain' &&
+    _editedDomain.transport === null
+  ) {
+    _editedDomain.transport = {}
+  }
+  return _editedDomain
 })
 const limitsConfig = ref({})
 const panel = ref(0)
@@ -191,19 +206,46 @@ const working = ref(false)
 const generalForm = ref()
 const resourcesForm = ref()
 const transportForm = ref()
+const limitationForm = ref()
+const dnsForm = ref()
+
+// Form map
+const formMap = computed(() => {
+  const map = {
+    generalForm: generalForm,
+    limitationForm: limitationForm,
+    dnsForm: dnsForm,
+  }
+  if (editedDomain.value.type === 'relaydomain') {
+    map.transportForm = transportForm
+  }
+  if (
+    limitsConfig.value.params &&
+    limitsConfig.value.params.enable_domain_limits &&
+    (authUser.value.role === 'SuperAdmins' ||
+      authUser.value.role === 'Resellers')
+  ) {
+    map.resourcesForm = resourcesForm
+  }
+  return map
+})
+
+const formErrors = ref(false)
 
 async function save() {
-  if (generalForm.value !== undefined) {
-    const { valid } = await generalForm.value.vFormRef.value.validate()
-    if (!valid) {
-      return
+  formErrors.value = false
+  panel.value = []
+  for (const [panelName, formRef] of Object.entries(formMap.value)) {
+    if (formRef.value != null) {
+      const { valid } = await formRef.value.vFormRef.validate()
+      if (!valid) {
+        formErrors.value = true
+        panel.value.push(panelName)
+      }
     }
   }
-  if (resourcesForm.value !== undefined) {
-    const { valid } = await resourcesForm.value.vFormRef.value.validate()
-    if (!valid) {
-      return
-    }
+  if (formErrors.value) {
+    return
   }
   working.value = true
   try {
@@ -215,14 +257,17 @@ async function save() {
       transportForm.value.checkSettingTypes(data)
     }
     domainsStore.updateDomain(data).then(() => {
-      busStore.displayNotification({ msg: this.$gettext('Domain updated') })
+      busStore.displayNotification({ msg: $gettext('Domain updated') })
+      router.go(-1)
     })
   } finally {
     working.value = false
   }
 }
-
-parametersApi.getApplication('limits').then((resp) => {
-  limitsConfig.value.data = resp.data
+onMounted(() => {
+  parametersApi.getApplication('limits').then((resp) => {
+    limitsConfig.value.data = resp.data
+  })
+  domainsStore.getDomain(route.params.id)
 })
 </script>

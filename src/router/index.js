@@ -56,6 +56,7 @@ const routes = [
           requiresAuth: true,
           allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
         },
+        component: () => import('@/views/domains/DomainEditView.vue'),
       },
       {
         path: '/imap_migration/migrations',
@@ -222,7 +223,7 @@ const routes = [
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
-    redirect: { name: 'Dashboard' },
+    redirect: { name: 'Dashboard', params: {} },
   },
 ]
 
