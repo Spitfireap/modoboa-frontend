@@ -15,8 +15,7 @@ export const useAuthStore = defineStore('auth', () => {
   //TODO: check wether or not we should not await for the resp.
   async function fetchUser() {
     return account.getMe().then((resp) => {
-      const language = gettext
-      language.current = resp.data.language
+      gettext.current = resp.data.language
       authUser.value = resp.data
       isAuthenticated.value = true
     })
