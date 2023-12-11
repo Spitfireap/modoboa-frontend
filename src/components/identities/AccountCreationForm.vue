@@ -29,7 +29,7 @@
             <v-col
               ><span>{{ item.key }}</span></v-col
             >
-            <v-col class="text-right" v-if="item.type === 'yesno'">
+            <v-col v-if="item.type === 'yesno'" class="text-right">
               {{ $yesno(item.value) }}
             </v-col>
           </v-row>
@@ -52,7 +52,7 @@
         <v-col
           ><span class="grey--text">{{ item.key }}</span></v-col
         >
-        <v-col class="text-right" v-if="item.type === 'yesno'">{{
+        <v-col v-if="item.type === 'yesno'" class="text-right">{{
           $yesno(item.value)
         }}</v-col>
       </template>
@@ -110,7 +110,7 @@ const summarySections = computed(() => {
       ],
     },
   ]
-  if (needsMailbox) {
+  if (needsMailbox.value) {
     return result.concat([
       {
         title: $gettext('Mailbox'),

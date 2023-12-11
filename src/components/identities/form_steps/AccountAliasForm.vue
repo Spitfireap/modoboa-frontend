@@ -4,7 +4,6 @@
       ref="aliasField"
       v-model="currentAlias"
       :placeholder="$gettext('Start typing a name here...')"
-      @domain-selected="addAlias"
       :hint="
         $gettext(
           'Alias(es) of this mailbox. To create a catchall alias, just enter the domain name (@domain.tld).'
@@ -13,6 +12,7 @@
       persistent-hint
       :loading="isValidating"
       :error-messages="errors"
+      @domain-selected="addAlias"
     />
     <v-chip
       v-for="(alias, index) in account.aliases"

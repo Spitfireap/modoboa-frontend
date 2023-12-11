@@ -14,7 +14,7 @@ export const useAliasesStore = defineStore('aliases', () => {
   const aliasesLoaded = ref(false)
 
   async function _getIndexByPk(pk) {
-    for (let i = 0; i < aliases.length; i++) {
+    for (let i = 0; i < aliases.value.length; i++) {
       if (aliases[i].pk === pk) {
         return i
       }

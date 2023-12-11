@@ -10,5 +10,4 @@
       </v-col>
     </v-row>
   </v-container>
-  <template> </template>
 </template>

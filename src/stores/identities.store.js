@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 
 import { useAccountsStore } from './accounts.store'
 import { useAliasesStore } from './aliases.store'
@@ -97,6 +97,7 @@ export const useIdentitiesStore = defineStore('identities', () => {
         return response
       })
     } else if (type === 'account') {
+      return
     }
   }
 

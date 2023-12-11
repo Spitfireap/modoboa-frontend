@@ -94,7 +94,7 @@ const routes = [
       {
         path: '/identities/accounts/:id',
         name: 'AccountDetail',
-        component: () => import('@/views/identities/Account.vue'),
+        component: () => import('@/views/identities/AccountView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],

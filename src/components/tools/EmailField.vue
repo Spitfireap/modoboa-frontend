@@ -9,13 +9,13 @@
       autocomplete="new-password"
       @keydown="onKeyDown"
     />
-    <div class="menu" v-if="showMenu" :style="`width: ${width}px;`">
+    <div v-if="showMenu" class="menu" :style="`width: ${width}px;`">
       <v-list class="list">
         <v-list-item
           v-for="(domain, index) in filteredDomains"
           :key="index"
-          @click="selectDomain(domain)"
           :class="selectionIndex === index ? 'bg-primary-lighten-1' : ''"
+          @click="selectDomain(domain)"
           @mouseenter="selectionIndex = index"
         >
           <v-list-item-title>{{ domain.name }}</v-list-item-title>

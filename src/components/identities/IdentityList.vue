@@ -44,7 +44,7 @@
           ></v-text-field>
         </v-toolbar>
       </template>
-      <template #item.identity="{ item }">
+      <template #[`item.identity`]="{ item }">
         <template v-if="item.type === 'account'">
           <router-link :to="{ name: 'AccountDetail', params: { id: item.pk } }">
             {{ item.identity }}
@@ -56,7 +56,7 @@
           </router-link>
         </template>
       </template>
-      <template #item.tags="{ item }">
+      <template #[`item.tags`]="{ item }">
         <v-chip
           v-for="(tag, index) in item.tags"
           :key="tag.name"
@@ -67,7 +67,7 @@
           {{ tag.label }}
         </v-chip>
       </template>
-      <template #item.actions="{ item }">
+      <template #[`item.actions`]="{ item }">
         <template
           v-if="
             item.possible_actions !== undefined &&
@@ -137,7 +137,7 @@ function getMenuItems(item) {
         icon: element.icon,
         onClick: () => {
           if (element.type === 'download') {
-            downloadFile(element)
+            //TODO : downloadFile(element)
           }
           fetchIdentities()
         },

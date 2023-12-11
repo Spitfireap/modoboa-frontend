@@ -16,10 +16,10 @@
         <v-switch
           v-model="account.random_password"
           :label="$gettext('Random password')"
-          @update:model-value="updatePassword"
           density="compact"
           color="primary"
           class="text-center"
+          @update:model-value="updatePassword"
         />
       </v-col>
       <template v-if="account.random_password">

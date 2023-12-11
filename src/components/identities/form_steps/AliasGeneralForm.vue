@@ -34,8 +34,8 @@
         </template>
       </v-select>
       <v-text-field
-        :label="$gettext('Generated address')"
         v-model="alias.address"
+        :label="$gettext('Generated address')"
         readonly
       >
         <template #append-inner>

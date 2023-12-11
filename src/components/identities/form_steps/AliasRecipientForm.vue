@@ -4,7 +4,6 @@
       ref="recipientField"
       v-model="recipient"
       :placeholder="$gettext('Start typing a name here...')"
-      @domain-selected="addRecipient"
       :hint="
         $gettext(
           'Alias(es) of this mailbox. To create a catchall alias, just enter the domain name (@domain.tld).'
@@ -13,15 +12,16 @@
       persistent-hint
       allow-add
       :rules="requiredRecipient"
+      @domain-selected="addRecipient"
     />
     <v-chip
-      v-for="(recipient, index) in recipients"
+      v-for="(_recipient, index) in recipients"
       :key="index"
       class="mr-2 mt-2"
       closable
       @click:close="removeRecipient(index)"
     >
-      {{ recipient }}
+      {{ _recipient }}
     </v-chip>
   </v-form>
 </template>
