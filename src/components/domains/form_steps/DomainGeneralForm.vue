@@ -1,7 +1,7 @@
 <template>
   <v-form ref="vFormRef">
     <v-text-field
-      v-model="form.name"
+      v-model="domain.name"
       :label="$gettext('Domain name (ex: domain.tld)')"
       :rules="[rules.required]"
       variant="outlined"
@@ -9,13 +9,13 @@
     />
 
     <choice-field
-      v-model="form.type"
+      v-model="domain.type"
       :label="$gettext('Type')"
       :choices="domainTypes"
     />
 
     <v-switch
-      v-model="form.enabled"
+      v-model="domain.enabled"
       :label="$gettext('Enabled')"
       :hint="
         $gettext(
@@ -36,18 +36,9 @@ import rules from '@/plugins/rules.js'
 
 const { $gettext } = useGettext()
 
-const props = defineProps({ modelValue: { type: Object, default: () => {} } })
+const props = defineProps({ modelValue: { type: Object, default: null } })
 
-const emit = defineEmits(['update:model-value'])
-
-const form = computed({
-  get() {
-    return props.modelValue
-  },
-  set(value) {
-    emit('update:model-value', value)
-  },
-})
+const domain = computed(() => props.modelValue)
 
 const vFormRef = ref()
 

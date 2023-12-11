@@ -13,17 +13,18 @@
     >
       <template #top>
         <v-toolbar color="white" flat>
-          <v-menu offset-y>
+          <v-menu location="bottom">
             <template #activator="{ props }">
               <v-btn
-                variant="elevated"
+                variant="flat"
                 append-icon="mdi-chevron-down"
                 v-bind="props"
+                size="small"
               >
                 {{ $gettext('Actions') }}
               </v-btn>
             </template>
-            <v-list dense> </v-list>
+            <v-list density="compact"> </v-list>
           </v-menu>
           <v-btn
             variant="text"
@@ -34,7 +35,7 @@
           <v-text-field
             v-model="search"
             prepend-inner-icon="mdi-magnify"
-            placeholder="Search"
+            :placeholder="$gettext('Search')"
             variant="outlined"
             single-line
             flat
@@ -53,7 +54,9 @@
         }"
       >
         <tr>
-          <td>
+          <td
+            class="v-data-table__td v-data-table-column--no-padding v-data-table-column--align-start"
+          >
             <v-checkbox-btn
               :value="!isSelected(internalItem)"
               @click="toggleSelect(internalItem)"
@@ -74,7 +77,7 @@
               {{ $gettext('Relay') }}
             </v-chip>
             <template v-if="!item.enabled">
-              {{ $gettext('(disabled)') }}
+              {{ $gettext('disabled') }}
             </template>
           </td>
           <td>
@@ -182,7 +185,7 @@ import DNSStatusChip from './DNSStatusChip.vue'
 import DomainAliasForm from '@/components/domains/DomainAliasForm.vue'
 import MenuItems from '@/components/tools/MenuItems.vue'
 
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 
 const { $gettext } = useGettext()
 const router = useRouter()
@@ -220,8 +223,6 @@ const expanded = ref([])
 function reloadDomains() {
   domainStore.getDomains()
 }
-
-reloadDomains()
 
 function closeDomainAliasForm() {
   showAliasForm.value = false
@@ -307,6 +308,12 @@ function getDomainMenuItems(domain) {
   }
   return result
 }
+
+onMounted(() => {
+  if (Object.values(domains.value).length < 1) {
+    reloadDomains()
+  }
+})
 </script>
 
 <style scoped>

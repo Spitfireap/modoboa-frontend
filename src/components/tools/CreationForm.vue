@@ -135,7 +135,6 @@ async function goToNextStep(current, next) {
   const vform = props.getVFormRef(props.steps[current - 1])
   if (vform !== undefined) {
     const { valid } = await vform.validate()
-    console.log(valid)
     if (!valid) {
       return
     }

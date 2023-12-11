@@ -52,21 +52,14 @@ import rules from '@/plugins/rules.js'
 
 const { $gettext } = useGettext()
 
-const props = defineProps({ modelValue: { type: Object, default: () => {} } })
-const emit = defineEmits(['update:modelValue', 'createAdmin'])
+const props = defineProps({ modelValue: { type: Object, default: null } })
+const emit = defineEmits(['createAdmin'])
 
 const vFormRef = ref()
 
 const createAdmin = ref(false)
 
-const domain = computed({
-  get() {
-    return props.modelValue
-  },
-  set(value) {
-    emit('update:modelValue', value)
-  },
-})
+const domain = computed(() => props.modelValue)
 
 function updatePassword(value) {
   if (value) {

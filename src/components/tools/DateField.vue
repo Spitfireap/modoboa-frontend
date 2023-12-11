@@ -28,11 +28,9 @@ defineProps({
   modelValue: { type: Object, default: null },
   label: { type: String, default: '' },
 })
-const emit = defineEmits(['update:modelValue'])
 
 const menu = ref(false)
-function update(value) {
-  emit('update:modelValue', value)
+function update() {
   menu.value = false
 }
 </script>

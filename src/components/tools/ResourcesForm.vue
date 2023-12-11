@@ -17,16 +17,8 @@
 import { ref, computed } from 'vue'
 
 const props = defineProps({ modelValue: { type: Object, default: null } })
-const emit = defineEmits(['update:modelValue'])
 
-const resources = computed({
-  get() {
-    return props.modelValue
-  },
-  set(value) {
-    emit('update:modelValue', value)
-  },
-})
+const resources = computed(() => props.modelValue)
 
 const vFormRef = ref()
 

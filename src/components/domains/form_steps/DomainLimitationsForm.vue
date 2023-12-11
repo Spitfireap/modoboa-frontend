@@ -26,7 +26,6 @@
       class="mb-4"
       variant="outlined"
       :rules="[rules.required]"
-      @update:model-value="check"
     />
     <v-text-field
       v-model="domain.message_limit"
@@ -44,34 +43,17 @@
 </template>
 
 <script setup lang="js">
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref } from 'vue'
 import { useGettext } from 'vue3-gettext'
 import rules from '@/plugins/rules.js'
 
 const { $gettext } = useGettext()
 
-const props = defineProps({ modelValue: { type: Object, default: () => {} } })
-const emit = defineEmits(['update:modelValue'])
+const props = defineProps({ modelValue: { type: Object, default: null } })
 
 const vFormRef = ref()
 
-onMounted(() => {
-  check()
-})
-
-function check() {
-  console.log(`input is : ${domain.value.message_limit}`)
-  console.log(typeof domain.value.message_limit)
-}
-
-const domain = computed({
-  get() {
-    return props.modelValue
-  },
-  set(value) {
-    emit('update:modelValue', value)
-  },
-})
+const domain = computed(() => props.modelValue)
 
 defineExpose({ vFormRef })
 </script>

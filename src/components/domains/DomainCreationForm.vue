@@ -109,6 +109,7 @@ const defaultDomain = {
 const domain = ref(defaultDomain)
 
 onMounted(() => {
+  //TODO : Store this in Pinia
   ParametersApi.getApplication('admin').then((resp) => {
     const params = resp.data.params
     domain.value.quota = params.default_domain_quota
@@ -220,7 +221,6 @@ const summarySections = computed(() => {
       transport.value.service != null &&
       transport.value.service.value
     ) {
-      console.log(transport.value)
       const service = transport.value.service.value
       for (const setting of service.settings) {
         const item = {
@@ -276,7 +276,6 @@ const summarySections = computed(() => {
 })
 
 function close() {
-  domain.value = defaultDomain
   emit('close')
 }
 
@@ -292,8 +291,6 @@ function getForm(step) {
   return formStepsComponenents.value[step.name]
 }
 function getVFormRef(step) {
-  console.log(step.name)
-  console.log(formStepsComponenents[step.name].value.vFormRef)
   return formStepsComponenents[step.name].value.vFormRef
 }
 

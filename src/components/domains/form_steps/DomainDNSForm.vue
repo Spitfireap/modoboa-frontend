@@ -17,7 +17,7 @@
         :disabled="!domain.enable_dkim"
         variant="outlined"
       />
-      <choice-field
+      <ChoiceField
         v-model="domain.dkim_key_length"
         :label="$gettext('DKIM key length')"
         :choices="dkimKeyLengths"
@@ -35,18 +35,10 @@ import { ref, computed } from 'vue'
 const { $gettext } = useGettext()
 
 const props = defineProps({ modelValue: { type: Object, default: () => {} } })
-const emit = defineEmits(['update:modelValue'])
 
 const vFormRef = ref()
 
-const domain = computed({
-  get() {
-    return props.modelValue
-  },
-  set(value) {
-    emit('update:modelValue', value)
-  },
-})
+const domain = computed(() => props.modelValue)
 
 const dkimKeyLengths = ref([
   {

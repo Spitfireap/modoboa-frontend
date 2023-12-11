@@ -23,15 +23,14 @@
         </v-row>
       </template>
       <template v-else>
-        <v-data-table
+        <v-data-table-virtual
           :headers="mxRecordHeaders"
           :items="detail.mx_records"
-          hide-default-footer
         >
           <template #[`item.updated`]="{ item }">
             {{ $date(item.updated) }}
           </template>
-        </v-data-table>
+        </v-data-table-virtual>
       </template>
       <div class="overline">{{ $gettext('Auto configuration') }}</div>
       <template v-if="domain.dns_global_status == 'pending'">
@@ -177,28 +176,20 @@ const busStore = useBusStore()
 const props = defineProps({
   modelValue: { type: Object, default: null },
 })
-const emit = defineEmits(['update:modelValue'])
+
+const domain = computed(() => props.modelValue)
 
 const dialog = ref()
 const detail = ref({})
 const mxRecordHeaders = ref([
-  { text: $gettext('Name'), value: 'name' },
-  { text: $gettext('Address'), value: 'address' },
-  { text: $gettext('Updated'), value: 'updated' },
+  { title: $gettext('Name'), value: 'name' },
+  { title: $gettext('Address'), value: 'address' },
+  { title: $gettext('Updated'), value: 'updated' },
 ])
 const keyLoading = ref(false)
 
 const showConfigHelp = ref(false)
 const showDKIMKey = ref(false)
-
-const domain = computed({
-  get() {
-    return props.modelValue
-  },
-  set(value) {
-    emit('update:modelValue', value)
-  },
-})
 
 function copyPubKey() {
   navigator.clipboard.writeText(domain.value.dkim_public_key)
