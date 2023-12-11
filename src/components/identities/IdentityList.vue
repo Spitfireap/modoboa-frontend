@@ -1,37 +1,49 @@
 <template>
   <v-card class="mt-6">
-    <v-toolbar flat color="white">
-      <v-menu location="bottom">
-        <template #activator="{ props }">
-          <v-btn v-bind="props" size="small" variant="flat">
-            {{ $gettext('Actions') }} <v-icon right>mdi-chevron-down</v-icon>
-          </v-btn>
-        </template>
-        <v-list density="compact">
-          <menu-items :items="getActionMenuItems()" />
-        </v-list>
-      </v-menu>
-      <v-spacer></v-spacer>
-      <v-text-field
-        v-model="search"
-        prepend-inner-icon="mdi-magnify"
-        placeholder="Search"
-        variant="outlined"
-        density="compact"
-        hide-details
-      />
-    </v-toolbar>
-
     <v-data-table
       v-model="selected"
       :headers="headers"
       :items="identities"
       :search="search"
-      :loading="loading"
+      :loading="!identitiesLoaded"
       item-value="identity"
       class="elevation-0"
       show-select
     >
+      <template #top>
+        <v-toolbar flat color="white">
+          <v-menu location="bottom">
+            <template #activator="{ props }">
+              <v-btn
+                append-icon="mdi-chevron-down"
+                v-bind="props"
+                size="small"
+                variant="flat"
+              >
+                {{ $gettext('Actions') }}
+              </v-btn>
+            </template>
+            <v-list density="compact">
+              <menu-items :items="getActionMenuItems()" />
+            </v-list>
+          </v-menu>
+          <v-btn
+            variant="text"
+            icon="mdi-reload"
+            @click="fetchIdentities"
+          ></v-btn>
+          <v-spacer></v-spacer>
+          <v-text-field
+            v-model="search"
+            prepend-inner-icon="mdi-magnify"
+            :placeholder="$gettext('Search')"
+            variant="outlined"
+            hide-details
+            single-line
+            flat
+          ></v-text-field>
+        </v-toolbar>
+      </template>
       <template #item.identity="{ item }">
         <template v-if="item.type === 'account'">
           <router-link :to="{ name: 'AccountDetail', params: { id: item.pk } }">
@@ -56,28 +68,41 @@
         </v-chip>
       </template>
       <template #item.actions="{ item }">
-        <template v-if="item.possible_actions.length !== 0">
+        <template
+          v-if="
+            item.possible_actions !== undefined &&
+            item.possible_actions.length !== 0
+          "
+        >
           <v-icon size="2.5em" color="blue">mdi-circle-small</v-icon>
         </template>
         <v-menu location="bottom">
           <template #activator="{ props }">
-            <v-btn v-bind="props" size="small" icon="mdi-dots-horizontal" variant="text">
+            <v-btn
+              v-bind="props"
+              size="small"
+              icon="mdi-dots-horizontal"
+              variant="text"
+            >
             </v-btn>
           </template>
-          <menu-items :items="getMenuItems(item)" :object="item" />
+          <MenuItems :items="getMenuItems(item)" :obj="item" />
         </v-menu>
       </template>
     </v-data-table>
+    <ConfirmDialog ref="confirm" @agree="deleteIdentity" />
   </v-card>
 </template>
 
 <script setup lang="js">
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useGettext } from 'vue3-gettext'
-import identitiesApi from '@/api/identities'
+import { useIdentitiesStore } from '@/stores'
 import MenuItems from '@/components/tools/MenuItems.vue'
+import ConfirmDialog from '@/components/tools/ConfirmDialog.vue'
 
 const { $gettext } = useGettext()
+const identitiesStore = useIdentitiesStore()
 
 const headers = ref([
   { title: $gettext('Name'), key: 'identity' },
@@ -90,21 +115,18 @@ const headers = ref([
     align: 'end',
   },
 ])
-const identities = ref([])
-const loading = ref(false)
+
+const identities = computed(() => identitiesStore.identities)
+const identitiesLoaded = computed(() => identitiesStore.identitiesLoaded)
 const search = ref('')
 const selected = ref([])
+const confirm = ref()
 
 function fetchIdentities() {
-  loading.value = true
-  identitiesApi.getAll().then((resp) => {
-    identities.value = resp.data
+  identitiesStore.getIdentities().then(() => {
     selected.value = []
-    loading.value = false
   })
 }
-
-function deleteIdentities() {}
 
 function getMenuItems(item) {
   const result = []
@@ -126,25 +148,19 @@ function getMenuItems(item) {
       icon: 'mdi-circle-edit-outline',
       onClick: editAccount,
     })
-    result.push({
-      label: $gettext('Delete'),
-      icon: 'mdi-delete-outline',
-      onClick: deleteAccount,
-      color: 'red',
-    })
   } else if (item.type === 'alias') {
     result.push({
       label: $gettext('Edit'),
       icon: 'mdi-circle-edit-outline',
       onClick: editAlias,
     })
-    result.push({
-      label: $gettext('Delete'),
-      icon: 'mdi-delete-outline',
-      onClick: deleteAlias,
-      color: 'red',
-    })
   }
+  result.push({
+    label: $gettext('Delete'),
+    icon: 'mdi-delete-outline',
+    onClick: confirmDelete,
+    color: 'red',
+  })
   return result
 }
 
@@ -158,21 +174,35 @@ function getActionMenuItems() {
       color: 'red',
     })
   }
-  result.push({
-    label: $gettext('Reload'),
-    icon: 'mdi-reload',
-    onClick: fetchIdentities,
-  })
   return result
+}
+
+async function confirmDelete(item) {
+  confirm.value.open(
+    $gettext('Warning'),
+    $gettext('Are you sure you want to delete this identity ?'),
+    {
+      color: 'warning',
+      agreeLabel: $gettext('Yes'),
+      cancelLabel: $gettext('No'),
+    },
+    item
+  )
 }
 
 function editAccount() {}
 
-function deleteAccount() {}
+function deleteIdentity(item) {
+  identitiesStore.deleteIdentity(item.type, item.pk)
+}
+
+function deleteIdentities() {}
 
 function editAlias() {}
 
-function deleteAlias() {}
-
-fetchIdentities()
+onMounted(() => {
+  if (identities.value.length < 1) {
+    fetchIdentities()
+  }
+})
 </script>
