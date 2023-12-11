@@ -4,5 +4,14 @@ module.exports = {
     node: true,
   },
   extends: ['plugin:vue/vue3-recommended', 'eslint:recommended', 'prettier'],
-  rules: {},
+  rules: {
+    'vue/component-name-in-template-casing': [
+      'error',
+      'PascalCase',
+      {
+        registeredComponentsOnly: true,
+        ignores: [],
+      },
+    ],
+  },
 }
