@@ -34,6 +34,14 @@ export const useDomainsStore = defineStore('domains', () => {
     })
   }
 
+  function getDomainByName(name) {
+    for (const domain of Object.values(domains.value)) {
+      if (domain.name === name) {
+        return domain
+      }
+    }
+  }
+
   async function createDomain(data) {
     return domainApi.createDomain(data).then((response) => {
       domains.value[response.data.pk] = response.data
@@ -128,6 +136,7 @@ export const useDomainsStore = defineStore('domains', () => {
     domains,
     domainAliases,
     getDomain,
+    getDomainByName,
     getDomains,
     createDomain,
     updateDomain,
