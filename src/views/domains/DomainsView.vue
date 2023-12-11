@@ -16,8 +16,7 @@
         variant="elevated"
         icon="mdi-file-export-outline"
         @click="exportDomains"
-      >
-      </v-btn>
+      ></v-btn>
       <v-menu offset-y>
         <template #activator="{ props }">
           <v-btn
@@ -29,7 +28,7 @@
             {{ $gettext('New') }}
           </v-btn>
         </template>
-        <v-list>
+        <v-list density="compact">
           <v-list-item @click="showDomainWizard = true">
             <v-list-item-title>{{ $gettext('Domain') }}</v-list-item-title>
           </v-list-item>

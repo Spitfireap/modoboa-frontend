@@ -23,15 +23,14 @@
         </v-row>
       </template>
       <template v-else>
-        <v-data-table
+        <v-data-table-virtual
           :headers="mxRecordHeaders"
           :items="detail.mx_records"
-          hide-default-footer
         >
           <template #[`item.updated`]="{ item }">
             {{ $date(item.updated) }}
           </template>
-        </v-data-table>
+        </v-data-table-virtual>
       </template>
       <div class="overline">{{ $gettext('Auto configuration') }}</div>
       <template v-if="domain.dns_global_status == 'pending'">
@@ -182,9 +181,9 @@ const emit = defineEmits(['update:modelValue'])
 const dialog = ref()
 const detail = ref({})
 const mxRecordHeaders = ref([
-  { text: $gettext('Name'), value: 'name' },
-  { text: $gettext('Address'), value: 'address' },
-  { text: $gettext('Updated'), value: 'updated' },
+  { title: $gettext('Name'), value: 'name' },
+  { title: $gettext('Address'), value: 'address' },
+  { title: $gettext('Updated'), value: 'updated' },
 ])
 const keyLoading = ref(false)
 

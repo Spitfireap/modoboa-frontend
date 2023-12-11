@@ -1,4 +1,5 @@
 import gettext from './gettext'
+import accountApi from '@/api/account'
 
 const { $gettext } = gettext
 

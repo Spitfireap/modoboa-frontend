@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="js">
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref } from 'vue'
 import { useGettext } from 'vue3-gettext'
 import rules from '@/plugins/rules.js'
 
@@ -54,15 +54,6 @@ const props = defineProps({ modelValue: { type: Object, default: () => {} } })
 const emit = defineEmits(['update:modelValue'])
 
 const vFormRef = ref()
-
-onMounted(() => {
-  check()
-})
-
-function check() {
-  console.log(`input is : ${domain.value.message_limit}`)
-  console.log(typeof domain.value.message_limit)
-}
 
 const domain = computed({
   get() {
