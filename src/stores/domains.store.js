@@ -6,6 +6,7 @@ import gettext from '@/plugins/gettext'
 import domainApi from '@/api/domains'
 
 export const useDomainsStore = defineStore('domains', () => {
+  const busStore = useBusStore()
   const { $gettext } = gettext
   const domainsLoaded = ref(false)
   const domains = ref({})
@@ -52,6 +53,7 @@ export const useDomainsStore = defineStore('domains', () => {
   async function updateDomain(data) {
     return domainApi.updateDomain(data.pk, data).then((response) => {
       domains.value[data.pk] = response.data
+      busStore.displayNotification({ msg: $gettext('Domain updated') })
       return response
     })
   }
@@ -77,7 +79,6 @@ export const useDomainsStore = defineStore('domains', () => {
   }
 
   async function createAlias(data) {
-    const busStore = useBusStore()
     return domainApi.createDomainAlias(data).then((response) => {
       busStore.displayNotification({
         msg: $gettext('Domain alias created'),
@@ -96,7 +97,6 @@ export const useDomainsStore = defineStore('domains', () => {
   }
 
   async function deleteAlias(alias) {
-    const busStore = useBusStore()
     const domain = domains.value[alias.target]
     const apiRequest = domainApi.deleteDomainAlias(alias.pk)
     const filter = _filterAlias(domain.name, alias.pk)
@@ -113,7 +113,6 @@ export const useDomainsStore = defineStore('domains', () => {
   }
 
   async function updateAlias(data) {
-    const busStore = useBusStore()
     const domain = domains.value[data.target]
     const filter = _filterAlias(domain.name, data.pk)
     const apiRequest = domainApi.updateDomainAlias(data.pk, data)

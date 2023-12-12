@@ -171,7 +171,7 @@ import parametersApi from '@/api/parameters'
 import ResourcesForm from '@/components/tools/ResourcesForm.vue'
 import { computed, ref } from 'vue'
 import { useGettext } from 'vue3-gettext'
-import { useAuthStore, useDomainsStore, useBusStore } from '@/stores'
+import { useAuthStore, useDomainsStore } from '@/stores'
 import { useRoute, useRouter } from 'vue-router'
 import { onMounted } from 'vue'
 
@@ -180,23 +180,18 @@ const router = useRouter()
 const { $gettext } = useGettext()
 const authStore = useAuthStore()
 const domainsStore = useDomainsStore()
-const busStore = useBusStore()
 
 const authUser = computed(() => authStore.authUser)
 
+const domain = ref()
 const editedDomain = computed(() => {
-  const _editedDomain = domainsStore.domains[route.params.id]
-  if (_editedDomain === undefined) {
-    domainsStore.getDomain(route.params.id)
+  if (domain.value == null) {
     return { pk: route.params.id }
   }
-  if (
-    _editedDomain.type === 'relaydomain' &&
-    _editedDomain.transport === null
-  ) {
-    _editedDomain.transport = {}
+  if (domain.value.type === 'relaydomain' && domain.value.transport === null) {
+    domain.value.transport = {}
   }
-  return _editedDomain
+  return domain.value
 })
 const limitsConfig = ref({})
 const panel = ref(0)
@@ -257,7 +252,6 @@ async function save() {
       transportForm.value.checkSettingTypes(data)
     }
     domainsStore.updateDomain(data).then(() => {
-      busStore.displayNotification({ msg: $gettext('Domain updated') })
       router.go(-1)
     })
   } finally {
@@ -268,6 +262,8 @@ onMounted(() => {
   parametersApi.getApplication('limits').then((resp) => {
     limitsConfig.value.data = resp.data
   })
-  domainsStore.getDomain(route.params.id)
+  domainsStore
+    .getDomain(route.params.id)
+    .then(() => (domain.value = domainsStore.domains[route.params.id]))
 })
 </script>
