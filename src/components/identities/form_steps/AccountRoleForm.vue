@@ -10,12 +10,15 @@
         />
       </v-col>
       <v-col cols="5">
-        <v-alert text color="primary" class="mt-11 ml-4 rounded-lg">
+        <v-alert color="primary" class="mt-11 ml-4 rounded-lg">
           <h3 class="headline">{{ roleLabel }}</h3>
           <p class="mt-4">{{ roleHelp }}</p>
-          <v-icon color="white" class="float-right" large
-            >mdi-help-circle-outline</v-icon
-          >
+          <v-icon
+            color="white"
+            class="float-right"
+            size="large"
+            icon="mdi-help-circle-outline"
+            />
         </v-alert>
       </v-col>
     </v-row>
