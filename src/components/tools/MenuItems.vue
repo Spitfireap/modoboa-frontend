@@ -1,5 +1,5 @@
 <template>
-  <v-list dense>
+  <v-list density="compact">
     <v-list-item
       v-for="(item, index) in items"
       :key="index"
@@ -14,7 +14,7 @@
   </v-list>
 </template>
 
-<script setup>
+<script setup lang="js">
 defineProps({
   items: {
     type: Object,

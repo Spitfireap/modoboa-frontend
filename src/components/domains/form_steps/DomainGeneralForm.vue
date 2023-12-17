@@ -8,7 +8,7 @@
       class="mb-5"
     />
 
-    <choice-field
+    <ChoiceField
       v-model="domain.type"
       :label="$gettext('Type')"
       :choices="domainTypes"

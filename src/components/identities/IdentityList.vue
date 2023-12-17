@@ -24,7 +24,7 @@
               </v-btn>
             </template>
             <v-list density="compact">
-              <menu-items :items="getActionMenuItems()" />
+              <MenuItems :items="getActionMenuItems()" />
             </v-list>
           </v-menu>
           <v-btn

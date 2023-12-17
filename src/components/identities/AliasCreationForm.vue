@@ -1,5 +1,5 @@
 <template>
-  <creation-form
+  <CreationForm
     ref="form"
     :title="$gettext('New alias')"
     :steps="steps"
@@ -16,7 +16,7 @@
     <template #[`form.recipients`]>
       <AliasRecipientForm ref="recipients" v-model="alias.recipients" />
     </template>
-  </creation-form>
+  </CreationForm>
 </template>
 
 <script setup lang="js">

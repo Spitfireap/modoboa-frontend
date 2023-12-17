@@ -1,11 +1,11 @@
 <template>
-  <hello-world />
+  <HelloWorld />
   <v-btn @click="openDialog">OpenDialog</v-btn>
   <v-btn @click="sendNotification({ msg: 'ok' })">Send notification</v-btn>
   <v-btn @click="sendNotification({ msg: 'pas ok du tout !', type: 'error' })"
     >Send notification2</v-btn
   >
-  <confirm-dialog ref="dialog" @agree="agree" />
+  <ConfirmDialog ref="dialog" @agree="agree" />
 </template>
 
 <script setup>

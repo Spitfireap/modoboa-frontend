@@ -136,6 +136,7 @@ const routes = [
       {
         path: '/alarms',
         name: 'Alarms',
+        component: () => import('@/views/alarms/AlarmsView.vue'),
         meta: {
           requiresAuth: true,
         },

@@ -1,6 +1,6 @@
 <template>
   <template v-if="smAndDown">
-    <twofa-form />
+    <TwofaForm />
   </template>
   <template v-else>
     <v-row class="fill-height ma-0">
@@ -12,7 +12,7 @@
         />
       </v-col>
       <v-col class="text-center">
-        <twofa-form />
+        <TwofaForm />
       </v-col>
     </v-row>
   </template>
