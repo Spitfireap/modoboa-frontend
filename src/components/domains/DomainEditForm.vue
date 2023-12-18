@@ -188,9 +188,6 @@ const editedDomain = computed(() => {
   if (domain.value == null) {
     return { pk: route.params.id }
   }
-  if (domain.value.type === 'relaydomain' && domain.value.transport === null) {
-    domain.value.transport = {}
-  }
   return domain.value
 })
 const limitsConfig = ref({})

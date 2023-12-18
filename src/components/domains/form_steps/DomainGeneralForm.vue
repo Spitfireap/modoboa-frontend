@@ -12,6 +12,7 @@
       v-model="domain.type"
       :label="$gettext('Type')"
       :choices="domainTypes"
+      @update:model-value="cleanTransport"
     />
 
     <v-switch
@@ -42,16 +43,21 @@ const domain = computed(() => props.modelValue)
 
 const vFormRef = ref()
 
+function cleanTransport(value) {
+  if (value === 'relaydomain' && domain.value.transport == null) {
+    domain.value.transport = {}
+  }
+}
 const domainTypes = [
   {
     label: 'Domain',
     icon: 'mdi-earth',
-    value: 'domain',
+    value: $gettext('domain'),
   },
   {
     label: 'Relay domain',
     icon: 'mdi-earth',
-    value: 'relaydomain',
+    value: $gettext('relaydomain'),
   },
 ]
 
