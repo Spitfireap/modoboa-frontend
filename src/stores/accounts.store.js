@@ -11,12 +11,36 @@ export const useAccountsStore = defineStore('accounts', () => {
 
   const { $gettext } = gettext
 
-  const accounts = ref([])
+  const accounts = ref({})
   const accountsLoaded = ref(false)
 
   async function getAll() {
+    accounts.value = {}
     return accountsApi.getAll().then((response) => {
-      accounts.value = response.data
+      for (const account of response.data) {
+        accounts.value[account.pk] = account
+      }
+      return response
+    })
+  }
+
+  async function getAccount(pk) {
+    accountsLoaded.value = false
+    return accountsApi
+      .get(pk)
+      .then((response) => {
+        accounts.value[pk] = response.data
+        return response
+      })
+      .finally(() => {
+        accountsLoaded.value = true
+      })
+  }
+
+  async function updateAccount(data) {
+    return accountsApi.patch(data.pk, data).then((response) => {
+      accounts.value[data.pk] = response.data
+      busStore.displayNotification({ msg: this.$gettext('Account updated') })
       return response
     })
   }
@@ -32,6 +56,8 @@ export const useAccountsStore = defineStore('accounts', () => {
     accounts,
     accountsLoaded,
     getAll,
+    getAccount,
+    updateAccount,
     createAccount,
   }
 })

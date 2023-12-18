@@ -111,5 +111,5 @@ const superAdminsRole = [
   },
 ]
 
-defineExpose({ vFormRef })
+defineExpose({ vFormRef, roleLabel })
 </script>

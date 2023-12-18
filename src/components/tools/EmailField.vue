@@ -5,6 +5,8 @@
       v-model="input"
       variant="outlined"
       v-bind="$attrs"
+      :error-messages="errors"
+      :error="errors.length > 0"
       density="compact"
       autocomplete="new-password"
       @keydown="onKeyDown"
@@ -28,11 +30,15 @@
 <script setup lang="js">
 import { ref, computed, onMounted, onUnmounted, onUpdated, nextTick } from 'vue'
 import { useDomainsStore } from '@/stores'
+import { useGettext } from 'vue3-gettext'
 
+const { $gettext } = useGettext()
 const domainsStore = useDomainsStore()
 const props = defineProps({
   modelValue: { type: String, default: '' },
   allowAdd: { type: Boolean, default: false },
+  role: { type: String, default: 'SimpleUsers' },
+  errorMsg: { type: Array, default: () => [] },
 })
 const emit = defineEmits(['domain-selected', 'update:model-value'])
 
@@ -41,12 +47,17 @@ const input = computed({
     return props.modelValue
   },
   set(value) {
+    errors.value = []
     if (value.indexOf('@') !== -1) {
-      domainSearch.value = value.split('@')[1]
-      if (props.allowAdd) {
-        showMenu.value = filteredDomains.value.length > 0
+      if (props.role !== 'SuperAdmins') {
+        domainSearch.value = value.split('@')[1]
+        if (props.allowAdd) {
+          showMenu.value = filteredDomains.value.length > 0
+        } else {
+          showMenu.value = true
+        }
       } else {
-        showMenu.value = true
+        errors.value = [$gettext('SuperAdmins cannot own a mailbox')]
       }
     } else {
       showMenu.value = false
@@ -61,15 +72,28 @@ const filteredDomains = computed(() => {
   )
 })
 
+const errors = computed({
+  get() {
+    return [...localErrors.value, ...props.errorMsg]
+  },
+  set(value) {
+    localErrors.value = value
+  },
+})
+
 const domainSearch = ref('')
 const selectionIndex = ref(0)
 const showMenu = ref(false)
 const width = ref(500)
 const inputRef = ref()
+const localErrors = ref([])
 
 function onKeyDown(e) {
+  if (props.role === 'SuperAdmins') {
+    // No mailbox for SuperAdmins
+    return
+  }
   const keyCode = e.keyCode
-
   if (keyCode === 40 || keyCode === 34) {
     // on arrow down or page down
     if (!showMenu.value) {
@@ -123,7 +147,7 @@ function decreaseSelectionIndex() {
 
 function selectDomain(domain) {
   if (domain !== undefined) {
-    input.value = input.value.split('@')[0] + '@' + domain.name //TODO
+    input.value = input.value.split('@')[0] + '@' + domain.name
   }
   showMenu.value = false
   emit('domain-selected')

@@ -103,7 +103,7 @@ const routes = [
       {
         path: '/identities/accounts/:id/edit',
         name: 'AccountEdit',
-        component: () => import('@/views/identities/AccountEdit.vue'),
+        component: () => import('@/views/identities/AccountEditView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],

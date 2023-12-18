@@ -80,8 +80,9 @@ const emit = defineEmits(['close', 'created'])
 
 const needsMailbox = computed(
   () =>
-    account.value.role !== 'SuperAdmins' ||
-    (account.value.username && account.value.username.indexOf('@') !== -1)
+    account.value.role !== 'SuperAdmins' &&
+    account.value.username &&
+    account.value.username.indexOf('@') !== -1
 )
 
 const summarySections = computed(() => {

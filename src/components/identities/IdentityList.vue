@@ -100,9 +100,11 @@ import { useGettext } from 'vue3-gettext'
 import { useIdentitiesStore } from '@/stores'
 import MenuItems from '@/components/tools/MenuItems.vue'
 import ConfirmDialog from '@/components/tools/ConfirmDialog.vue'
+import { useRouter } from 'vue-router'
 
 const { $gettext } = useGettext()
 const identitiesStore = useIdentitiesStore()
+const router = useRouter()
 
 const headers = ref([
   { title: $gettext('Name'), key: 'identity' },
@@ -190,7 +192,9 @@ async function confirmDelete(item) {
   )
 }
 
-function editAccount() {}
+function editAccount(account) {
+  router.push({ name: 'AccountEdit', params: { id: account.pk } })
+}
 
 function deleteIdentity(item) {
   identitiesStore.deleteIdentity(item.type, item.pk)

@@ -11,6 +11,7 @@
           ? [rules.required, rules.email]
           : [rules.required]
       "
+      :role="account.role"
       @update:model-value="updateUsername"
     />
     <label class="m-label">{{ $gettext('First name') }}</label>
@@ -28,7 +29,11 @@
       density="compact"
     />
 
-    <AccountPasswordSubForm ref="passwordForm" v-model="account" />
+    <AccountPasswordSubForm
+      ref="passwordForm"
+      v-model="account"
+      :is-edit="isEdit"
+    />
 
     <v-switch
       v-model="account.is_active"
@@ -47,7 +52,10 @@ import { useGettext } from 'vue3-gettext'
 import rules from '@/plugins/rules'
 
 const { $gettext } = useGettext()
-const props = defineProps({ modelValue: { type: Object, default: null } })
+const props = defineProps({
+  modelValue: { type: Object, default: null },
+  isEdit: { type: Boolean, default: false },
+})
 
 const vFormRef = ref()
 
@@ -65,12 +73,17 @@ const usernameInputType = computed(() => {
 })
 
 function updateUsername() {
-  if (account.value.username.indexOf('@') !== -1) {
+  if (
+    account.value.role != 'SuperAdmins' &&
+    account.value.username.indexOf('@') !== -1
+  ) {
+    if (account.value.mailbox === undefined) {
+      account.value.mailbox = {}
+    }
     account.value.mailbox.full_address = account.value.username
     account.value.mailbox.message_limit = null
   } else {
-    delete account.value.mailbox.full_address
-    delete account.value.mailbox.message_limit
+    delete account.value.mailbox
   }
 }
 
