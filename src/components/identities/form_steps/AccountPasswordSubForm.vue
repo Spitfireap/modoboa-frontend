@@ -8,7 +8,8 @@
         type="password"
         density="compact"
         validate-on="submit"
-        :rules="[rules.required]"
+        :rules="disabled ? [] : [rules.required]"
+        :disabled="disabled"
       />
     </template>
     <v-row justify="center">
@@ -19,48 +20,56 @@
           density="compact"
           color="primary"
           class="text-center"
+          :disabled="disabled"
           @update:model-value="updatePassword"
         />
       </v-col>
-      <template v-if="account.random_password">
-        <v-col>
-          <v-alert
-            style="background-color: #515d78"
-            class="ml-6"
+      <v-col>
+        <v-alert
+          style="background-color: #515d78"
+          class="ml-6"
+          density="compact"
+          v-if="account.random_password"
+        >
+          <span class="text-white mr-4">{{ account.password }}</span>
+          <v-btn
+            size="small"
+            color="white"
+            variant="text"
             density="compact"
-          >
-            <span class="text-white mr-4">{{ account.password }}</span>
-            <v-btn
-              size="small"
-              color="white"
-              variant="text"
-              density="compact"
-              icon="mdi-clipboard-multiple-outline"
-              :title="$gettext('Copy to clipboard')"
-              @click="copyPassword"
-            />
-          </v-alert>
-        </v-col>
-      </template>
+            :disabled="disabled"
+            icon="mdi-clipboard-multiple-outline"
+            :title="$gettext('Copy to clipboard')"
+            @click="copyPassword"
+          />
+        </v-alert>
+      </v-col>
     </v-row>
     <template v-if="!account.random_password">
-      <label class="m-label">{{ $gettext('Password') }}</label>
       <v-text-field
         v-model="account.password"
         variant="outlined"
+        :label="$gettext('Password')"
         type="password"
         density="compact"
-        :rules="[rules.required]"
+        :disabled="disabled"
+        :rules="isRuleActive ? [] : [rules.required]"
       />
-      <label class="m-label">{{ $gettext('Confirmation') }}</label>
       <v-text-field
         v-model="account.password_confirmation"
         variant="outlined"
         type="password"
+        :label="$gettext('Confirmation')"
         density="compact"
-        :rules="[rules.required, passwordConfirmationRules]"
+        :disabled="disabled"
+        :rules="isRuleActive ? [] : [rules.required, passwordConfirmationRules]"
       />
-      <v-input validate-on="submit lazy" :rules="[validPassword]"> </v-input>
+      <v-input
+        validate-on="submit lazy"
+        :rules="isRuleActive ? [] : [validPassword]"
+        :disabled="disabled"
+      >
+      </v-input>
     </template>
   </div>
 </template>
@@ -78,9 +87,15 @@ const busStore = useBusStore()
 const props = defineProps({
   modelValue: { type: Object, default: null },
   withPasswordCheck: { type: Boolean, default: false },
+  disabled: { type: Boolean, default: false },
+  editing: { type: Boolean, default: false },
 })
 
 const account = computed(() => props.modelValue)
+
+const isRuleActive = computed(
+  () => !props.disabled || (props.editing && account.value.password)
+)
 
 const passwordConfirmationRules = (value) =>
   value === account.value.password || $gettext('Password mismatch')
@@ -105,9 +120,12 @@ function updatePassword(value) {
 }
 
 async function validPassword() {
-  return accountApi
-    .checkPassword(account.value.password)
-    .then(() => true)
-    .catch(() => $gettext('Invalid password'))
+  if (account.value.password) {
+    return accountApi
+      .checkPassword(account.value.password)
+      .then(() => true)
+      .catch(() => $gettext('Invalid password'))
+  }
+  return true
 }
 </script>

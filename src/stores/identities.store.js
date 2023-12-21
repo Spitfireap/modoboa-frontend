@@ -128,7 +128,7 @@ export const useIdentitiesStore = defineStore('identities', () => {
     if (type === 'alias') {
     } else if (type === 'account') {
       return accountsStore.updateAccount(data).then((response) => {
-        _accountToId(response.data)
+        _accountToId(response.data, true)
         identitiesLoaded.value = true
         return response
       })

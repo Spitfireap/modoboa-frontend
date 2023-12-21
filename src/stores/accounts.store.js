@@ -40,7 +40,7 @@ export const useAccountsStore = defineStore('accounts', () => {
   async function updateAccount(data) {
     return accountsApi.patch(data.pk, data).then((response) => {
       accounts.value[data.pk] = response.data
-      busStore.displayNotification({ msg: this.$gettext('Account updated') })
+      busStore.displayNotification({ msg: $gettext('Account updated') })
       return response
     })
   }

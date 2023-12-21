@@ -15,6 +15,7 @@
 
 <script setup lang="js">
 import { ref, computed } from 'vue'
+import rules from '@/plugins/rules'
 
 const props = defineProps({ modelValue: { type: Object, default: null } })
 
@@ -22,15 +23,11 @@ const resources = computed(() => props.modelValue)
 
 const vFormRef = ref()
 
-async function validateForm() {
-  return await vFormRef.value.validate()
-}
-
 function getPayload() {
   return resources.value.map((r) => {
     return { name: r.name, max_value: r.max_value }
   })
 }
 
-defineExpose({ validateForm, getPayload })
+defineExpose({ vFormRef, getPayload })
 </script>

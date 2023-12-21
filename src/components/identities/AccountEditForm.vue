@@ -1,5 +1,5 @@
 <template>
-  <LoadingData v-if="!accountsStore.accountsLoaded" />
+  <LoadingData v-if="!accountsStore.accountsLoaded || working" />
   <div v-else>
     <v-expansion-panels v-model="panel" :multiple="formErrors">
       <v-expansion-panel eager value="roleForm">
@@ -132,16 +132,7 @@
           <AccountAliasForm ref="aliasForm" v-model="editedAccount" />
         </v-expansion-panel-text>
       </v-expansion-panel>
-      <v-expansion-panel
-        v-if="
-          limitsConfig.params &&
-          limitsConfig.params.enable_admin_limits &&
-          account.role !== 'SimpleUsers' &&
-          account.role !== 'SuperAdmins'
-        "
-        eager
-        value="resourcesForm"
-      >
+      <v-expansion-panel v-if="needsResources" eager value="resourcesForm">
         <v-expansion-panel-title v-slot="{ expanded }">
           <v-row no-gutters>
             <v-col cols="4">
@@ -153,22 +144,22 @@
                 <v-row v-else no-gutters style="width: 100%">
                   <template
                     v-if="
-                      account.resources != undefined &&
-                      account.resources.length == 2
+                      editedAccount.resources != undefined &&
+                      editedAccount.resources.length == 2
                     "
                   >
                     <v-col cols="6">
                       <div class="mr-2">
                         {{ $gettext('Mailbox:') }}
                         {{ $gettext('Number of allowed mailboxes:') }}
-                        {{ account.resources[0].max_value }}
+                        {{ editedAccount.resources[0].max_value }}
                       </div>
                     </v-col>
                     <v-col cols="6">
                       <div class="mr-2">
                         {{ $gettext('Mailbox aliases:') }}
                         {{ $gettext('Number of allowed mailbox aliases:') }}
-                        {{ account.resources[1].max_value }}
+                        {{ editedAccount.resources[1].max_value }}
                       </div>
                     </v-col>
                   </template>
@@ -242,6 +233,18 @@ const usernameIsEmail = computed(() => {
   )
 })
 
+const needsResources = computed(() => {
+  const isNeeded =
+    limitsConfig.value.params &&
+    limitsConfig.value.params.enable_admin_limits &&
+    editedAccount.value.role !== 'SimpleUsers' &&
+    editedAccount.value.role !== 'SuperAdmins'
+  if (isNeeded === undefined) {
+    return false
+  }
+  return isNeeded
+})
+
 const limitsConfig = ref({})
 const panel = ref(0)
 const working = ref(false)
@@ -264,12 +267,7 @@ const formMap = computed(() => {
     map.aliasForm = aliasForm
     map.mailboxForm = mailboxForm
   }
-  if (
-    limitsConfig.value.params &&
-    limitsConfig.value.params.enable_admin_limits &&
-    account.value.role !== 'SimpleUsers' &&
-    account.value.role !== 'SuperAdmins'
-  ) {
+  if (needsResources.value) {
     map.resourcesForm = resourcesForm
   }
   return map
@@ -302,14 +300,14 @@ async function save() {
       delete data.password
       delete data.password_confirmation
     }
-    if (resourcesForm.value !== null) {
+    if (needsResources.value && resourcesForm.value !== null) {
       data.resources = resourcesForm.value.getPayload()
     }
     if (data.aliases === null) {
       delete data.aliases
     }
     identitiesStore.updateIdentity('account', data).then(() => {
-      router.go(-1)
+      router.push({ name: 'AccountDetail', params: { id: route.params.id } })
     })
   } finally {
     working.value = false
@@ -318,7 +316,7 @@ async function save() {
 
 onMounted(() => {
   parametersApi.getApplication('limits').then((response) => {
-    limitsConfig.value.data = response.data
+    limitsConfig.value = response.data
   })
   accountsStore
     .getAccount(route.params.id)
