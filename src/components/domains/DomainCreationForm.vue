@@ -35,7 +35,7 @@
         class="ml-4"
       />
     </template>
-    <template #[`item.with_random_password`]="{ item }">
+    <template #[`item.random_password`]="{ item }">
       <template v-if="item.value">
         <v-col cols="12" class="highligth text-white">
           <v-row>
@@ -99,7 +99,7 @@ const defaultDomain = {
   default_mailbox_quota: 0,
   domain_admin: {
     username: 'admin',
-    with_random_password: false,
+    random_password: false,
     with_mailbox: false,
     with_aliases: false,
   },
@@ -253,9 +253,9 @@ const summarySections = computed(() => {
           value: domain.value.domain_admin.username,
         },
         {
-          name: 'with_random_password',
+          name: 'random_password',
           key: $gettext('Random password'),
-          value: domain.value.domain_admin.with_random_password,
+          value: domain.value.domain_admin.random_password,
           type: 'yesno',
         },
         {

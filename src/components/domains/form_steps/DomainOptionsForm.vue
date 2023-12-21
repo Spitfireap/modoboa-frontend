@@ -16,14 +16,9 @@
       :suffix="`@${domain.name}`"
       :rules="[!createAdmin || rules.required]"
     />
-    <v-switch
-      v-model="domain.domain_admin.with_random_password"
-      :label="$gettext('Random password')"
+    <AccountPasswordSubForm
+      v-model="domain.domain_admin"
       :disabled="!createAdmin"
-      :hint="$gettext('Generate a random password for the administrator.')"
-      persistent-hint
-      color="primary"
-      @update:model-value="updatePassword"
     />
     <v-switch
       v-model="domain.domain_admin.with_mailbox"
@@ -45,6 +40,7 @@
 </template>
 
 <script setup lang="js">
+import AccountPasswordSubForm from '@/components/identities/form_steps/AccountPasswordSubForm.vue'
 import accountsApi from '@/api/accounts'
 import { ref, computed } from 'vue'
 import { useGettext } from 'vue3-gettext'
