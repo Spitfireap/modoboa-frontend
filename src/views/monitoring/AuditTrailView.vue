@@ -2,7 +2,7 @@
   <v-toolbar flat>
     <v-toolbar-title>{{ $gettext('Audit trail') }}</v-toolbar-title>
   </v-toolbar>
-  <audit-trail-list />
+  <AuditTrailList />
 </template>
 
 <script setup lang="js">
