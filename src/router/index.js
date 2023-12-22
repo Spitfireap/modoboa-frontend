@@ -164,6 +164,7 @@ const routes = [
       {
         path: '/monitoring/messages',
         name: 'MessageLog',
+        component: () => import('@/views/monitoring/MessagesView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['DomainAdmins', 'SuperAdmins'],

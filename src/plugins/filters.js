@@ -13,5 +13,9 @@ export default {
         .setLocale('en')
         .toLocaleString(DateTime.DATETIME_MED)
     }
+    app.config.globalProperties.$truncate = (value, length, clamp) => {
+      clamp = clamp || '...'
+      return value.length > length ? value.slice(0, length) + clamp : value
+    }
   },
 }
