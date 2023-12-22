@@ -20,10 +20,10 @@
           />
         </v-toolbar>
       </template>
-      <template #item.date="{ item }">
+      <template #[`item.date`]="{ item }">
         {{ $date(item.date) }}
       </template>
-      <template #item.sender="{ item }">
+      <template #[`item.sender`]="{ item }">
         {{ $truncate(item.sender, 50) }}
       </template>
     </v-data-table-server>
