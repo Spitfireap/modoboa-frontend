@@ -1,0 +1,16 @@
+<template>
+  <v-toolbar flat>
+    <v-toolbar-title>{{ $gettext('Audit trail') }}</v-toolbar-title>
+  </v-toolbar>
+  <audit-trail-list />
+</template>
+
+<script setup lang="js">
+import AuditTrailList from '@/components/logs/AuditTrailList.vue'
+</script>
+
+<style scoped>
+.v-toolbar {
+  background-color: #f7f8fa !important;
+}
+</style>

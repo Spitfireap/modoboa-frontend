@@ -155,6 +155,7 @@ const routes = [
       {
         path: '/monitoring/audit_trail',
         name: 'AuditTrail',
+        component: () => import('@/views/monitoring/AuditTrailView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['SuperAdmins'],
