@@ -11,7 +11,7 @@
         />
       </v-col>
       <v-col cols="12">
-        <time-serie-chart
+        <TimeSerieChart
           graphic-set="mailtraffic"
           graphic-name="averagetrafficsize"
         />
