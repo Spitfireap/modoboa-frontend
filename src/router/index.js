@@ -146,6 +146,7 @@ const routes = [
       {
         path: '/monitoring/statistics',
         name: 'Statistics',
+        component: () => import('@/views/monitoring/StatisticsView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['SuperAdmins'],
