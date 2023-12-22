@@ -10,7 +10,7 @@ Ac
         :items="addresses"
         :no-data-text="$gettext('No sender address defined for this account')"
       >
-        <template #item.address="{ item }">
+        <template #[`item.address`]="{ item }">
           <span v-if="item.pk">{{ item.address }}</span>
           <v-text-field
             v-else
@@ -29,7 +29,7 @@ Ac
             </template>
           </v-text-field>
         </template>
-        <template #item.actions="{ item }">
+        <template #[`item.actions`]="{ item }">
           <v-btn
             v-if="item.pk"
             icon="mdi-delete-outline"
@@ -63,9 +63,7 @@ import { useGettext } from 'vue3-gettext'
 import senderAddresses from '@/api/senderAddresses'
 
 const { $gettext } = useGettext()
-const props = defineProps({
-  account: Object,
-})
+const props = defineProps({ account: { type: Object, default: null } })
 
 const addresses = ref([])
 const hideAddBtn = ref(false)

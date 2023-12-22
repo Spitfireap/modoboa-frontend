@@ -26,10 +26,10 @@
       </v-col>
       <v-col>
         <v-alert
+          v-if="account.random_password"
           style="background-color: #515d78"
           class="ml-6"
           density="compact"
-          v-if="account.random_password"
         >
           <span class="text-white mr-4">{{ account.password }}</span>
           <v-btn

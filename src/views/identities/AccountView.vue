@@ -1,14 +1,14 @@
 <template>
   <v-toolbar flat>
-    <v-toolbar-title
-      >{{ $gettext('Account') }} {{ account.username }}</v-toolbar-title
-    >
-    <v-btn
-      color="primary"
-      icon="mdi-circle-edit-outline"
-      :to="{ name: 'AccountEdit', params: { id: account.pk } }"
-    >
-    </v-btn>
+    <v-toolbar-title>
+      {{ $gettext('Account') }} {{ account.username }}
+      <v-btn
+        color="primary"
+        icon="mdi-circle-edit-outline"
+        :to="{ name: 'AccountEdit', params: { id: account.pk } }"
+      />
+      <v-btn color="primary" icon="mdi-reload" @click="refreshAccount" />
+    </v-toolbar-title>
   </v-toolbar>
   <v-row>
     <v-col cols="6">
@@ -40,10 +40,10 @@
 </template>
 
 <script setup lang="js">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import accounts from '@/api/accounts'
-import parameters from '@/api/parameters'
+import { useAccountsStore } from '@/stores'
+import parametersApi from '@/api/parameters'
 import AccountAliases from '@/components/identities/AccountAliases.vue'
 import AccountSenderAddresses from '@/components/identities/AccountSenderAddresses.vue'
 import AccountSummary from '@/components/identities/AccountSummary.vue'
@@ -51,13 +51,28 @@ import DomainAdminDomains from '@/components/identities/DomainAdminDomains.vue'
 import ResourcesView from '@/components/tools/ResourcesView.vue'
 
 const route = useRoute()
-const account = ref({ pk: route.params.id })
+const accountsStore = useAccountsStore()
+
+const account = computed(() => {
+  if (accountsStore.accounts[route.params.id] !== undefined) {
+    return accountsStore.accounts[route.params.id]
+  }
+  refreshAccount()
+  return { pk: route.params.id }
+})
 const limitsConfig = ref({})
 
-accounts.get(route.params.id).then((resp) => {
-  account.value = resp.data
-})
-parameters.getApplication('limits').then((resp) => {
+parametersApi.getApplication('limits').then((resp) => {
   limitsConfig.value = resp.data
 })
+
+function refreshAccount() {
+  accountsStore.getAccount(route.params.id)
+}
 </script>
+
+<style scoped>
+.v-toolbar {
+  background-color: #f7f8fa !important;
+}
+</style>

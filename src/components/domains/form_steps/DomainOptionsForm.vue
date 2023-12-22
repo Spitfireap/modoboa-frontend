@@ -41,7 +41,6 @@
 
 <script setup lang="js">
 import AccountPasswordSubForm from '@/components/identities/form_steps/AccountPasswordSubForm.vue'
-import accountsApi from '@/api/accounts'
 import { ref, computed } from 'vue'
 import { useGettext } from 'vue3-gettext'
 import rules from '@/plugins/rules.js'
@@ -57,15 +56,6 @@ const createAdmin = ref(false)
 
 const domain = computed(() => props.modelValue)
 
-function updatePassword(value) {
-  if (value) {
-    accountsApi.getRandomPassword().then((resp) => {
-      domain.value.domain_admin.password = resp.data.password
-    })
-  } else {
-    delete domain.value.domain_admin.password
-  }
-}
 function updateCreateAdmin(val) {
   emit('createAdmin', val)
 }

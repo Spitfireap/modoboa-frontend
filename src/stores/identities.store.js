@@ -126,12 +126,21 @@ export const useIdentitiesStore = defineStore('identities', () => {
   async function updateIdentity(type, data) {
     identitiesLoaded.value = false
     if (type === 'alias') {
+      return aliasesStore
+        .updateAlias(data)
+        .then((response) => {
+          _aliasToId(response.data, true)
+          return response
+        })
+        .finally(() => (identitiesLoaded.value = true))
     } else if (type === 'account') {
-      return accountsStore.updateAccount(data).then((response) => {
-        _accountToId(response.data, true)
-        identitiesLoaded.value = true
-        return response
-      })
+      return accountsStore
+        .updateAccount(data)
+        .then((response) => {
+          _accountToId(response.data, true)
+          return response
+        })
+        .finally(() => (identitiesLoaded.value = true))
     }
   }
 

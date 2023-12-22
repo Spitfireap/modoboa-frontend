@@ -4,64 +4,88 @@ import aliasesApi from '@/api/aliases'
 import { useBusStore } from './bus.store'
 
 import gettext from '@/plugins/gettext'
+import account from '@/api/account'
 
 export const useAliasesStore = defineStore('aliases', () => {
   const busStore = useBusStore()
   const { $gettext } = gettext
 
-  const aliases = ref([])
+  const aliases = ref({})
 
   const aliasesLoaded = ref(false)
 
-  async function _getIndexByPk(pk) {
-    for (let i = 0; i < aliases.value.length; i++) {
-      if (aliases[i].pk === pk) {
-        return i
-      }
-    }
-    return null
+  async function getAll() {
+    aliasesLoaded.value = false
+    return aliasesApi
+      .getAll()
+      .then((response) => {
+        aliases.value = {}
+        for (const account of response.data) {
+          aliases.value[account.pk] = account
+        }
+        return response
+      })
+      .finally(() => (aliasesLoaded.value = true))
   }
 
-  async function getAll() {
-    return aliasesApi.getAll().then((response) => {
-      aliases.value = response.data
-      return response
-    })
+  async function getAlias(pk) {
+    aliasesLoaded.value = false
+    return aliasesApi
+      .get(pk)
+      .then((response) => {
+        aliases.value[pk] = response.data
+        return response
+      })
+      .finally(() => (aliasesLoaded.value = true))
   }
 
   async function createAlias(data) {
     aliasesLoaded.value = false
-    return aliasesApi.create(data).then((response) => {
-      aliases.value.push(response.data)
-      aliasesLoaded.value = true
-      busStore.displayNotification({
-        msg: $gettext('Alias successfully created'),
+    return aliasesApi
+      .create(data)
+      .then((response) => {
+        aliases.value[response.data.pk] = response.data
+        busStore.displayNotification({
+          msg: $gettext('Alias successfully created'),
+        })
+        return response
       })
-      return response
-    })
+      .finally(() => (aliasesLoaded.value = true))
   }
 
   async function deleteAlias(pk) {
     aliasesLoaded.value = false
-    const apiRequest = aliasesApi.delete(pk)
-    const aliasIndex = _getIndexByPk(pk)
-    Promise.all([apiRequest, aliasIndex]).then((response) => {
-      if (response[1] !== null) {
-        aliases.value.splice(response[1], 1)
-      }
-      aliasesLoaded.value = true
-      busStore.displayNotification({
-        msg: $gettext('Alias successfully deleted'),
+    return aliasesApi
+      .delete(pk)
+      .then((response) => {
+        delete account.value[pk]
+        busStore.displayNotification({
+          msg: $gettext('Alias successfully deleted'),
+        })
+        return response
       })
-      return response[0]
-    })
+      .finally(() => (aliasesLoaded.value = true))
+  }
+
+  async function updateAlias(data) {
+    aliasesLoaded.value = false
+    return aliasesApi
+      .patch(data.pk, data)
+      .then((response) => {
+        aliases.value[data.pk] = response.data
+        busStore.displayNotification({ msg: $gettext('Alias updated') })
+        return response
+      })
+      .finally(() => (aliasesLoaded.value = true))
   }
 
   return {
     aliases,
     aliasesLoaded,
     getAll,
+    getAlias,
     createAlias,
     deleteAlias,
+    updateAlias,
   }
 })

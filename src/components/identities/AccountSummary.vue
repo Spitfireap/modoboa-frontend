@@ -10,10 +10,10 @@
       </v-row>
       <v-row>
         <v-col cols="6">{{ $gettext('Last login date') }}</v-col>
-        <v-col v-if="account.last_login" cols="6">{{
-          $date(account.last_login)
-        }}</v-col>
-        <v-col v-else cols="6">{{ $gettext('Never logged-in') }} </v-col>
+        <v-col v-if="account.last_login" cols="6">
+          {{ $date(account.last_login) }}
+        </v-col>
+        <v-col v-else cols="6">{{ $gettext('Never logged-in') }}</v-col>
       </v-row>
       <v-row>
         <v-col cols="6">{{ $gettext('Full name') }}</v-col>
@@ -46,7 +46,7 @@
             >
               <template #default="{ value }">
                 {{ Math.ceil(value) }}% ({{ account.mailbox.quota }}
-                <translate>MB</translate>)
+                {{ $gettext('MB') }})
               </template>
             </v-progress-linear>
           </v-col>
@@ -61,7 +61,5 @@
 </template>
 
 <script setup lang="js">
-const props = defineProps({
-  account: Object,
-})
+defineProps({ account: { type: Object, default: null } })
 </script>

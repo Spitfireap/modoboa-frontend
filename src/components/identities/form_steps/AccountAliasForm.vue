@@ -11,7 +11,7 @@
       "
       persistent-hint
       :loading="isValidating"
-      :errorMsg="errors"
+      :error-msg="errors"
       @domain-selected="addAlias"
     />
     <v-chip

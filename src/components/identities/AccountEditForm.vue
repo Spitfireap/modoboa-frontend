@@ -21,11 +21,7 @@
           </v-row>
         </v-expansion-panel-title>
         <v-expansion-panel-text>
-          <AccountRoleForm
-            ref="roleForm"
-            v-model="editedAccount"
-            :account="editedAccount"
-          />
+          <AccountRoleForm ref="roleForm" v-model="editedAccount" />
         </v-expansion-panel-text>
       </v-expansion-panel>
       <v-expansion-panel eager value="generalForm">
@@ -71,8 +67,11 @@
               <v-fade-transition leave-absolute>
                 <span v-if="expanded"></span>
                 <v-row v-else no-gutters style="width: 100%">
-                  <template v-if="account.mailbox">
-                    <v-col v-if="account.mailbox.use_domain_quota" cols="6">
+                  <template v-if="editedAccount.mailbox">
+                    <v-col
+                      v-if="editedAccount.mailbox.use_domain_quota"
+                      cols="6"
+                    >
                       <div class="mr-2">
                         {{ $gettext('Quota: ') }}
                         {{ $gettext("domain's default value") }}
@@ -80,14 +79,15 @@
                     </v-col>
                     <v-col v-else cols="6">
                       <div class="mr-2">
-                        {{ $gettext('Quota: ') }} {{ account.mailbox.quota }}
+                        {{ $gettext('Quota: ') }}
+                        {{ editedAccount.mailbox.quota }}
                       </div>
                     </v-col>
                     <v-col cols="6">
                       <div class="mr-2">
                         {{ $gettext('Send only') }}
                         <v-icon
-                          v-if="account.mailbox.is_send_only"
+                          v-if="editedAccount.mailbox.is_send_only"
                           color="success"
                           >mdi-check-circle-outline</v-icon
                         >
@@ -114,12 +114,12 @@
               <v-fade-transition leave-absolute>
                 <span v-if="expanded"></span>
                 <v-row v-else no-gutters style="width: 100%">
-                  <template v-if="account.aliases">
+                  <template v-if="editedAccount.aliases">
                     <v-col cols="6">
                       <div class="mr-2">
                         {{ $gettext('Aliases:') }}
                         {{ $gettext('Number of associated alias:') }}
-                        {{ account.aliases.length }}
+                        {{ editedAccount.aliases.length }}
                       </div>
                     </v-col>
                   </template>
@@ -205,6 +205,7 @@ import { ref, computed } from 'vue'
 import { useGettext } from 'vue3-gettext'
 import { onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { watch } from 'vue'
 
 const { $gettext } = useGettext()
 const accountsStore = useAccountsStore()
@@ -212,18 +213,7 @@ const identitiesStore = useIdentitiesStore()
 const route = useRoute()
 const router = useRouter()
 
-const account = ref()
-const editedAccount = computed(() => {
-  if (account.value == null) {
-    return { pk: route.params.id }
-  } else {
-    delete account.value.domains
-    if (account.value.mailbox === null) {
-      delete account.value.mailbox
-    }
-    return account.value
-  }
-})
+const editedAccount = ref({ pk: route.params.id })
 
 const usernameIsEmail = computed(() => {
   return (
@@ -315,11 +305,23 @@ async function save() {
 }
 
 onMounted(() => {
+  accountsStore
+    .getAccount(route.params.id)
+    .then((response) => (editedAccount.value = { ...response.data }))
+
   parametersApi.getApplication('limits').then((response) => {
     limitsConfig.value = response.data
   })
-  accountsStore
-    .getAccount(route.params.id)
-    .then(() => (account.value = accountsStore.accounts[route.params.id]))
 })
+
+watch(
+  editedAccount,
+  () => {
+    delete editedAccount.value.domains
+    if (editedAccount.value.mailbox === null) {
+      delete editedAccount.value.mailbox
+    }
+  },
+  { deep: true }
+)
 </script>

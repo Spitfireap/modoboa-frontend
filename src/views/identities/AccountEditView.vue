@@ -7,5 +7,6 @@
 <script setup lang="js">
 import AccountEditForm from '@/components/identities/AccountEditForm.vue'
 import { useGettext } from 'vue3-gettext'
+
 const { $gettext } = useGettext()
 </script>

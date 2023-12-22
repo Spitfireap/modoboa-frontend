@@ -112,6 +112,7 @@ const routes = [
       {
         path: '/identities/aliases/:id',
         name: 'AliasDetail',
+        component: () => import('@/views/identities/AliasView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
@@ -120,6 +121,7 @@ const routes = [
       {
         path: '/identities/aliases/:id/edit',
         name: 'AliasEdit',
+        component: () => import('@/views/identities/AliasEditView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
