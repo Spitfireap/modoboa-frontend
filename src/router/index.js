@@ -17,6 +17,18 @@ const routes = [
         name: 'TwoFA',
         component: () => import('@/views/TwoFA.vue'),
       },
+      {
+        path: '/password_recovery',
+        name: 'PasswordRecoveryForm',
+      },
+      {
+        path: '/password_recovery/confirm/:id?/:token?/',
+        name: 'PasswordRecoveryChangeForm',
+      },
+      {
+        path: '/password_recovery/sms_confirm',
+        name: 'PasswordRecoverySms',
+      },
     ],
   },
   {
@@ -59,7 +71,7 @@ const routes = [
         component: () => import('@/views/domains/DomainEditView.vue'),
       },
       {
-        path: '/imap_migration/migrations',
+        path: 'imap_migration/migrations',
         name: 'MigrationsList',
         meta: {
           requiresAuth: true,
@@ -67,7 +79,7 @@ const routes = [
         },
       },
       {
-        path: '/imap_migration/providers',
+        path: 'imap_migration/providers',
         name: 'ProvidersList',
         meta: {
           requiresAuth: true,
@@ -75,7 +87,7 @@ const routes = [
         },
       },
       {
-        path: '/imap_migration/providers/:id/edit',
+        path: 'imap_migration/providers/:id/edit',
         name: 'ProviderEdit',
         meta: {
           requiresAuth: true,
@@ -83,7 +95,7 @@ const routes = [
         },
       },
       {
-        path: '/identities',
+        path: 'identities',
         name: 'Identities',
         component: () => import('@/views/identities/IdentitiesView.vue'),
         meta: {
@@ -92,7 +104,7 @@ const routes = [
         },
       },
       {
-        path: '/identities/accounts/:id',
+        path: 'identities/accounts/:id',
         name: 'AccountDetail',
         component: () => import('@/views/identities/AccountView.vue'),
         meta: {
@@ -101,7 +113,7 @@ const routes = [
         },
       },
       {
-        path: '/identities/accounts/:id/edit',
+        path: 'identities/accounts/:id/edit',
         name: 'AccountEdit',
         component: () => import('@/views/identities/AccountEditView.vue'),
         meta: {
@@ -110,7 +122,7 @@ const routes = [
         },
       },
       {
-        path: '/identities/aliases/:id',
+        path: 'identities/aliases/:id',
         name: 'AliasDetail',
         component: () => import('@/views/identities/AliasView.vue'),
         meta: {
@@ -119,7 +131,7 @@ const routes = [
         },
       },
       {
-        path: '/identities/aliases/:id/edit',
+        path: 'identities/aliases/:id/edit',
         name: 'AliasEdit',
         component: () => import('@/views/identities/AliasEditView.vue'),
         meta: {
@@ -128,7 +140,7 @@ const routes = [
         },
       },
       {
-        path: '/parameters/:app',
+        path: 'parameters/:app',
         name: 'ParametersEdit',
         component: () => import('@/views/ParametersView.vue'),
         meta: {
@@ -137,7 +149,7 @@ const routes = [
         },
       },
       {
-        path: '/alarms',
+        path: 'alarms',
         name: 'Alarms',
         component: () => import('@/views/alarms/AlarmsView.vue'),
         meta: {
@@ -145,7 +157,7 @@ const routes = [
         },
       },
       {
-        path: '/monitoring/statistics',
+        path: 'monitoring/statistics',
         name: 'Statistics',
         component: () => import('@/views/monitoring/StatisticsView.vue'),
         meta: {
@@ -154,7 +166,7 @@ const routes = [
         },
       },
       {
-        path: '/monitoring/audit_trail',
+        path: 'monitoring/audit_trail',
         name: 'AuditTrail',
         component: () => import('@/views/monitoring/AuditTrailView.vue'),
         meta: {
@@ -163,7 +175,7 @@ const routes = [
         },
       },
       {
-        path: '/monitoring/messages',
+        path: 'monitoring/messages',
         name: 'MessageLog',
         component: () => import('@/views/monitoring/MessagesView.vue'),
         meta: {
@@ -172,24 +184,13 @@ const routes = [
         },
       },
       {
-        path: '/information',
+        path: 'information',
         name: 'Information',
+        component: () => import('@/views/InformationView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['SuperAdmins'],
         },
-      },
-      {
-        path: '/password_recovery',
-        name: 'PasswordRecoveryForm',
-      },
-      {
-        path: '/password_recovery/confirm/:id?/:token?/',
-        name: 'PasswordRecoveryChangeForm',
-      },
-      {
-        path: '/password_recovery/sms_confirm',
-        name: 'PasswordRecoverySms',
       },
     ],
   },

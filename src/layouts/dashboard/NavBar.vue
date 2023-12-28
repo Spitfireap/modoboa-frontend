@@ -35,7 +35,7 @@
             :prepend-icon="item.icon"
           >
           </v-list-item>
-          <v-list-group v-else :value="item.text" :key="item.text">
+          <v-list-group v-else :key="item.text" :value="item.text">
             <template #activator="{ props }">
               <v-list-item
                 v-bind="props"
