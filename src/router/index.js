@@ -130,6 +130,7 @@ const routes = [
       {
         path: '/parameters/:app',
         name: 'ParametersEdit',
+        component: () => import('@/views/ParametersView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['SuperAdmins'],

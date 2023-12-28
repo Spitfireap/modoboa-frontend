@@ -19,7 +19,8 @@ export default {
     (value !== '' && value != null) || $gettext('Field is required'),
   email: (value) => validateEmail(value) || $gettext('Not a valid email'),
   minLength: (len) => (value) =>
-    value.length > len || $gettext('Minimum length is 6'),
+    value.length > len ||
+    $gettext('Minimum length is %{ length }', { length: len }),
   numericOrNull: (value) =>
     value == null ||
     value === '' ||

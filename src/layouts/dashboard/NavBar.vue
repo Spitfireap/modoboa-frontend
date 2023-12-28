@@ -5,7 +5,6 @@
     permanent
     :color="mainColor"
     app
-    dark
   >
     <div class="d-flex align-center">
       <v-img
@@ -36,7 +35,7 @@
             :prepend-icon="item.icon"
           >
           </v-list-item>
-          <v-list-group v-else :key="item.text" :value="item.text">
+          <v-list-group v-else :value="item.text" :key="item.text">
             <template #activator="{ props }">
               <v-list-item
                 v-bind="props"
@@ -99,11 +98,12 @@ import { useRoute, useRouter } from 'vue-router'
 import { ref, computed } from 'vue'
 import { useGettext } from 'vue3-gettext'
 
-import parameters from '@/api/parameters'
-import { useAuthStore, useBusStore } from '@/stores'
+import parametersApi from '@/api/parameters'
+import { useAuthStore, useParametersStore } from '@/stores'
+import { onMounted } from 'vue'
 
 const authStore = useAuthStore()
-const busStore = useBusStore()
+const parametersStore = useParametersStore()
 const route = useRoute()
 const router = useRouter()
 const { $gettext } = useGettext()
@@ -150,7 +150,7 @@ const mainColor = computed(() => {
 })
 
 // created
-parameters.getApplications().then((response) => {
+parametersApi.getApplications().then((response) => {
   response.data.forEach((item) => {
     mainMenuItems[6].children.push({
       text: item.label,
@@ -159,11 +159,7 @@ parameters.getApplications().then((response) => {
   })
 })
 
-let imapMigration = computed(() => busStore.imapSettings)
-
-parameters.getApplication('imap_migration').then((response) => {
-  busStore.changeImapSettings(response.data.params.enabled_imapmigration)
-})
+const imapMigration = computed(() => parametersStore.imapMigrationEnabled)
 
 const mainMenuItems = [
   {
@@ -299,7 +295,7 @@ function displayMenuItem(item) {
       item.activated !== false
     if (item.icon === 'mdi-email-sync-outline') {
       // For imapMigration
-      return condition && imapMigration
+      return condition && imapMigration.value
     }
     return condition
   }
@@ -310,6 +306,15 @@ function logout() {
     router.push({ name: 'Login' })
   })
 }
+
+onMounted(() => {
+  if (parametersStore.imapMigrationEnabled === null) {
+    parametersApi.getApplication('imap_migration').then((response) => {
+      parametersStore.imapMigrationEnabled =
+        response.data.params.enabled_imapmigration
+    })
+  }
+})
 </script>
 
 <style lang="scss" scoped>
