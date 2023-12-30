@@ -8,6 +8,7 @@
       <v-tab
         v-for="(element, index) in displayableElements"
         :key="index"
+        color="primary"
         :class="tab_error.includes(index) ? 'error_tab' : ''"
       >
         {{ element.label }}
