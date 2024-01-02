@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="js">
-import AuditTrailList from '@/components/logs/AuditTrailList.vue'
+import AuditTrailList from '@/components/admin/logs/AuditTrailList.vue'
 </script>
 
 <style scoped>

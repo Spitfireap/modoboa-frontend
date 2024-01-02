@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="js">
-import AccountPasswordSubForm from '@/components/identities/form_steps/AccountPasswordSubForm.vue'
+import AccountPasswordSubForm from '@/components/admin/identities/form_steps/AccountPasswordSubForm.vue'
 import { ref, computed } from 'vue'
 import { useGettext } from 'vue3-gettext'
 import rules from '@/plugins/rules.js'

@@ -19,6 +19,7 @@ export default createVuetify({
         colors: {
           primary: '#046BF8',
           'primary-lighten-1': '#3688F9',
+          'primary-darken-1': '#0350BA',
           secondary: '#F18429',
           label: '#616161',
         },

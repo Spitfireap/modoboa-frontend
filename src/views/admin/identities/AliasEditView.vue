@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="js">
-import AliasEditForm from '@/components/identities/AliasEditForm.vue'
+import AliasEditForm from '@/components/admin/identities/AliasEditForm.vue'
 import { useGettext } from 'vue3-gettext'
 
 const { $gettext } = useGettext()

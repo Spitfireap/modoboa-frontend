@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="js">
-import AlarmList from '@/components/alarms/AlarmList.vue'
+import AlarmList from '@/components/admin/alarms/AlarmList.vue'
 </script>
 
 <style scoped>

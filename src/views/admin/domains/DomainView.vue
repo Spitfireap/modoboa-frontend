@@ -78,10 +78,10 @@
 </template>
 
 <script setup lang="js">
-import DomainAdminList from '@/components/domains/DomainAdminList.vue'
-import DmarcAligmentChart from '@/components/dmarc/DmarcAligmentChart.vue'
-import DNSDetail from '@/components/domains/DNSDetail.vue'
-import DomainSummary from '@/components/domains/DomainSummary.vue'
+import DomainAdminList from '@/components/admin/domains/DomainAdminList.vue'
+import DmarcAligmentChart from '@/components/admin/dmarc/DmarcAligmentChart.vue'
+import DNSDetail from '@/components/admin/domains/DNSDetail.vue'
+import DomainSummary from '@/components/admin/domains/DomainSummary.vue'
 import { useDomainsStore } from '@/stores'
 import ResourcesForm from '@/components/tools/ResourcesForm.vue'
 import TimeSerieChart from '@/components/tools/TimeSerieChart.vue'

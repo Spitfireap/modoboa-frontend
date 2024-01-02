@@ -58,9 +58,9 @@
 <script setup lang="js">
 import { ref } from 'vue'
 import { useGettext } from 'vue3-gettext'
-import IdentityList from '@/components/identities/IdentityList.vue'
-import AliasCreationForm from '@/components/identities/AliasCreationForm.vue'
-import AccountCreationForm from '@/components/identities/AccountCreationForm.vue'
+import IdentityList from '@/components/admin/identities/IdentityList.vue'
+import AliasCreationForm from '@/components/admin/identities/AliasCreationForm.vue'
+import AccountCreationForm from '@/components/admin/identities/AccountCreationForm.vue'
 
 const { $gettext } = useGettext()
 

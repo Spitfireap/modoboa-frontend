@@ -102,7 +102,7 @@
 
 <script setup lang="js">
 import colors from 'vuetify/lib/util/colors'
-import DmarcSourceTable from './DmarcSourceTable'
+import DmarcSourceTable from './DmarcSourceTable.vue'
 import domainsApi from '@/api/domains'
 import { useGettext } from 'vue3-gettext'
 import { DateTime } from 'luxon'

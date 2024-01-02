@@ -182,7 +182,7 @@ import { useRouter } from 'vue-router'
 import DomainAdminList from './DomainAdminList.vue'
 import ConfirmDialog from '@/components/tools/ConfirmDialog.vue'
 import DNSStatusChip from './DNSStatusChip.vue'
-import DomainAliasForm from '@/components/domains/DomainAliasForm.vue'
+import DomainAliasForm from './DomainAliasForm.vue'
 import MenuItems from '@/components/tools/MenuItems.vue'
 
 import { computed, ref, onMounted } from 'vue'

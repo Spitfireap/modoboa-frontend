@@ -10,23 +10,23 @@ const routes = [
       {
         path: '',
         name: 'Login',
-        component: () => import('@/views/LoginView.vue'),
+        component: () => import('@/views/login/LoginView.vue'),
       },
       {
-        path: '/twofa',
+        path: 'twofa',
         name: 'TwoFA',
-        component: () => import('@/views/TwoFA.vue'),
+        component: () => import('@/views/login/TwoFA.vue'),
       },
       {
-        path: '/password_recovery',
+        path: 'password_recovery',
         name: 'PasswordRecoveryForm',
       },
       {
-        path: '/password_recovery/confirm/:id?/:token?/',
+        path: 'password_recovery/confirm/:id?/:token?/',
         name: 'PasswordRecoveryChangeForm',
       },
       {
-        path: '/password_recovery/sms_confirm',
+        path: 'password_recovery/sms_confirm',
         name: 'PasswordRecoverySms',
       },
     ],
@@ -46,7 +46,7 @@ const routes = [
       {
         path: 'domains',
         name: 'DomainList',
-        component: () => import('@/views/domains/DomainsView.vue'),
+        component: () => import('@/views/admin/domains/DomainsView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
@@ -59,7 +59,7 @@ const routes = [
           requiresAuth: true,
           allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
         },
-        component: () => import('@/views/domains/DomainView.vue'),
+        component: () => import('@/views/admin/domains/DomainView.vue'),
       },
       {
         path: 'domains/:id/edit',
@@ -68,7 +68,7 @@ const routes = [
           requiresAuth: true,
           allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
         },
-        component: () => import('@/views/domains/DomainEditView.vue'),
+        component: () => import('@/views/admin/domains/DomainEditView.vue'),
       },
       {
         path: 'imap_migration/migrations',
@@ -97,7 +97,7 @@ const routes = [
       {
         path: 'identities',
         name: 'Identities',
-        component: () => import('@/views/identities/IdentitiesView.vue'),
+        component: () => import('@/views/admin/identities/IdentitiesView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
@@ -106,7 +106,7 @@ const routes = [
       {
         path: 'identities/accounts/:id',
         name: 'AccountDetail',
-        component: () => import('@/views/identities/AccountView.vue'),
+        component: () => import('@/views/admin/identities/AccountView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
@@ -115,7 +115,7 @@ const routes = [
       {
         path: 'identities/accounts/:id/edit',
         name: 'AccountEdit',
-        component: () => import('@/views/identities/AccountEditView.vue'),
+        component: () => import('@/views/admin/identities/AccountEditView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
@@ -124,7 +124,7 @@ const routes = [
       {
         path: 'identities/aliases/:id',
         name: 'AliasDetail',
-        component: () => import('@/views/identities/AliasView.vue'),
+        component: () => import('@/views/admin/identities/AliasView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
@@ -133,7 +133,7 @@ const routes = [
       {
         path: 'identities/aliases/:id/edit',
         name: 'AliasEdit',
-        component: () => import('@/views/identities/AliasEditView.vue'),
+        component: () => import('@/views/admin/identities/AliasEditView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
@@ -142,7 +142,7 @@ const routes = [
       {
         path: 'parameters/:app',
         name: 'ParametersEdit',
-        component: () => import('@/views/ParametersView.vue'),
+        component: () => import('@/views/admin/ParametersView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['SuperAdmins'],
@@ -151,7 +151,7 @@ const routes = [
       {
         path: 'alarms',
         name: 'Alarms',
-        component: () => import('@/views/alarms/AlarmsView.vue'),
+        component: () => import('@/views/admin/alarms/AlarmsView.vue'),
         meta: {
           requiresAuth: true,
         },
@@ -159,7 +159,7 @@ const routes = [
       {
         path: 'monitoring/statistics',
         name: 'Statistics',
-        component: () => import('@/views/monitoring/StatisticsView.vue'),
+        component: () => import('@/views/admin/monitoring/StatisticsView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['SuperAdmins'],
@@ -168,7 +168,7 @@ const routes = [
       {
         path: 'monitoring/audit_trail',
         name: 'AuditTrail',
-        component: () => import('@/views/monitoring/AuditTrailView.vue'),
+        component: () => import('@/views/admin/monitoring/AuditTrailView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['SuperAdmins'],
@@ -177,7 +177,7 @@ const routes = [
       {
         path: 'monitoring/messages',
         name: 'MessageLog',
-        component: () => import('@/views/monitoring/MessagesView.vue'),
+        component: () => import('@/views/admin/monitoring/MessagesView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['DomainAdmins', 'SuperAdmins'],
@@ -186,7 +186,7 @@ const routes = [
       {
         path: 'information',
         name: 'Information',
-        component: () => import('@/views/InformationView.vue'),
+        component: () => import('@/views/admin/InformationView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['SuperAdmins'],
@@ -195,7 +195,7 @@ const routes = [
     ],
   },
   {
-    path: '/user',
+    path: '/account',
     component: () => import('@/layouts/default/DefaultLayout.vue'),
     children: [
       {

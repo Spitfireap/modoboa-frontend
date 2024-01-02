@@ -77,9 +77,9 @@
 import { ref } from 'vue'
 import domainApi from '@/api/domains'
 import { useGettext } from 'vue3-gettext'
-import DomainAliasForm from '@/components/domains/DomainAliasForm'
-import DomainCreationForm from '@/components/domains/DomainCreationForm'
-import DomainList from '@/components/domains/DomainList'
+import DomainAliasForm from '@/components/admin/domains/DomainAliasForm'
+import DomainCreationForm from '@/components/admin/domains/DomainCreationForm'
+import DomainList from '@/components/admin/domains/DomainList'
 import ImportForm from '@/components/tools/ImportForm'
 import { importExportMixin } from '@/mixins/importExport'
 

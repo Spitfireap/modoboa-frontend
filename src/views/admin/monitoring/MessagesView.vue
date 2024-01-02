@@ -6,5 +6,5 @@
 </template>
 
 <script setup lang="js">
-import MessageList from '@/components/logs/MessageList'
+import MessageList from '@/components/admin/logs/MessageList'
 </script>

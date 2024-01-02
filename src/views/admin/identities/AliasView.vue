@@ -21,8 +21,8 @@
 </template>
 
 <script setup lang="js">
-import AliasRecipientsSummary from '@/components/identities/AliasRecipientsSummary.vue'
-import AliasSummary from '@/components/identities/AliasSummary.vue'
+import AliasRecipientsSummary from '@/components/admin/identities/AliasRecipientsSummary.vue'
+import AliasSummary from '@/components/admin/identities/AliasSummary.vue'
 import { useGettext } from 'vue3-gettext'
 import { computed } from 'vue'
 import { useAliasesStore } from '@/stores'

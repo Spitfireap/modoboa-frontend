@@ -9,7 +9,7 @@
 <script setup lang="js">
 import { useGettext } from 'vue3-gettext'
 import { useDomainsStore } from '@/stores'
-import DomainEditForm from '@/components/domains/DomainEditForm'
+import DomainEditForm from '@/components/admin/domains/DomainEditForm'
 import { useRoute } from 'vue-router'
 import { ref } from 'vue'
 
