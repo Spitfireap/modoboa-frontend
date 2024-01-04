@@ -62,16 +62,24 @@
       <v-menu v-if="isAuthenticated" rounded="lg" offset-y top>
         <template #activator="{ props }">
           <div
-            class="d-flex user-box justify-center align-center white--text py-2"
-            v-bind="props"
+            class="d-flex justify-center align-center bg-primary-darken-1 pa-2"
           >
-            <v-avatar size="40" color="primary">
-              <span class="white--text headline">{{ userInitials }}</span>
-            </v-avatar>
-            <template v-if="!rail">
-              <span class="mx-2">{{ displayName }}</span>
-              <v-icon class="float-right">mdi-chevron-up</v-icon>
-            </template>
+            <v-btn
+              v-bind="props"
+              class="bg-primary-darken-1 text-white"
+              rounded
+              density="compact"
+              height="48"
+              elevation="0"
+            >
+              <v-avatar size="40" color="primary">
+                <span class="text-white headline">{{ userInitials }}</span>
+              </v-avatar>
+              <template v-if="!rail">
+                <span class="mx-2">{{ displayName }}</span>
+                <v-icon class="float-right">mdi-chevron-up</v-icon>
+              </template>
+            </v-btn>
           </div>
         </template>
         <v-list>
@@ -323,14 +331,10 @@ onMounted(() => {
     &::before {
       opacity: 0;
     }
-    background-color: #034bad;
+    background-color: #034bad !important;
     color: white;
     opacity: 1;
   }
-}
-
-.user-box {
-  background: rgba(0, 0, 0, 0.25);
 }
 
 .logo {
