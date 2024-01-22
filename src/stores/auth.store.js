@@ -41,7 +41,7 @@ export const useAuthStore = defineStore('auth', () => {
     cookie.set('refreshToken', resp.data.refresh)
     initialize()
   }
-  async function $reset() {
+  async function reset() {
     delete repository.defaults.headers.common.Authorization
     Cookies.remove('token')
     Cookies.remove('refreshToken')
@@ -49,5 +49,5 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated.value = false
   }
 
-  return { authUser, isAuthenticated, fetchUser, initialize, login, $reset }
+  return { authUser, isAuthenticated, fetchUser, initialize, login, reset }
 })

@@ -14,6 +14,10 @@ function validateNumeric(value) {
   return (x | 0) === x
 }
 
+function samePassword(value, confirmation) {
+  return value === confirmation
+}
+
 export default {
   required: (value) =>
     (value !== '' && value != null) || $gettext('Field is required'),
@@ -26,4 +30,6 @@ export default {
     value === '' ||
     validateNumeric(value) ||
     $gettext('Must be a numeric value or empty'),
+  samePassword: (value, confirmation) =>
+    samePassword(value, confirmation) || $gettext('Passwords mismatch'),
 }

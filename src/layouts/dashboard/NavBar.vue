@@ -101,7 +101,7 @@
   </v-navigation-drawer>
 </template>
 
-<script setup>
+<script setup lang="js">
 import { useRoute, useRouter } from 'vue-router'
 import { ref, computed } from 'vue'
 import { useGettext } from 'vue3-gettext'
@@ -310,7 +310,7 @@ function displayMenuItem(item) {
 }
 
 function logout() {
-  authStore.$reset.then(() => {
+  authStore.reset().then(() => {
     router.push({ name: 'Login' })
   })
 }

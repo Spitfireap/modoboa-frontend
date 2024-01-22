@@ -46,8 +46,8 @@ async function authenticate() {
 </script>
 
 <template>
-  <v-container class="fill-height" fuild>
-    <v-row align="center" justify="center" dense>
+  <v-container class="fill-height" fluid>
+    <v-row align="center" justify="center">
       <v-col cols="12" sm="10" md="8" lg="8" class="text-center">
         <h4 class="text-primary mb-10 text-h4">
           {{ $gettext('Identification') }}
@@ -55,7 +55,7 @@ async function authenticate() {
         <v-form ref="loginForm" @submit.prevent="authenticate">
           <v-text-field
             v-model="username"
-            outlined
+            variant="outlined"
             :label="$gettext('Username')"
             prepend-inner-icon="mdi-account-outline"
             :rules="[rules.required]"
@@ -65,7 +65,7 @@ async function authenticate() {
             :type="isPasswordvisible ? 'text' : 'password'"
             prepend-inner-icon="mdi-lock-outline"
             :label="$gettext('Password')"
-            outlined
+            variant="outlined"
             :append-inner-icon="isPasswordvisible ? 'mdi-eye-off' : 'mdi-eye'"
             :rules="[rules.required, rules.minLength(6)]"
             @click:append-inner="isPasswordvisible = !isPasswordvisible"
@@ -83,7 +83,12 @@ async function authenticate() {
             {{ $gettext('Connect') }}
           </v-btn>
         </v-form>
-        <v-btn block variant="outlined" size="large">
+        <v-btn
+          block
+          variant="outlined"
+          size="large"
+          :to="{ name: 'PasswordRecovery' }"
+        >
           {{ $gettext('Forgot password') }}
         </v-btn>
       </v-col>
