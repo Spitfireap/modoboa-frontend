@@ -43,7 +43,7 @@ const routes = [
       {
         path: '',
         name: 'Dashboard',
-        component: () => import('@/views/HomeView.vue'),
+        component: () => import('@/views/Dashboard.vue'),
         meta: {
           requiresAuth: true,
         },
