@@ -12,6 +12,7 @@ const username = ref('')
 const password = ref('')
 const isPasswordvisible = ref(false)
 const loginForm = ref()
+const errors = ref([])
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -37,9 +38,11 @@ async function authenticate() {
     .catch((err) => {
       loading.value = false
       if (err.response.status === 401) {
-        console.log('Invalid username and/or password')
+        errors.value = [$gettext('Invalid username and/or password')]
       } else if (err.response.status === 429) {
-        console.log('Too many unsuccessful attempts, please try later.')
+        errors.value = [
+          $gettext('Too many unsuccessful attempts, please try later.'),
+        ]
       }
     })
 }
@@ -68,6 +71,7 @@ async function authenticate() {
             variant="outlined"
             :append-inner-icon="isPasswordvisible ? 'mdi-eye-off' : 'mdi-eye'"
             :rules="[rules.required, rules.minLength(6)]"
+            :error-messages="errors"
             @click:append-inner="isPasswordvisible = !isPasswordvisible"
           />
           <v-checkbox v-model="rememberMe" :label="$gettext('Remember me')" />

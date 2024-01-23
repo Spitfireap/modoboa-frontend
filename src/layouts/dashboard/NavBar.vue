@@ -310,7 +310,7 @@ function displayMenuItem(item) {
 }
 
 function logout() {
-  authStore.reset().then(() => {
+  authStore.$reset().then(() => {
     router.push({ name: 'Login' })
   })
 }
