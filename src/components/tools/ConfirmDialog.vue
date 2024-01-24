@@ -38,7 +38,6 @@ const dialog = ref(false)
 const message = ref('')
 const title = ref('')
 let storedResolve
-let storedReject
 let passthrough = null
 
 const emit = defineEmits(['agree', 'cancel'])
@@ -62,7 +61,6 @@ function open(_title, _message, _options, _passthrough = null) {
   }
   return new Promise((resolve, reject) => {
     storedResolve = resolve
-    storedReject = reject
   })
 }
 defineExpose({
