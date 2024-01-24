@@ -50,6 +50,7 @@
               <v-btn
                 icon="mdi-clipboard-multiple-outline"
                 color="white"
+                variant="text"
                 :title="$gettext('Copy to clipboard')"
                 @click="copyPassword"
               ></v-btn>
