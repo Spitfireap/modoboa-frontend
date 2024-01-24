@@ -121,20 +121,22 @@ const emit = defineEmits(['close', 'create', 'validationError'])
 
 const { $gettext } = useGettext()
 
-function close(withConfirm) {
-  if (withConfirm) {
-    confirm.value.open(
-      $gettext('Warning'),
-      $gettext(
-        "If you close this form now, your modifications won't be saved. Do you confirm?"
-      ),
-      {
-        color: 'warning',
-        agreeLabel: $gettext('Yes'),
-        cancelLabel: $gettext('No'),
-      }
-    )
+async function close() {
+  const confirmed = await confirm.value.open(
+    $gettext('Warning'),
+    $gettext(
+      "If you close this form now, your modifications won't be saved. Do you confirm?"
+    ),
+    {
+      color: 'warning',
+      agreeLabel: $gettext('Yes'),
+      cancelLabel: $gettext('No'),
+    }
+  )
+  if (!confirmed) {
+    return
   }
+  emit('close')
 }
 async function goToNextStep(current, next) {
   const vform = props.getVFormRef(props.steps[current - 1])

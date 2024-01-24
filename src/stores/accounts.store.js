@@ -47,7 +47,7 @@ export const useAccountsStore = defineStore('accounts', () => {
 
   async function createAccount(data) {
     return accountsApi.create(data).then((response) => {
-      accounts.value.push(response.data)
+      accounts.value[response.data.pk] = response.data
       busStore.displayNotification({ msg: $gettext('Account created') })
       return response
     })

@@ -63,7 +63,9 @@
         density="compact"
         :disabled="disabled"
         :rules="isRuleActive ? [rules.required, passwordConfirmationRules] : []"
-        :error-messages="formErrors.value.password"
+        :error-messages="
+          formErrors && formErrors.value ? formErrors.value.password : []
+        "
       />
     </template>
   </div>

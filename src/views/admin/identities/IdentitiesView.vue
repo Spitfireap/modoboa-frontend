@@ -40,13 +40,8 @@
     </v-toolbar>
 
     <IdentityList />
-    <v-dialog
-      v-model="showAliasCreationWizard"
-      fullscreen
-      scrollable
-      z-index="10"
-    >
-      <AliasCreationForm @close="showAliasCreationWizard = false" />
+    <v-dialog v-if="showAliasCreationWizard" fullscreen scrollable z-index="10">
+      <AliasCreationForm @close="showAliasCreationWizard.value = false" />
     </v-dialog>
 
     <v-dialog v-model="showCreationWizard" fullscreen scrollable z-index="10">
@@ -68,6 +63,10 @@ const showCreationWizard = ref(false)
 const showAliasCreationWizard = ref(false)
 
 function exportIdentities() {}
+
+function closeCreationForm() {
+  showCreationWizard.value = false
+}
 </script>
 
 <style scoped>

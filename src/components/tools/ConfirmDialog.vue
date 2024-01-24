@@ -6,7 +6,7 @@
     @keydown.esc="cancel"
   >
     <v-card>
-      <v-toolbar dark :color="options.color" dense flat>
+      <v-toolbar :color="options.color" density="compact" flat>
         <v-toolbar-title class="text-body-2 font-weight-bold">
           {{ title }}
         </v-toolbar-title>
@@ -37,7 +37,8 @@ const { $gettext } = useGettext()
 const dialog = ref(false)
 const message = ref('')
 const title = ref('')
-
+let storedResolve
+let storedReject
 let passthrough = null
 
 const emit = defineEmits(['agree', 'cancel'])
@@ -59,18 +60,24 @@ function open(_title, _message, _options, _passthrough = null) {
   if (_passthrough !== null) {
     passthrough = _passthrough
   }
+  return new Promise((resolve, reject) => {
+    storedResolve = resolve
+    storedReject = reject
+  })
 }
 defineExpose({
   open,
 })
 
 function agree() {
+  storedResolve(true)
   dialog.value = false
   emit('agree', passthrough)
   passthrough = null
 }
 
 function cancel() {
+  storedResolve(false)
   dialog.value = false
   emit('cancel', passthrough)
   passthrough = null
