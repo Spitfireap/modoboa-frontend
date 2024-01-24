@@ -9,6 +9,7 @@
     :summary-sections="summarySections"
     @close="close"
     @create="submit"
+    @validation-error="setFormErrors"
   >
     <template #[`form.role`]>
       <AccountRoleForm ref="role" v-model="account" />
@@ -185,13 +186,13 @@ const account = ref({
   random_password: false,
 })
 
-//Forms refs
+// Form refs
 const role = ref()
 const identification = ref()
 const mailbox = ref()
 const aliases = ref()
 
-const formStepsComponenents = {
+const formStepsComponents = {
   role: role,
   identification: identification,
   mailbox: mailbox,
@@ -207,11 +208,18 @@ function copyPassword() {
 }
 
 function getForm(step) {
-  return formStepsComponenents.step[step.name]
+  return formStepsComponents.step[step.name]
 }
 
 function getVFormRef(step) {
-  return formStepsComponenents[step.name].value.vFormRef
+  return formStepsComponents[step.name].value.vFormRef
+}
+
+function setFormErrors(step, errors) {
+  const stepName = steps.value[step - 1].name
+  if (formStepsComponents[stepName].value.formErrors) {
+    formStepsComponents[stepName].value.formErrors.value = errors
+  }
 }
 
 function preparePayload(payload) {

@@ -5,7 +5,7 @@
     :steps="steps"
     :form-getter="getForm"
     :get-v-form-ref="getVFormRef"
-    :validate-domain="validateDomain"
+    :validate-object="validateDomain"
     :summary-sections="summarySections"
     @close="close"
     @create="submit"
@@ -130,7 +130,7 @@ const options = ref()
 const transport = ref()
 
 // Object to reference
-const formStepsComponenents = {
+const formStepsComponents = {
   general: general,
   dns: dns,
   limitations: limitations,
@@ -288,13 +288,13 @@ function copyPassword() {
 }
 
 function getForm(step) {
-  return formStepsComponenents.value[step.name]
+  return formStepsComponents.value[step.name]
 }
 function getVFormRef(step) {
-  return formStepsComponenents[step.name].value.vFormRef
+  return formStepsComponents[step.name].value.vFormRef
 }
 
-function validateDomain() {}
+async function validateDomain() {}
 
 function updateCreateAdmin(value) {
   createAdmin.value = value

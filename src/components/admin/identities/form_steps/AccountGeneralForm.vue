@@ -12,6 +12,7 @@
           : [rules.required]
       "
       :role="account.role"
+      :error-msg="formErrors.value ? formErrors.value.username : []"
       @update:model-value="updateUsername"
     />
     <label class="m-label">{{ $gettext('First name') }}</label>
@@ -33,6 +34,7 @@
       ref="passwordForm"
       v-model="account"
       :is-edit="isEdit"
+      :form-errors="formErrors"
     />
 
     <v-switch
@@ -58,6 +60,7 @@ const props = defineProps({
 })
 
 const vFormRef = ref()
+const formErrors = ref({})
 
 const account = computed(() => props.modelValue)
 
@@ -77,15 +80,10 @@ function updateUsername() {
     account.value.role != 'SuperAdmins' &&
     account.value.username.indexOf('@') !== -1
   ) {
-    if (account.value.mailbox === undefined) {
-      account.value.mailbox = {}
-    }
     account.value.mailbox.full_address = account.value.username
     account.value.mailbox.message_limit = null
-  } else {
-    delete account.value.mailbox
   }
 }
 
-defineExpose({ vFormRef })
+defineExpose({ vFormRef, formErrors })
 </script>

@@ -62,7 +62,7 @@
             </v-btn>
             <v-btn
               color="primary"
-              large
+              size="large"
               @click="goToNextStep(index + 1, index + 2)"
             >
               {{ $gettext('Next') }}
@@ -80,7 +80,12 @@
             </template>
           </CreationSummary>
           <div class="d-flex justify-center mt-8">
-            <v-btn color="primary" large :loading="working" @click="create">
+            <v-btn
+              color="primary"
+              size="large"
+              :loading="working"
+              @click="create"
+            >
               {{ $gettext('Confirm and create') }}
             </v-btn>
           </div>
@@ -112,7 +117,7 @@ const currentStep = ref(1)
 const working = ref(false)
 const confirm = ref()
 
-const emit = defineEmits(['close', 'create'])
+const emit = defineEmits(['close', 'create', 'validationError'])
 
 const { $gettext } = useGettext()
 
@@ -137,6 +142,14 @@ async function goToNextStep(current, next) {
     const { valid } = await vform.validate()
     if (!valid) {
       return
+    }
+    if (props.validateObject) {
+      try {
+        await props.validateObject()
+      } catch (error) {
+        emit('validationError', current, error.response.data)
+        return
+      }
     }
   }
   currentStep.value = next

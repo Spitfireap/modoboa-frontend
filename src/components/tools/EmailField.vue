@@ -1,29 +1,27 @@
 <template>
-  <div>
-    <v-text-field
-      ref="inputRef"
-      v-model="input"
-      variant="outlined"
-      v-bind="$attrs"
-      :error-messages="errors"
-      :error="errors.length > 0"
-      density="compact"
-      autocomplete="new-password"
-      @keydown="onKeyDown"
-    />
-    <div v-if="showMenu" class="menu" :style="`width: ${width}px;`">
-      <v-list class="list">
-        <v-list-item
-          v-for="(domain, index) in filteredDomains"
-          :key="index"
-          :class="selectionIndex === index ? 'bg-primary-lighten-1' : ''"
-          @click="selectDomain(domain)"
-          @mouseenter="selectionIndex = index"
-        >
-          <v-list-item-title>{{ domain.name }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </div>
+  <v-text-field
+    ref="inputRef"
+    v-model="input"
+    variant="outlined"
+    v-bind="$attrs"
+    :error-messages="errors"
+    :error="errors.length > 0"
+    density="compact"
+    autocomplete="new-password"
+    @keydown="onKeyDown"
+  />
+  <div v-if="showMenu" class="menu" :style="`width: ${width}px;`">
+    <v-list class="list">
+      <v-list-item
+        v-for="(domain, index) in filteredDomains"
+        :key="index"
+        :class="selectionIndex === index ? 'bg-primary-lighten-1' : ''"
+        @click="selectDomain(domain)"
+        @mouseenter="selectionIndex = index"
+      >
+        <v-list-item-title>{{ domain.name }}</v-list-item-title>
+      </v-list-item>
+    </v-list>
   </div>
 </template>
 

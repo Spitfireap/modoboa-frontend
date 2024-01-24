@@ -53,7 +53,7 @@
         type="password"
         density="compact"
         :disabled="disabled"
-        :rules="isRuleActive ? [] : [rules.required]"
+        :rules="isRuleActive ? [rules.required] : []"
       />
       <v-text-field
         v-model="account.password_confirmation"
@@ -62,14 +62,9 @@
         :label="$gettext('Confirmation')"
         density="compact"
         :disabled="disabled"
-        :rules="isRuleActive ? [] : [rules.required, passwordConfirmationRules]"
+        :rules="isRuleActive ? [rules.required, passwordConfirmationRules] : []"
+        :error-messages="formErrors.value.password"
       />
-      <v-input
-        validate-on="submit lazy"
-        :rules="isRuleActive ? [] : [validPassword]"
-        :disabled="disabled"
-      >
-      </v-input>
     </template>
   </div>
 </template>
@@ -89,6 +84,7 @@ const props = defineProps({
   withPasswordCheck: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
   editing: { type: Boolean, default: false },
+  formErrors: { type: Object, required: false, default: () => {} },
 })
 
 const account = computed(() => props.modelValue)
@@ -102,7 +98,7 @@ const passwordConfirmationRules = (value) =>
 
 function copyPassword() {
   navigator.clipboard.writeText(account.value.password).then(() => {
-    busStore.displayNotfication({
+    busStore.displayNotification({
       msg: $gettext('Password copied to clipboard'),
     })
   })
