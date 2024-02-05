@@ -34,8 +34,8 @@
             class="flex-grow-1"
             color="primary"
             size="large"
-            @click="changePassword"
             :loading="loading"
+            @click="changePassword"
           >
             {{ $gettext('Submit') }}
           </v-btn>

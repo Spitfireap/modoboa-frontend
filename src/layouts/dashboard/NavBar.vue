@@ -62,11 +62,17 @@
       <v-menu v-if="isAuthenticated" rounded="lg" offset-y top>
         <template #activator="{ props }">
           <div
-            class="d-flex justify-center align-center bg-primary-darken-1 pa-2"
+            :class="[
+              backgroundColor,
+              'd-flex',
+              'justify-center',
+              'align-center',
+              'pa-2',
+            ]"
           >
             <v-btn
               v-bind="props"
-              class="bg-primary-darken-1 text-white"
+              :class="[backgroundColor, 'text-white']"
               rounded
               density="compact"
               height="48"
@@ -121,6 +127,9 @@ const drawer = ref(true)
 
 const authUser = computed(() => authStore.authUser)
 const isAuthenticated = computed(() => authStore.isAuthenticated)
+const backgroundColor = computed(() =>
+  route.meta.layout === 'account' ? 'bg-grey-darken-1' : 'bg-primary-darken-1'
+)
 
 const userInitials = computed(() => {
   let initials = null
@@ -144,14 +153,14 @@ const displayName = computed(() => {
 })
 
 const menuItems = computed(() => {
-  if (route.meta.layout === 'user') {
+  if (route.meta.layout === 'account') {
     return userSettingsMenuItems
   }
   return mainMenuItems
 })
 
 const mainColor = computed(() => {
-  if (route.meta.layout === 'user') {
+  if (route.meta.layout === 'account') {
     return 'grey'
   }
   return 'primary'

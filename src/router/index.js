@@ -201,11 +201,13 @@ const routes = [
   },
   {
     path: '/account',
-    component: () => import('@/layouts/default/DefaultLayout.vue'),
+    component: () => import('@/layouts/dashboard/DashboardLayout.vue'),
+    meta: { layout: 'account' },
     children: [
       {
         path: 'api',
         name: 'APISetup',
+        component: () => import('@/views/account/APISetupView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['SuperAdmins'],
@@ -214,6 +216,7 @@ const routes = [
       {
         path: 'profile',
         name: 'UserProfile',
+        component: () => import('@/views/account/ProfileView.vue'),
         meta: {
           requiresAuth: true,
         },
@@ -221,6 +224,7 @@ const routes = [
       {
         path: 'security',
         name: 'UserSecurity',
+        component: () => import('@/views/account/SecurityView.vue'),
         meta: {
           requiresAuth: true,
         },

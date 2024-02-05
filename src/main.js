@@ -28,5 +28,7 @@ fetch(import.meta.env.BASE_URL + 'config.json').then((resp) => {
     registerPlugins(app)
 
     app.mount('#app')
+
+    app.provide('$config', config)
   })
 })

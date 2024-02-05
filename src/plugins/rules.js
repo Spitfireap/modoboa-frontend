@@ -3,7 +3,11 @@ import gettext from './gettext'
 const { $gettext } = gettext
 
 function validateEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return $gettext('Not a valid email')
+  } else {
+    return true
+  }
 }
 
 function validateNumeric(value) {
@@ -21,7 +25,8 @@ function samePassword(value, confirmation) {
 export default {
   required: (value) =>
     (value !== '' && value != null) || $gettext('Field is required'),
-  email: (value) => validateEmail(value) || $gettext('Not a valid email'),
+  email: (value) => validateEmail(value),
+  emailOrNull: (value) => value != null || value !== '' || validateEmail(value),
   minLength: (len) => (value) =>
     value.length > len ||
     $gettext('Minimum length is %{ length }', { length: len }),

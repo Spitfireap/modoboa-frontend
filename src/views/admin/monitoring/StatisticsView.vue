@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="js">
-import TimeSerieChart from '@/components/admin/tools/TimeSerieChart'
+import TimeSerieChart from '@/components/tools/TimeSerieChart.vue'
 </script>
 
 <style scoped>

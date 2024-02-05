@@ -28,14 +28,14 @@
             class="flex-grow-1"
             color="primary"
             size="large"
-            @click="checkSmsTotp"
             :loading="loading"
+            @click="checkSmsTotp"
           >
             {{ $gettext('Submit') }}
           </v-btn>
         </div>
         <div>
-          <a @click="resendSms" class="float-left text-primary">{{
+          <a class="float-left text-primary" @click="resendSms">{{
             $gettext('Resend SMS.')
           }}</a>
           <router-link
