@@ -7,5 +7,6 @@ export * from './accounts.store'
 export * from './aliases.store'
 export * from './identities.store'
 export * from './parameters.store'
+export * from './providers.store'
 
 export default createPinia()

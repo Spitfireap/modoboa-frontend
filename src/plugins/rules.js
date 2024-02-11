@@ -37,4 +37,6 @@ export default {
     $gettext('Must be a numeric value or empty'),
   samePassword: (value, confirmation) =>
     samePassword(value, confirmation) || $gettext('Passwords mismatch'),
+  portNumber: (value) =>
+    (value > 0 && value < 65536) || $gettext('Invalid port number'),
 }

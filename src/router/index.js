@@ -78,6 +78,8 @@ const routes = [
       {
         path: 'imap_migration/migrations',
         name: 'MigrationsList',
+        component: () =>
+          import('@/views/admin/imap_migration/MigrationsView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['Resellers', 'SuperAdmins'],
@@ -86,6 +88,8 @@ const routes = [
       {
         path: 'imap_migration/providers',
         name: 'ProvidersList',
+        component: () =>
+          import('@/views/admin/imap_migration/ProvidersView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['Resellers', 'SuperAdmins'],
@@ -94,6 +98,8 @@ const routes = [
       {
         path: 'imap_migration/providers/:id/edit',
         name: 'ProviderEdit',
+        component: () =>
+          import('@/views/admin/imap_migration/ProviderEditView.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['Resellers', 'SuperAdmins'],
