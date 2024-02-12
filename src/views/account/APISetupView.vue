@@ -32,12 +32,14 @@
             density="compact"
             :title="$gettext('Copy token to clipboard')"
             @click="copyToClipboard()"
+            variant="text"
           >
           </v-btn>
           <v-btn
             icon="mdi-delete"
             density="compact"
             color="error"
+            variant="text"
             :title="$gettext('Delete token')"
             @click="openDeletionDialog"
           >

@@ -70,15 +70,15 @@
             </router-link>
             <v-chip
               v-if="item.type === 'relaydomain'"
-              small
+              size="small"
               color="primary"
               class="ml-2"
             >
               {{ $gettext('Relay') }}
             </v-chip>
-            <template v-if="!item.enabled">
-              {{ $gettext('disabled') }}
-            </template>
+            <span v-if="!item.enabled" class="ml-2">
+              ({{ $gettext('disabled') }})
+            </span>
           </td>
           <td>
             {{ item.domainalias_count }} aliases

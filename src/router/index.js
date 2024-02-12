@@ -238,6 +238,7 @@ const routes = [
       {
         path: 'forward',
         name: 'UserForward',
+        component: () => import('@/views/account/ForwardView.vue'),
         meta: {
           requiresAuth: true,
         },
