@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex justify-center inner fill-height">
     <v-stepper v-model="currentStep" :mobile="!smAndDown">
-      <ConfirmDialog ref="confirm" @agree="emit('close')" />
+      <ConfirmDialog ref="confirm" />
       <v-stepper-header class="align-center px-10">
         <v-img
           src="@/assets/Modoboa_RVB-BLEU-SANS.png"

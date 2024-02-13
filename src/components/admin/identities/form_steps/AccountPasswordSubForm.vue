@@ -51,6 +51,7 @@
         variant="outlined"
         :label="$gettext('Password')"
         type="password"
+        autocomplete="new-password"
         density="compact"
         :disabled="disabled"
         :rules="isRuleActive ? [rules.required] : []"
@@ -92,7 +93,7 @@ const props = defineProps({
 const account = computed(() => props.modelValue)
 
 const isRuleActive = computed(
-  () => !props.disabled || (props.editing && account.value.password)
+  () => !props.disabled && (!props.editing || account.value.password)
 )
 
 const passwordConfirmationRules = (value) =>

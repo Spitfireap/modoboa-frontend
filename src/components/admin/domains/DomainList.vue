@@ -152,7 +152,7 @@
         </tr>
       </template>
     </v-data-table>
-    <ConfirmDialog ref="confirm" @agree="onDeletedDomain">
+    <ConfirmDialog ref="confirm">
       <v-checkbox
         v-model="keepDomainFolder"
         :label="$gettext('Do not delete domain folder')"
@@ -231,7 +231,7 @@ function closeDomainAliasForm() {
 }
 
 async function deleteDomain(domain) {
-  confirm.value.open(
+  const result = await confirm.value.open(
     $gettext('Warning'),
     $gettext('Do you really want to delete the domain %{ domain }?', {
       domain: domain.name,
@@ -240,12 +240,11 @@ async function deleteDomain(domain) {
       color: 'error',
       cancelLabel: $gettext('No'),
       agreeLabel: $gettext('Yes'),
-    },
-    domain
+    }
   )
-}
-
-function onDeletedDomain(domain) {
+  if (!result) {
+    return
+  }
   const data = { keep_folder: keepDomainFolder.value }
   domainStore.deleteDomain({ id: domain.pk, data }).then(() => {
     busStore.displayNotification({ msg: $gettext('Domain deleted') })

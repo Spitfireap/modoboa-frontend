@@ -144,7 +144,7 @@ export const useIdentitiesStore = defineStore('identities', () => {
     }
   }
 
-  async function deleteIdentity(type, pk) {
+  async function deleteIdentity(type, pk, options) {
     identitiesLoaded.value = false
     if (type === 'alias') {
       return aliasesStore.deleteAlias(pk).then((response) => {
@@ -153,7 +153,11 @@ export const useIdentitiesStore = defineStore('identities', () => {
         return response
       })
     } else if (type === 'account') {
-      return
+      return accountsStore.deleteAccount(pk, options).then((response) => {
+        _deleteIdByPkAndType(type, pk)
+        identitiesLoaded.value = true
+        return response
+      })
     }
   }
 

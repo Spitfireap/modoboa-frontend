@@ -30,7 +30,7 @@
             <v-col cols="4">
               {{ $gettext('Identification') }}
             </v-col>
-            <v-col cols="8" class="text--secondary">
+            <v-col cols="8" class="text-secondary">
               <v-fade-transition leave-absolute>
                 <span v-if="expanded"></span>
                 <v-row v-else no-gutters style="width: 100%">
@@ -54,7 +54,11 @@
           </v-row>
         </v-expansion-panel-title>
         <v-expansion-panel-text>
-          <AccountGeneralForm ref="generalForm" v-model="editedAccount" />
+          <AccountGeneralForm
+            ref="generalForm"
+            v-model="editedAccount"
+            editing
+          />
         </v-expansion-panel-text>
       </v-expansion-panel>
       <v-expansion-panel v-if="usernameIsEmail" eager value="mailboxForm">
@@ -63,7 +67,7 @@
             <v-col cols="4">
               {{ $gettext('Mailbox') }}
             </v-col>
-            <v-col cols="8" class="text--secondary">
+            <v-col cols="8" class="text-secondary">
               <v-fade-transition leave-absolute>
                 <span v-if="expanded"></span>
                 <v-row v-else no-gutters style="width: 100%">
@@ -110,7 +114,7 @@
             <v-col cols="4">
               {{ $gettext('Alias') }}
             </v-col>
-            <v-col cols="8" class="text--secondary">
+            <v-col cols="8" class="text-secondary">
               <v-fade-transition leave-absolute>
                 <span v-if="expanded"></span>
                 <v-row v-else no-gutters style="width: 100%">
@@ -138,7 +142,7 @@
             <v-col cols="4">
               {{ $gettext('Resources') }}
             </v-col>
-            <v-col cols="8" class="text--secondary">
+            <v-col cols="8" class="text-secondary">
               <v-fade-transition leave-absolute>
                 <span v-if="expanded"></span>
                 <v-row v-else no-gutters style="width: 100%">
@@ -280,7 +284,8 @@ async function save() {
   }
   working.value = true
   try {
-    const data = JSON.parse(JSON.stringify(editedAccount.value))
+    const data = { ...editedAccount.value }
+    console.log(data)
     if (usernameIsEmail.value) {
       data.mailbox.full_address = data.username
     } else {

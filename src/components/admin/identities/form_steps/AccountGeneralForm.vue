@@ -33,7 +33,7 @@
     <AccountPasswordSubForm
       ref="passwordForm"
       v-model="account"
-      :is-edit="isEdit"
+      :editing="editing"
       :form-errors="formErrors"
     />
 
@@ -56,7 +56,7 @@ import rules from '@/plugins/rules'
 const { $gettext } = useGettext()
 const props = defineProps({
   modelValue: { type: Object, default: null },
-  isEdit: { type: Boolean, default: false },
+  editing: { type: Boolean, default: false },
 })
 
 const vFormRef = ref()

@@ -52,6 +52,19 @@ export const useAccountsStore = defineStore('accounts', () => {
       return response
     })
   }
+
+  async function deleteAccount(pk, options) {
+    accountsLoaded.value = false
+    return accountsApi
+      .delete(pk, options)
+      .then((response) => {
+        busStore.displayNotification({
+          msg: $gettext('Account successfully deleted'),
+        })
+        return response
+      })
+      .finally(() => (accountsLoaded.value = true))
+  }
   return {
     accounts,
     accountsLoaded,
@@ -59,5 +72,6 @@ export const useAccountsStore = defineStore('accounts', () => {
     getAccount,
     updateAccount,
     createAccount,
+    deleteAccount,
   }
 })

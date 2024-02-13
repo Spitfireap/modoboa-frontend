@@ -90,7 +90,14 @@
         </v-menu>
       </template>
     </v-data-table>
-    <ConfirmDialog ref="confirm" @agree="deleteIdentity" />
+    <ConfirmDialog ref="confirmAlias" />
+    <ConfirmDialog ref="confirmAccount">
+      <v-checkbox
+        v-model="keepAccountFolder"
+        :label="$gettext('Do not delete account folder')"
+        hide-details
+      />
+    </ConfirmDialog>
   </v-card>
 </template>
 
@@ -122,7 +129,9 @@ const identities = computed(() => identitiesStore.identities)
 const identitiesLoaded = computed(() => identitiesStore.identitiesLoaded)
 const search = ref('')
 const selected = ref([])
-const confirm = ref()
+const keepAccountFolder = ref(false)
+const confirmAlias = ref()
+const confirmAccount = ref()
 
 function fetchIdentities() {
   identitiesStore.getIdentities().then(() => {
@@ -150,19 +159,25 @@ function getMenuItems(item) {
       icon: 'mdi-circle-edit-outline',
       onClick: editAccount,
     })
+    result.push({
+      label: $gettext('Delete'),
+      icon: 'mdi-delete-outline',
+      onClick: deleteAccount,
+      color: 'red',
+    })
   } else if (item.type === 'alias') {
     result.push({
       label: $gettext('Edit'),
       icon: 'mdi-circle-edit-outline',
       onClick: editAlias,
     })
+    result.push({
+      label: $gettext('Delete'),
+      icon: 'mdi-delete-outline',
+      onClick: deleteAlias,
+      color: 'red',
+    })
   }
-  result.push({
-    label: $gettext('Delete'),
-    icon: 'mdi-delete-outline',
-    onClick: confirmDelete,
-    color: 'red',
-  })
   return result
 }
 
@@ -179,30 +194,51 @@ function getActionMenuItems() {
   return result
 }
 
-async function confirmDelete(item) {
-  confirm.value.open(
-    $gettext('Warning'),
-    $gettext('Are you sure you want to delete this identity ?'),
-    {
-      color: 'warning',
-      agreeLabel: $gettext('Yes'),
-      cancelLabel: $gettext('No'),
-    },
-    item
-  )
-}
-
 function editAccount(account) {
   router.push({ name: 'AccountEdit', params: { id: account.pk } })
 }
 
-function deleteIdentity(item) {
-  identitiesStore.deleteIdentity(item.type, item.pk)
+async function deleteAccount(account) {
+  const result = await confirmAccount.value.open(
+    $gettext('Warning'),
+    $gettext('Are you sure you want to delete this identity ?'),
+    {
+      color: 'error',
+      agreeLabel: $gettext('Yes'),
+      cancelLabel: $gettext('No'),
+    }
+  )
+  if (!result) {
+    return
+  }
+  identitiesStore
+    .deleteIdentity(account.type, account.pk, {
+      keepdir: keepAccountFolder.value,
+    })
+    .then(() => {
+      keepAccountFolder.value = false
+    })
 }
+
+function editAlias() {}
 
 function deleteIdentities() {}
 
-function editAlias() {}
+async function deleteAlias(alias) {
+  const result = await confirmAlias.value.open(
+    $gettext('Warning'),
+    $gettext('Are you sure you want to delete this alias?'),
+    {
+      color: 'error',
+      agreeLabel: $gettext('Yes'),
+      cancelLabel: $gettext('No'),
+    }
+  )
+  if (!result) {
+    return
+  }
+  identitiesStore.deleteIdentity(alias.type, alias.pk)
+}
 
 onMounted(() => {
   if (identities.value.length < 1) {

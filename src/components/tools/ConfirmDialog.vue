@@ -38,9 +38,6 @@ const dialog = ref(false)
 const message = ref('')
 const title = ref('')
 let storedResolve
-let passthrough = null
-
-const emit = defineEmits(['agree', 'cancel'])
 
 const options = ref({
   color: 'primary',
@@ -51,15 +48,12 @@ const options = ref({
   agreeLabel: $gettext('OK'),
 })
 
-function open(_title, _message, _options, _passthrough = null) {
+function open(_title, _message, _options) {
   dialog.value = true
   title.value = _title
   message.value = _message
   options.value = Object.assign(options.value, _options)
-  if (_passthrough !== null) {
-    passthrough = _passthrough
-  }
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     storedResolve = resolve
   })
 }
@@ -70,14 +64,10 @@ defineExpose({
 function agree() {
   storedResolve(true)
   dialog.value = false
-  emit('agree', passthrough)
-  passthrough = null
 }
 
 function cancel() {
   storedResolve(false)
   dialog.value = false
-  emit('cancel', passthrough)
-  passthrough = null
 }
 </script>

@@ -31,8 +31,8 @@
             icon="mdi-clipboard-plus"
             density="compact"
             :title="$gettext('Copy token to clipboard')"
-            @click="copyToClipboard()"
             variant="text"
+            @click="copyToClipboard()"
           >
           </v-btn>
           <v-btn

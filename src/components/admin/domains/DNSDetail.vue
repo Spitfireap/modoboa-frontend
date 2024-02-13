@@ -153,11 +153,7 @@
     <v-dialog v-model="showDKIMKey" max-width="800px" persistent>
       <DomainDKIMKey :domain="domain" @close="showDKIMKey = false" />
     </v-dialog>
-    <ConfirmDialog
-      ref="dialog"
-      @agree="confirmGenNewKey"
-      @cancel="cancelDKIMGen"
-    />
+    <ConfirmDialog ref="dialog" />
   </v-card>
 </template>
 
@@ -222,9 +218,9 @@ function cancelDKIMGen() {
 
 async function retryKeyGeneration() {
   keyLoading.value = true
-  domainsApi.getDomainDNSDetail(domain.value.pk).then((resp) => {
+  domainsApi.getDomainDNSDetail(domain.value.pk).then(async (resp) => {
     detail.value = resp.data
-    dialog.value.open(
+    const result = await dialog.value.open(
       $gettext('warning'),
       $gettext(
         'DKIM key does not seem to be genrated yet or has failed. Do you want to requeue the job?'
@@ -235,6 +231,11 @@ async function retryKeyGeneration() {
         agreeLabel: $gettext('Yes'),
       }
     )
+    if (result) {
+      confirmGenNewKey()
+    } else {
+      cancelDKIMGen()
+    }
   })
 }
 

@@ -2,14 +2,14 @@
   <v-form ref="vFormRef">
     <label class="m-label">{{ $gettext('Quota') }}</label>
     <v-switch
-      v-model="account.mailbox.use_domain_quota"
+      v-model="form.mailbox.use_domain_quota"
       :label="useDomainQuotaLabel"
       color="primary"
       @update:model-value="cleanQuota"
     />
     <v-text-field
-      v-if="!account.mailbox.use_domain_quota"
-      v-model="account.mailbox.quota"
+      v-if="!form.mailbox.use_domain_quota"
+      v-model="form.mailbox.quota"
       :placeholder="$gettext('Ex: 10MB. Leave empty for no limit')"
       :hint="
         $gettext(
@@ -22,7 +22,7 @@
     />
     <label class="m-label">{{ $gettext('Daily message sending limit') }}</label>
     <v-text-field
-      v-model="account.mailbox.message_limit"
+      v-model="form.mailbox.message_limit"
       :placeholder="$gettext('Leave empty for no limit')"
       :hint="
         $gettext(
@@ -36,7 +36,7 @@
       @update:model-value="cleanMessageLimit"
     />
     <v-switch
-      v-model="account.mailbox.is_send_only"
+      v-model="form.mailbox.is_send_only"
       :label="$gettext('Send only account')"
       density="compact"
       color="primary"
@@ -45,21 +45,54 @@
 </template>
 
 <script setup lang="js">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useGettext } from 'vue3-gettext'
 import { useDomainsStore } from '@/stores'
 import rules from '@/plugins/rules'
 
 const { $gettext } = useGettext()
+const emit = defineEmits(['update:modelValue'])
 const props = defineProps({ modelValue: { type: Object, default: null } })
 const domainsStore = useDomainsStore()
 
 const vFormRef = ref()
+const form = ref({
+  mailbox: {},
+})
 
-const account = computed(() => props.modelValue)
+watch(
+  props.modelValue,
+  (value) => {
+    if (value) {
+      form.value = { ...value }
+      if (form.value.role === 'SimpleUsers') {
+        if (!form.value.mailbox) {
+          form.value.mailbox = {}
+        }
+        form.value.mailbox.full_address = form.value.username
+      }
+      if (form.value.mailbox.message_limit === '') {
+        form.value.mailbox.message_limit = null
+      }
+    } else {
+      form.value = {
+        mailbox: {},
+      }
+    }
+  },
+  { immediate: true }
+)
+
+watch(
+  form,
+  (value) => {
+    emit('update:modelValue', value)
+  },
+  { deep: true }
+)
 
 const domainQuota = computed(() => {
-  const email = account.value.mailbox.full_address
+  const email = form.value.mailbox.full_address
   if (email && email.indexOf('@') !== -1) {
     const domain = domainsStore.getDomainByName(email.split('@')[1])
     if (domain) {
@@ -83,13 +116,13 @@ const useDomainQuotaLabel = computed(() => {
 
 function cleanQuota(value) {
   if (value) {
-    delete account.value.mailbox.quota
+    delete form.value.mailbox.quota
   }
 }
 
 function cleanMessageLimit(value) {
   if (value === '') {
-    delete account.value.mailbox.message_limit
+    delete form.value.mailbox.message_limit
   }
 }
 

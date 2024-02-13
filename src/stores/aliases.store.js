@@ -4,7 +4,6 @@ import aliasesApi from '@/api/aliases'
 import { useBusStore } from './bus.store'
 
 import gettext from '@/plugins/gettext'
-import account from '@/api/account'
 
 export const useAliasesStore = defineStore('aliases', () => {
   const busStore = useBusStore()
@@ -58,7 +57,6 @@ export const useAliasesStore = defineStore('aliases', () => {
     return aliasesApi
       .delete(pk)
       .then((response) => {
-        delete account.value[pk]
         busStore.displayNotification({
           msg: $gettext('Alias successfully deleted'),
         })
