@@ -98,33 +98,22 @@
         </v-row>
       </template>
       <template v-if="domain.enable_dkim">
-        <v-row no-gutters align="center" class="d-flex flex-nowrap">
-          <v-col
-            cols="4"
-            sm="auto"
-            class="d-flex flex-grow-1 flex-shrink-0 text-subtitle-2"
-          >
+        <div class="d-flex align-center flex-nowrap mt-4">
+          <div class="text-subtitle-2">
             {{ $gettext('DKIM key') }}
-          </v-col>
-          <v-col
-            v-if="domain.dkim_private_key_path && domain.dkim_public_key"
-            cols="8"
-            class="d-none d-sm-flex flex-shrink-1"
-          >
-            <v-btn
-              icon="mdi-content-copy"
-              variant="text"
-              size="small"
-              density="compact"
-              @click="copyPubKey"
-            ></v-btn>
-            <pre style="overflow-x: auto">{{ domain.dkim_public_key }}</pre>
-          </v-col>
-          <v-col class="d-flex flex-shrink-0 flex-grow-1">
+          </div>
+          <div class="ml-6">
             <div v-if="domain.dkim_private_key_path && domain.dkim_public_key">
-              <v-btn color="primary" small @click="showDKIMKey = true">
+              <v-btn color="primary" size="small" @click="showDKIMKey = true">
                 {{ $gettext('Show key') }}
               </v-btn>
+              <v-btn
+                icon="mdi-content-copy"
+                variant="text"
+                @click="copyPubKey"
+                class="ml-2"
+                :title="$gettext('Copy key to clipboard')"
+              ></v-btn>
               <v-btn
                 icon="mdi-refresh"
                 :title="$gettext('Generate a new DKIM key')"
@@ -143,8 +132,8 @@
                 @click="retryKeyGeneration"
               ></v-btn>
             </div>
-          </v-col>
-        </v-row>
+          </div>
+        </div>
       </template>
     </v-card-text>
     <v-dialog v-model="showConfigHelp" max-width="800px" persistent>
@@ -189,6 +178,10 @@ const showDKIMKey = ref(false)
 
 function copyPubKey() {
   navigator.clipboard.writeText(domain.value.dkim_public_key)
+  busStore.displayNotification({
+    msg: $gettext('DKIM key copied to clipboard'),
+    type: 'success',
+  })
 }
 
 function confirmGenNewKey() {

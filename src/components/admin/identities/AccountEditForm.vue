@@ -285,7 +285,6 @@ async function save() {
   working.value = true
   try {
     const data = { ...editedAccount.value }
-    console.log(data)
     if (usernameIsEmail.value) {
       data.mailbox.full_address = data.username
     } else {

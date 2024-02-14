@@ -38,20 +38,22 @@
                 <span v-if="expanded"></span>
                 <v-row v-else no-gutters style="width: 100%">
                   <v-col cols="6">
-                    <div class="mr-2">{{ $gettext('DNS checks') }}</div>
+                    {{ $gettext('DNS checks') }}
                     <v-icon
                       v-if="editedDomain.enable_dns_checks"
                       color="success"
-                      >mdi-check-circle-outline</v-icon
-                    >
-                    <v-icon v-else>mdi-close-circle-outline</v-icon>
+                      icon="mdi-check-circle-outline"
+                    />
+                    <v-icon v-else icon="mdi-check-circle-outline" />
                   </v-col>
                   <v-col cols="6">
-                    <div class="mr-2">{{ $gettext('DKIM signing') }}</div>
-                    <v-icon v-if="editedDomain.enable_dkim" color="success"
-                      >mdi-check-circle-outline</v-icon
-                    >
-                    <v-icon v-else>mdi-close-circle-outline</v-icon>
+                    {{ $gettext('DKIM signing') }}
+                    <v-icon
+                      v-if="editedDomain.enable_dkim"
+                      color="success"
+                      icon="mdi-check-circle-outline"
+                    />
+                    <v-icon v-else icon="mdi-close-circle-outline" />
                   </v-col>
                 </v-row>
               </v-fade-transition>
