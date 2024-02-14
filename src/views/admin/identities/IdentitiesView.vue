@@ -40,7 +40,12 @@
     </v-toolbar>
 
     <IdentityList />
-    <v-dialog v-if="showAliasCreationWizard" fullscreen scrollable z-index="10">
+    <v-dialog
+      v-model="showAliasCreationWizard"
+      fullscreen
+      scrollable
+      z-index="10"
+    >
       <AliasCreationForm @close="showAliasCreationWizard = false" />
     </v-dialog>
 
