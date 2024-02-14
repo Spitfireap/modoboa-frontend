@@ -110,9 +110,9 @@
               <v-btn
                 icon="mdi-content-copy"
                 variant="text"
-                @click="copyPubKey"
                 class="ml-2"
                 :title="$gettext('Copy key to clipboard')"
+                @click="copyPubKey"
               ></v-btn>
               <v-btn
                 icon="mdi-refresh"

@@ -14,16 +14,18 @@
         <template v-if="setting.type === 'str' || setting.type === 'int'">
           <label class="m-label">{{ setting.label }}</label>
           <v-text-field
-            v-model="transport.settings[`${service.name}_${setting.name}`]"
+            v-model="form.settings[`${service.name}_${setting.name}`]"
             variant="outlined"
-            :type="setting.type === 'int' ? 'number' : 'text'"
+            :type="form.type === 'int' ? 'number' : 'text'"
             :rules="[!!setting.required || rules.required]"
+            @update:model-value="update"
           />
         </template>
         <v-checkbox
           v-else-if="setting.type === 'boolean'"
-          v-model="transport.settings[`${service.name}_${setting.name}`]"
+          v-model="form.settings[`${service.name}_${setting.name}`]"
           :label="setting.label"
+          @update:model-value="update"
         />
       </template>
     </template>
@@ -33,19 +35,17 @@
 <script setup lang="js">
 import transports from '@/api/transports'
 import { useGettext } from 'vue3-gettext'
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import rules from '@/plugins/rules.js'
 
 const { $gettext } = useGettext()
 
 const props = defineProps({ modelValue: { type: Object, default: () => {} } })
-
+const emit = defineEmits(['update:modelValue'])
 const vFormRef = ref()
-
-const transport = computed(() => props.modelValue)
-
-const backends = ref([])
+const form = ref({})
 const service = ref()
+const backends = ref([])
 
 function checkSettingTypes(data) {
   for (const setting of service.value.settings) {
@@ -58,12 +58,20 @@ function checkSettingTypes(data) {
   }
 }
 
+function update() {
+  form.value.service = service.value.name
+  emit('update:modelValue', form.value)
+}
+
 onMounted(() => {
+  form.value = { ...props.modelValue }
   transports.getAll().then((resp) => {
     backends.value = resp.data
-    service.value = backends.value.find(
-      (backend) => backend.name === transport.value.service
-    )
+    if (form.value.service) {
+      service.value = backends.value.find(
+        (backend) => backend.name === form.value.service
+      )
+    }
   })
 })
 

@@ -123,7 +123,10 @@
           </v-row>
         </v-expansion-panel-title>
         <v-expansion-panel-text>
-          <DomainTransportForm ref="transportForm" v-model="editedDomain" />
+          <DomainTransportForm
+            ref="transportForm"
+            v-model="editedDomain.transport"
+          />
         </v-expansion-panel-text>
       </v-expansion-panel>
       <v-expansion-panel

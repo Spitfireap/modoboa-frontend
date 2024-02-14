@@ -69,7 +69,6 @@
 </template>
 
 <script setup lang="js">
-//TODO: Investigate transport!!
 import ParametersApi from '@/api/parameters.js'
 import CreationForm from '@/components/tools/CreationForm.vue'
 import DomainGeneralForm from './form_steps/DomainGeneralForm.vue'
@@ -210,30 +209,25 @@ const summarySections = computed(() => {
       value: domain.value.dkim_key_length,
     })
   }
-  if (domain.value.type === 'relaydomain') {
+  if (domain.value.type === 'relaydomain' && domain.value.transport.service) {
     const relayEntry = {
       title: $gettext('Transport'),
       items: [
         { key: $gettext('Service'), value: domain.value.transport.service },
       ],
     }
-    if (
-      transport.value !== undefined &&
-      transport.value.service != null &&
-      transport.value.service.value
-    ) {
-      const service = transport.value.service.value
-      for (const setting of service.settings) {
-        const item = {
-          key: setting.label,
-          value:
-            domain.value.transport.settings[`${service.name}_${setting.name}`],
-        }
-        if (setting.type === 'boolean') {
-          item.type = 'yesno'
-        }
-        relayEntry.items.push(item)
+    for (const setting of transport.value.service.settings) {
+      const item = {
+        key: setting.label,
+        value:
+          domain.value.transport.settings[
+            `${domain.value.transport.service}_${setting.name}`
+          ],
       }
+      if (setting.type === 'boolean') {
+        item.type = 'yesno'
+      }
+      relayEntry.items.push(item)
     }
     result.push(relayEntry)
   } else if (domain.value.type === 'domain') {
