@@ -45,14 +45,14 @@
 <script setup lang="js">
 import domainsApi from '@/api/domains'
 import providerApi from '@/api/imap_migration/providers'
-import { computed, ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useGettext } from 'vue3-gettext'
 
 const { $gettext } = useGettext()
 
-const props = defineProps({ modelValue: { type: Object, default: null } })
-
-const domains = computed(() => props.modelValue)
+const props = defineProps({ modelValue: { type: Array, default: null } })
+const emit = defineEmits(['update:modelValue'])
+const domains = ref([])
 
 const formRef = ref()
 const vFormRef = ref()
@@ -61,6 +61,16 @@ const domain = ref({
   new_domain: '',
 })
 const localDomains = ref([])
+
+watch(
+  () => props.modelValue,
+  (value) => {
+    if (value) {
+      domains.value = [...value]
+    }
+  },
+  { immediate: true }
+)
 
 async function addDomain() {
   const valid = await formRef.value.validate()
@@ -73,6 +83,7 @@ async function addDomain() {
         name: domain.value.name,
         new_domain: domain.value.new_domain,
       })
+      emit('update:modelValue', domains.value)
       domain.value = {
         name: '',
         new_domain: '',
@@ -83,6 +94,7 @@ async function addDomain() {
 
 function removeDomain(index) {
   domains.value.splice(index, 1)
+  emit('update:modelValue', domains.value)
 }
 
 function onKeyDown(e) {

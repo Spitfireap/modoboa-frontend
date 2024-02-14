@@ -69,9 +69,9 @@
       <template #[`item.actions`]="{ item }">
         <v-menu offset-y>
           <template #activator="{ props }">
-            <v-btn icon="mdi-dots-horizontal" v-bind="props" />
+            <v-btn icon="mdi-dots-horizontal" variant="text" v-bind="props" />
           </template>
-          <MenuItems :items="getMenuItems()" :object="item" />
+          <MenuItems :items="getMenuItems()" :obj="item" />
         </v-menu>
       </template>
     </v-data-table>
@@ -123,13 +123,13 @@ function getMenuItems() {
   result.push({
     label: $gettext('Delete'),
     icon: 'mdi-delete-outline',
-    onClick: deleteProvider(),
+    onClick: deleteProvider,
     color: 'red',
   })
   result.push({
     label: $gettext('Edit'),
     icon: 'mdi-circle-edit-outline',
-    onClick: editProvider(),
+    onClick: editProvider,
   })
   return result
 }
