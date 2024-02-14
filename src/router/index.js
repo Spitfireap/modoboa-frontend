@@ -50,30 +50,40 @@ const routes = [
       },
       {
         path: 'domains',
-        name: 'DomainList',
-        component: () => import('@/views/admin/domains/DomainsView.vue'),
+        component: () => import('@/layouts/default/DefaultLayout.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
         },
-      },
-      {
-        path: 'domains/:id',
-        name: 'DomainDetail',
-        meta: {
-          requiresAuth: true,
-          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
-        },
-        component: () => import('@/views/admin/domains/DomainView.vue'),
-      },
-      {
-        path: 'domains/:id/edit',
-        name: 'DomainEdit',
-        meta: {
-          requiresAuth: true,
-          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
-        },
-        component: () => import('@/views/admin/domains/DomainEditView.vue'),
+        children: [
+          {
+            path: '',
+            name: 'DomainList',
+            component: () => import('@/views/admin/domains/DomainsView.vue'),
+            meta: {
+              requiresAuth: true,
+              allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
+            },
+          },
+          {
+            path: ':id',
+            name: 'DomainDetail',
+            meta: {
+              requiresAuth: true,
+              allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
+            },
+            component: () => import('@/views/admin/domains/DomainView.vue'),
+          },
+          {
+            path: ':id/edit',
+            name: 'DomainEdit',
+            meta: {
+              requiresAuth: true,
+              allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
+            },
+            component: () => import('@/views/admin/domains/DomainEditView.vue'),
+          },
+        ],
       },
       {
         path: 'imap_migration/migrations',
@@ -107,48 +117,61 @@ const routes = [
       },
       {
         path: 'identities',
-        name: 'Identities',
-        component: () => import('@/views/admin/identities/IdentitiesView.vue'),
+        component: () => import('@/layouts/default/DefaultLayout.vue'),
         meta: {
           requiresAuth: true,
           allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
         },
-      },
-      {
-        path: 'identities/accounts/:id',
-        name: 'AccountDetail',
-        component: () => import('@/views/admin/identities/AccountView.vue'),
-        meta: {
-          requiresAuth: true,
-          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
-        },
-      },
-      {
-        path: 'identities/accounts/:id/edit',
-        name: 'AccountEdit',
-        component: () => import('@/views/admin/identities/AccountEditView.vue'),
-        meta: {
-          requiresAuth: true,
-          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
-        },
-      },
-      {
-        path: 'identities/aliases/:id',
-        name: 'AliasDetail',
-        component: () => import('@/views/admin/identities/AliasView.vue'),
-        meta: {
-          requiresAuth: true,
-          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
-        },
-      },
-      {
-        path: 'identities/aliases/:id/edit',
-        name: 'AliasEdit',
-        component: () => import('@/views/admin/identities/AliasEditView.vue'),
-        meta: {
-          requiresAuth: true,
-          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
-        },
+        children: [
+          {
+            path: '',
+            name: 'Identities',
+            component: () =>
+              import('@/views/admin/identities/IdentitiesView.vue'),
+            meta: {
+              requiresAuth: true,
+              allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
+            },
+          },
+          {
+            path: 'accounts/:id',
+            name: 'AccountDetail',
+            component: () => import('@/views/admin/identities/AccountView.vue'),
+            meta: {
+              requiresAuth: true,
+              allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
+            },
+          },
+          {
+            path: 'accounts/:id/edit',
+            name: 'AccountEdit',
+            component: () =>
+              import('@/views/admin/identities/AccountEditView.vue'),
+            meta: {
+              requiresAuth: true,
+              allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
+            },
+          },
+          {
+            path: 'aliases/:id',
+            name: 'AliasDetail',
+            component: () => import('@/views/admin/identities/AliasView.vue'),
+            meta: {
+              requiresAuth: true,
+              allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
+            },
+          },
+          {
+            path: 'aliases/:id/edit',
+            name: 'AliasEdit',
+            component: () =>
+              import('@/views/admin/identities/AliasEditView.vue'),
+            meta: {
+              requiresAuth: true,
+              allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
+            },
+          },
+        ],
       },
       {
         path: 'parameters/:app',
