@@ -86,34 +86,54 @@ const routes = [
         ],
       },
       {
-        path: 'imap_migration/migrations',
-        name: 'MigrationsList',
-        component: () =>
-          import('@/views/admin/imap_migration/MigrationsView.vue'),
+        path: 'imap_migration',
+        component: () => import('@/layouts/default/DefaultLayout.vue'),
         meta: {
           requiresAuth: true,
-          allowedRoles: ['Resellers', 'SuperAdmins'],
+          allowedRoles: ['DomainAdmins', 'Resellers', 'SuperAdmins'],
         },
-      },
-      {
-        path: 'imap_migration/providers',
-        name: 'ProvidersList',
-        component: () =>
-          import('@/views/admin/imap_migration/ProvidersView.vue'),
-        meta: {
-          requiresAuth: true,
-          allowedRoles: ['Resellers', 'SuperAdmins'],
-        },
-      },
-      {
-        path: 'imap_migration/providers/:id/edit',
-        name: 'ProviderEdit',
-        component: () =>
-          import('@/views/admin/imap_migration/ProviderEditView.vue'),
-        meta: {
-          requiresAuth: true,
-          allowedRoles: ['Resellers', 'SuperAdmins'],
-        },
+        children: [
+          {
+            path: 'migrations',
+            name: 'MigrationsList',
+            component: () =>
+              import('@/views/admin/imap_migration/MigrationsView.vue'),
+            meta: {
+              requiresAuth: true,
+              allowedRoles: ['Resellers', 'SuperAdmins'],
+            },
+          },
+          {
+            path: 'providers',
+            component: () => import('@/layouts/default/DefaultLayout.vue'),
+            meta: {
+              requiresAuth: true,
+              allowedRoles: ['Resellers', 'SuperAdmins'],
+            },
+            children: [
+              {
+                path: '',
+                name: 'ProvidersList',
+                component: () =>
+                  import('@/views/admin/imap_migration/ProvidersView.vue'),
+                meta: {
+                  requiresAuth: true,
+                  allowedRoles: ['Resellers', 'SuperAdmins'],
+                },
+              },
+              {
+                path: 'providers/:id/edit',
+                name: 'ProviderEdit',
+                component: () =>
+                  import('@/views/admin/imap_migration/ProviderEditView.vue'),
+                meta: {
+                  requiresAuth: true,
+                  allowedRoles: ['Resellers', 'SuperAdmins'],
+                },
+              },
+            ],
+          },
+        ],
       },
       {
         path: 'identities',
