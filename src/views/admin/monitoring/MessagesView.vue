@@ -8,3 +8,9 @@
 <script setup lang="js">
 import MessageList from '@/components/admin/logs/MessageList'
 </script>
+
+<style scoped>
+.v-toolbar {
+  background-color: #f7f8fa !important;
+}
+</style>
