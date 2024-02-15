@@ -5,7 +5,7 @@
         <span class="headline">{{ title }}</span>
       </v-card-title>
       <v-card-text>
-        <v-alert text type="info">
+        <v-alert variant="tonal" type="info" class="mb-2">
           {{
             $gettext(
               'Provide a CSV file where lines respect one of the following formats:'
@@ -25,7 +25,7 @@
           accept="text/csv"
           truncate-length="15"
           variant="outlined"
-          dense
+          density="compact"
           :rules="[rules.required]"
         />
         <label class="m-label">{{ $gettext('Separator') }}</label>
@@ -33,13 +33,13 @@
           v-model="form.sepchar"
           :rules="[rules.required]"
           variant="outlined"
-          dense
+          density="compact"
         />
         <v-switch
           v-model="form.continue_if_exists"
           :label="$gettext('Continue on error')"
           color="primary"
-          dense
+          density="compact"
           :hint="$gettext('Don\'t treat duplicated objects as errors')"
           persistent-hint
         />
@@ -58,7 +58,7 @@
   </v-card>
 </template>
 
-<script setup>
+<script setup lang="js">
 import { ref } from 'vue'
 import { useGettext } from 'vue3-gettext'
 import rules from '@/plugins/rules.js'
@@ -93,7 +93,7 @@ async function submit() {
   if (form.value.continue_if_exists) {
     data.append('continue_if_exists', form.value.continue_if_exists)
   }
-  emit('submit', data)
+  emit('submit', data, form.value)
 }
 
 defineExpose({ close })

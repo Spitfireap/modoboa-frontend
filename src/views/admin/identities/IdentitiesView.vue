@@ -52,22 +52,76 @@
     <v-dialog v-model="showCreationWizard" fullscreen scrollable z-index="10">
       <AccountCreationForm @close="showCreationWizard = false" />
     </v-dialog>
+
+    <v-dialog v-model="showImportForm" persistent max-width="800px">
+      <ImportForm
+        ref="importForm"
+        :title="$gettext('Import identities')"
+        @submit="importIdentities"
+        @close="showImportForm = false"
+      >
+        <template #help>
+          <ul>
+            <li>
+              <em
+                >account; loginname; password; first name; last name; enabled;
+                group; address; quota; [, domain, ...]</em
+              >
+            </li>
+            <li>
+              <em
+                >alias; address; enabled; recipient; [more recipients; ...]</em
+              >
+            </li>
+          </ul>
+        </template>
+        <template #extraFields="{ form }">
+          <v-switch
+            v-model="form.crypt_passwords"
+            :label="$gettext('Crypt passwords')"
+            color="primary"
+            density="compact"
+            :hint="
+              $gettext(
+                'Check this option if passwords contained in your file are not crypted'
+              )
+            "
+            persistent-hint
+          />
+        </template>
+      </ImportForm>
+    </v-dialog>
   </div>
 </template>
 
 <script setup lang="js">
 import { ref } from 'vue'
 import { useGettext } from 'vue3-gettext'
+import identitiesApi from '@/api/identities'
 import IdentityList from '@/components/admin/identities/IdentityList.vue'
 import AliasCreationForm from '@/components/admin/identities/AliasCreationForm.vue'
 import AccountCreationForm from '@/components/admin/identities/AccountCreationForm.vue'
+import ImportForm from '@/components/tools/ImportForm'
+import { importExportMixin } from '@/mixins/importExport'
 
 const { $gettext } = useGettext()
+const { importContent, exportContent } = importExportMixin()
 
 const showCreationWizard = ref(false)
 const showAliasCreationWizard = ref(false)
+const showImportForm = ref(false)
+const importForm = ref()
 
-function exportIdentities() {}
+function exportIdentities() {
+  identitiesApi.exportAll().then((resp) => {
+    exportContent(resp.data, 'identities', $gettext)
+  })
+}
+
+function importIdentities(data, form) {
+  data.append('crypt_passwords', form.crypt_passwords)
+  importContent(identitiesApi, data, importForm, $gettext)
+}
 </script>
 
 <style scoped>

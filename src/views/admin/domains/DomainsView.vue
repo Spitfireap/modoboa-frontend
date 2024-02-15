@@ -73,7 +73,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="js">
 import { ref } from 'vue'
 import domainApi from '@/api/domains'
 import { useGettext } from 'vue3-gettext'
